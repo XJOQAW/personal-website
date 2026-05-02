@@ -1903,11 +1903,8 @@ html {
 /* 单个字符动画 */
 .hero-title-animated .char {
     display: inline-block;
-    opacity: 0;
-    transform: translateY(40px) rotateX(90deg);
     animation: charAppear 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-    -webkit-text-fill-color: transparent;
-    position: relative;
+    opacity: 0;
 }
 
 .hero-title-animated .char:nth-child(1) { animation-delay: 0.1s; }
@@ -1918,15 +1915,15 @@ html {
 @keyframes charAppear {
     0% {
         opacity: 0;
-        transform: translateY(40px) rotateX(90deg) scale(0.5);
+        transform: translateY(30px) scale(0.8);
     }
     60% {
         opacity: 1;
-        transform: translateY(-10px) rotateX(-10deg) scale(1.1);
+        transform: translateY(-5px) scale(1.05);
     }
     100% {
         opacity: 1;
-        transform: translateY(0) rotateX(0deg) scale(1);
+        transform: translateY(0) scale(1);
     }
 }
 
