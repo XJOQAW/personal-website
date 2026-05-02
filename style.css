@@ -491,12 +491,22 @@ body {
     box-shadow: 0 5px 15px var(--shadow-color);
 }
 
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
 .form-group {
     margin-bottom: 20px;
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
     width: 100%;
     padding: 12px 15px;
     border: 1px solid var(--bg-dark);
@@ -506,6 +516,7 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: var(--transition);
+    appearance: auto;
 }
 
 .form-group input:focus,
