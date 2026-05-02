@@ -20,13 +20,13 @@
     width: 360px;
     height: 240px;
     animation: cameraFloat 3s ease-in-out infinite;
-    filter: drop-shadow(0 0 30px rgba(255, 107, 157, 0.3)) drop-shadow(0 30px 60px rgba(0, 0, 0, 0.5));
     position: relative;
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
     will-change: transform, opacity;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    filter: drop-shadow(0 0 20px rgba(255, 107, 157, 0.2));
 }
 
 .camera-back::before {
@@ -1833,8 +1833,9 @@ html {
     position: relative;
     display: flex;
     gap: 5px;
-    font-family: 'Noto Sans SC', serif;
-    font-style: italic;
+    font-family: 'STKaiti', 'KaiTi', 'Noto Serif SC', serif;
+    font-style: normal;
+    text-shadow: none;
 }
 
 @keyframes titleGradient {

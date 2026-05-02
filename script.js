@@ -1,4 +1,4 @@
-// 开屏动画 - 现代相机背面
+// 开屏动画 - 页面加载后自动播放
 window.addEventListener('load', function() {
     var splashScreen = document.getElementById('splashScreen');
     var cameraBack = splashScreen ? splashScreen.querySelector('.camera-back') : null;
@@ -8,14 +8,18 @@ window.addEventListener('load', function() {
     
     // 创建快门音效
     var audioContext = null;
+    var soundPlayed = false;
     
     function playShutterSound() {
+        if (soundPlayed) return;
         try {
             if (!audioContext) {
                 audioContext = new (window.AudioContext || window.webkitAudioContext)();
             }
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
             
-            // 快门声 - 短促清脆
             var osc1 = audioContext.createOscillator();
             var osc2 = audioContext.createOscillator();
             var gainNode = audioContext.createGain();
@@ -30,48 +34,44 @@ window.addEventListener('load', function() {
             osc2.frequency.setValueAtTime(800, audioContext.currentTime);
             osc2.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.1);
             
-            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+            gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.12);
             
             osc1.start(audioContext.currentTime);
             osc1.stop(audioContext.currentTime + 0.08);
-            
             osc2.start(audioContext.currentTime + 0.02);
             osc2.stop(audioContext.currentTime + 0.1);
+            
+            soundPlayed = true;
         } catch (e) {
             console.log('音效播放失败');
         }
     }
     
-    // 动画序列
+    // 动画序列 - 页面加载后自动开始
     function startAnimation() {
-        // 1. 显示标题
         setTimeout(function() {
             if (titleWrap) titleWrap.classList.add('show');
         }, 200);
         
-        // 2. 按下快门 + 快门声
         setTimeout(function() {
             cameraBack.classList.add('pressed');
-            playShutterSound();
+            // 尝试播放音效（需要用户有过交互）
+            try { playShutterSound(); } catch(e) {}
         }, 1000);
         
-        // 3. 显示屏变黑
         setTimeout(function() {
             cameraBack.classList.remove('pressed');
             cameraBack.classList.add('screen-black');
         }, 1200);
         
-        // 4. 旋转放大（旋转时就渐变出主页）
         setTimeout(function() {
             cameraBack.classList.add('rotate');
-            // 旋转到一半时就开始淡出开屏
             setTimeout(function() {
                 splashScreen.classList.add('fade-out');
             }, 400);
         }, 1400);
         
-        // 5. 完全隐藏开屏
         setTimeout(function() {
             splashScreen.classList.add('hidden');
             setTimeout(function() {
@@ -80,27 +80,20 @@ window.addEventListener('load', function() {
         }, 2200);
     }
     
-    // 处理用户交互
+    // 用户首次交互时播放音效
     function handleFirstInteraction() {
-        if (!audioContext) {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        if (!soundPlayed) {
+            playShutterSound();
         }
-        startAnimation();
         document.removeEventListener('touchstart', handleFirstInteraction);
         document.removeEventListener('click', handleFirstInteraction);
-        document.removeEventListener('scroll', handleFirstInteraction);
     }
     
     document.addEventListener('touchstart', handleFirstInteraction, { once: true });
     document.addEventListener('click', handleFirstInteraction, { once: true });
-    document.addEventListener('scroll', handleFirstInteraction, { once: true });
     
-    // 3秒无交互自动开始
-    setTimeout(function() {
-        if (!splashScreen.classList.contains('hidden')) {
-            startAnimation();
-        }
-    }, 3000);
+    // 页面加载后自动开始动画
+    setTimeout(startAnimation, 300);
 });
 
 document.addEventListener('DOMContentLoaded', function() {
