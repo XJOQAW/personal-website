@@ -303,246 +303,132 @@
                 </div>
             </div>
         </section>
+    </main>
 
-        <!-- 评价模态框 -->
-        <div class="testimonials-modal-overlay" id="testimonialsModal">
-            <div class="testimonials-modal">
-                <div class="testimonials-modal-header">
-                    <h2>全部评价</h2>
-                    <div class="testimonials-sort">
-                        <button class="sort-btn active" data-sort="latest">最新</button>
-                        <button class="sort-btn" data-sort="hottest">最热</button>
-                    </div>
-                    <button class="modal-close-btn" id="closeTestimonialsModal">&times;</button>
+    <!-- 评价模态框 -->
+    <div class="testimonials-modal-overlay" id="testimonialsModal">
+        <div class="testimonials-modal">
+            <div class="testimonials-modal-header">
+                <h2>全部评价</h2>
+                <div class="testimonials-sort">
+                    <button class="sort-btn active" data-sort="latest">最新</button>
+                    <button class="sort-btn" data-sort="hottest">最热</button>
                 </div>
-                <div class="testimonials-modal-body">
-                    <div class="testimonials-list" id="testimonialsList">
-                        <div class="testimonial-full-item" data-likes="12" data-time="2026-04-28">
-                            <div class="testimonial-full-content">
-                                <p>"摄影师非常专业，从前期沟通到后期修图都很细心。拍出来的效果比我想象的还要好，完全还原了我想要的角色感觉！"</p>
-                            </div>
-                            <div class="testimonial-full-footer">
-                                <div class="testimonial-author">
-                                    <div class="author-avatar">👩</div>
-                                    <div class="author-info">
-                                        <h4>小樱</h4>
-                                        <span>cosplay爱好者</span>
-                                    </div>
-                                </div>
-                                <div class="testimonial-meta">
-                                    <span class="testimonial-date">2026-04-28</span>
-                                    <button class="like-btn" data-id="1"><i class="fas fa-heart"></i> <span class="like-count">12</span></button>
-                                </div>
-                            </div>
+                <button class="modal-close-btn" id="closeTestimonialsModal">&times;</button>
+            </div>
+            <div class="testimonials-modal-body">
+                <div class="testimonials-list" id="testimonialsList">
+                    <div class="testimonial-full-item" data-likes="12" data-time="2026-04-28">
+                        <div class="testimonial-full-content">
+                            <p>"摄影师非常专业，从前期沟通到后期修图都很细心。拍出来的效果比我想象的还要好，完全还原了我想要的角色感觉！"</p>
                         </div>
-                        <div class="testimonial-full-item" data-likes="8" data-time="2026-04-25">
-                            <div class="testimonial-full-content">
-                                <p>"合作过很多摄影师，这位是最有耐心的。拍摄前提供了详细的策划方案，拍摄过程中不断沟通调整，最终效果非常满意。"</p>
-                            </div>
-                            <div class="testimonial-full-footer">
-                                <div class="testimonial-author">
-                                    <div class="author-avatar">👨</div>
-                                    <div class="author-info">
-                                        <h4>动漫博主小明</h4>
-                                        <span>百万粉丝博主</span>
-                                    </div>
-                                </div>
-                                <div class="testimonial-meta">
-                                    <span class="testimonial-date">2026-04-25</span>
-                                    <button class="like-btn" data-id="2"><i class="fas fa-heart"></i> <span class="like-count">8</span></button>
+                        <div class="testimonial-full-footer">
+                            <div class="testimonial-author">
+                                <div class="author-avatar">👩</div>
+                                <div class="author-info">
+                                    <h4>小樱</h4>
+                                    <span>cosplay爱好者</span>
                                 </div>
                             </div>
-                        </div>
-                        <div class="testimonial-full-item" data-likes="15" data-time="2026-04-20">
-                            <div class="testimonial-full-content">
-                                <p>"后期处理能力很强，能把普通的照片变成艺术品。而且交付的成品还可以自己调整，非常贴心。"</p>
-                            </div>
-                            <div class="testimonial-full-footer">
-                                <div class="testimonial-author">
-                                    <div class="author-avatar">👩</div>
-                                    <div class="author-info">
-                                        <h4>二次元爱好者</h4>
-                                        <span>个人约拍客户</span>
-                                    </div>
-                                </div>
-                                <div class="testimonial-meta">
-                                    <span class="testimonial-date">2026-04-20</span>
-                                    <button class="like-btn" data-id="3"><i class="fas fa-heart"></i> <span class="like-count">15</span></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="testimonial-full-item" data-likes="6" data-time="2026-04-15">
-                            <div class="testimonial-full-content">
-                                <p>"第一次拍cosplay写真，本来很紧张，但摄影师一直在引导我放松，拍出来的效果超出预期！下次还约！"</p>
-                            </div>
-                            <div class="testimonial-full-footer">
-                                <div class="testimonial-author">
-                                    <div class="author-avatar">🧑</div>
-                                    <div class="author-info">
-                                        <h4>cos新手小白</h4>
-                                        <span>首次约拍</span>
-                                    </div>
-                                </div>
-                                <div class="testimonial-meta">
-                                    <span class="testimonial-date">2026-04-15</span>
-                                    <button class="like-btn" data-id="4"><i class="fas fa-heart"></i> <span class="like-count">6</span></button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="testimonial-full-item" data-likes="20" data-time="2026-04-10">
-                            <div class="testimonial-full-content">
-                                <p>"策划案做得非常详细，从场地到服装到道具都考虑到了，拍摄当天效率很高，完全不浪费时间。强烈推荐给需要商拍的小伙伴！"</p>
-                            </div>
-                            <div class="testimonial-full-footer">
-                                <div class="testimonial-author">
-                                    <div class="author-avatar">👨</div>
-                                    <div class="author-info">
-                                        <h4>品牌方负责人</h4>
-                                        <span>商业合作</span>
-                                    </div>
-                                </div>
-                                <div class="testimonial-meta">
-                                    <span class="testimonial-date">2026-04-10</span>
-                                    <button class="like-btn" data-id="5"><i class="fas fa-heart"></i> <span class="like-count">20</span></button>
-                                </div>
+                            <div class="testimonial-meta">
+                                <span class="testimonial-date">2026-04-28</span>
+                                <button class="like-btn" data-id="1"><i class="fas fa-heart"></i> <span class="like-count">12</span></button>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="testimonials-modal-footer">
-                    <h3>发表评价</h3>
-                    <form id="reviewForm" class="review-form">
-                        <div class="review-form-row">
-                            <input type="text" name="nickname" placeholder="您的昵称" required>
-                            <select name="identity" required>
-                                <option value="">选择身份</option>
-                                <option value="cosplay爱好者">cosplay爱好者</option>
-                                <option value="个人约拍客户">个人约拍客户</option>
-                                <option value="商业合作">商业合作</option>
-                                <option value="其他">其他</option>
-                            </select>
+                    <div class="testimonial-full-item" data-likes="8" data-time="2026-04-25">
+                        <div class="testimonial-full-content">
+                            <p>"合作过很多摄影师，这位是最有耐心的。拍摄前提供了详细的策划方案，拍摄过程中不断沟通调整，最终效果非常满意。"</p>
                         </div>
-                        <textarea name="content" placeholder="分享您的拍摄体验..." rows="3" required></textarea>
-                        <button type="submit" class="btn btn-primary">发布评价</button>
-                    </form>
+                        <div class="testimonial-full-footer">
+                            <div class="testimonial-author">
+                                <div class="author-avatar">👨</div>
+                                <div class="author-info">
+                                    <h4>动漫博主小明</h4>
+                                    <span>百万粉丝博主</span>
+                                </div>
+                            </div>
+                            <div class="testimonial-meta">
+                                <span class="testimonial-date">2026-04-25</span>
+                                <button class="like-btn" data-id="2"><i class="fas fa-heart"></i> <span class="like-count">8</span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-full-item" data-likes="15" data-time="2026-04-20">
+                        <div class="testimonial-full-content">
+                            <p>"后期处理能力很强，能把普通的照片变成艺术品。而且交付的成品还可以自己调整，非常贴心。"</p>
+                        </div>
+                        <div class="testimonial-full-footer">
+                            <div class="testimonial-author">
+                                <div class="author-avatar">👩</div>
+                                <div class="author-info">
+                                    <h4>二次元爱好者</h4>
+                                    <span>个人约拍客户</span>
+                                </div>
+                            </div>
+                            <div class="testimonial-meta">
+                                <span class="testimonial-date">2026-04-20</span>
+                                <button class="like-btn" data-id="3"><i class="fas fa-heart"></i> <span class="like-count">15</span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-full-item" data-likes="6" data-time="2026-04-15">
+                        <div class="testimonial-full-content">
+                            <p>"第一次拍cosplay写真，本来很紧张，但摄影师一直在引导我放松，拍出来的效果超出预期！下次还约！"</p>
+                        </div>
+                        <div class="testimonial-full-footer">
+                            <div class="testimonial-author">
+                                <div class="author-avatar">🧑</div>
+                                <div class="author-info">
+                                    <h4>cos新手小白</h4>
+                                    <span>首次约拍</span>
+                                </div>
+                            </div>
+                            <div class="testimonial-meta">
+                                <span class="testimonial-date">2026-04-15</span>
+                                <button class="like-btn" data-id="4"><i class="fas fa-heart"></i> <span class="like-count">6</span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-full-item" data-likes="20" data-time="2026-04-10">
+                        <div class="testimonial-full-content">
+                            <p>"策划案做得非常详细，从场地到服装到道具都考虑到了，拍摄当天效率很高，完全不浪费时间。强烈推荐给需要商拍的小伙伴！"</p>
+                        </div>
+                        <div class="testimonial-full-footer">
+                            <div class="testimonial-author">
+                                <div class="author-avatar">👨</div>
+                                <div class="author-info">
+                                    <h4>品牌方负责人</h4>
+                                    <span>商业合作</span>
+                                </div>
+                            </div>
+                            <div class="testimonial-meta">
+                                <span class="testimonial-date">2026-04-10</span>
+                                <button class="like-btn" data-id="5"><i class="fas fa-heart"></i> <span class="like-count">20</span></button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
+            <div class="testimonials-modal-footer">
+                <h3>发表评价</h3>
+                <form id="reviewForm" class="review-form">
+                    <div class="review-form-row">
+                        <input type="text" name="nickname" placeholder="您的昵称" required>
+                        <select name="identity" required>
+                            <option value="">选择身份</option>
+                            <option value="cosplay爱好者">cosplay爱好者</option>
+                            <option value="个人约拍客户">个人约拍客户</option>
+                            <option value="商业合作">商业合作</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                    <textarea name="content" placeholder="分享您的拍摄体验..." rows="3" required></textarea>
+                    <button type="submit" class="btn btn-primary">发布评价</button>
+                </form>
             </div>
         </div>
-
-        <!-- 教程分享部分 -->
-        <section id="tutorials" class="section tutorials-section">
-            <div class="container">
-                <h2 class="section-title" data-aos="fade-up">教程分享</h2>
-                <div class="tutorials-grid">
-                    <div class="tutorial-card" data-aos="fade-up" data-aos-delay="100">
-                        <div class="tutorial-image">
-                            <div class="image-placeholder">
-                                <i class="fas fa-camera"></i>
-                            </div>
-                        </div>
-                        <div class="tutorial-content">
-                            <h3>二次元人像拍摄技巧</h3>
-                            <p>学习如何捕捉角色神韵，拍出有灵魂的二次元人像</p>
-                            <button class="btn btn-secondary">阅读教程</button>
-                        </div>
-                    </div>
-                    <div class="tutorial-card" data-aos="fade-up" data-aos-delay="200">
-                        <div class="tutorial-image">
-                            <div class="image-placeholder">
-                                <i class="fas fa-magic"></i>
-                            </div>
-                        </div>
-                        <div class="tutorial-content">
-                            <h3>后期调色基础教程</h3>
-                            <p>掌握二次元风格调色技巧，让照片更有氛围感</p>
-                            <button class="btn btn-secondary">阅读教程</button>
-                        </div>
-                    </div>
-                    <div class="tutorial-card" data-aos="fade-up" data-aos-delay="300">
-                        <div class="tutorial-image">
-                            <div class="image-placeholder">
-                                <i class="fas fa-lightbulb"></i>
-                            </div>
-                        </div>
-                        <div class="tutorial-content">
-                            <h3>拍摄策划方案制作</h3>
-                            <p>学习如何制作完整的拍摄策划方案</p>
-                            <button class="btn btn-secondary">阅读教程</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 联系方式部分 -->
-        <section id="contact" class="section contact-section">
-            <div class="container">
-                <h2 class="section-title" data-aos="fade-up">联系我</h2>
-                <div class="contact-content">
-                    <div class="contact-info" data-aos="fade-right">
-                        <div class="contact-item">
-                            <i class="fab fa-weixin"></i>
-                            <div>
-                                <h3>微信</h3>
-                                <p>YFTX0616</p>
-                            </div>
-                        </div>
-                        <a href="https://www.douyin.com/user/MS4wLjABAAAA1R_6aqng4qj4f9OXLkgdyWPbxn-EnNk16b9Oz66aQnE-h29bpFbJYI4jKGm5RnkF?from_tab_name=main" target="_blank" rel="noopener noreferrer" class="contact-item contact-link">
-                            <i class="fab fa-tiktok"></i>
-                            <div>
-                                <h3>抖音</h3>
-                                <p>YFTX0000</p>
-                            </div>
-                            <div class="hover-tooltip">点击跳转到抖音主页</div>
-                        </a>
-                        <div class="contact-item">
-                            <i class="fas fa-clock"></i>
-                            <div>
-                                <h3>工作时间</h3>
-                                <p>周一至周日 9:00-21:00</p>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <div>
-                                <h3>服务范围</h3>
-                                <p>全国可飞（需报销差旅）</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="contact-form" data-aos="fade-left">
-                        <form id="contactForm" action="https://formspree.io/f/your-form-id" method="POST">
-                            <div class="form-group">
-                                <input type="text" name="cn" placeholder="您的CN" required>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <input type="text" name="qq" placeholder="QQ">
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" name="wechat" placeholder="微信">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <select name="service" required>
-                                    <option value="">选择服务类型</option>
-                                    <option value="cosplay白棚拍摄">cosplay白棚拍摄</option>
-                                    <option value="漫展场照拍摄">漫展场照拍摄</option>
-                                    <option value="视频后期">视频后期</option>
-                                    <option value="图片后期">图片后期</option>
-                                    <option value="正片策划制作">正片策划制作</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <textarea name="message" placeholder="请描述您的需求" rows="5" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">发送咨询</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+    </div>
 
     <!-- 页脚 -->
     <footer class="footer">
