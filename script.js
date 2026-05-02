@@ -221,6 +221,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // 粒子效果
     initParticles();
 
+    // 评价模态框功能
+    initTestimonialsModal();
+
     // 通知功能
     function showNotification(message, type) {
         var existingNotification = document.querySelector('.notification');
@@ -239,6 +242,180 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(function() { if (notification.parentNode) notification.remove(); }, 5000);
     }
 });
+
+// 评价模态框功能
+function initTestimonialsModal() {
+    var modal = document.getElementById('testimonialsModal');
+    var openBtn = document.getElementById('openTestimonialsModal');
+    var closeBtn = document.getElementById('closeTestimonialsModal');
+
+    if (!modal || !openBtn || !closeBtn) return;
+
+    // 打开模态框
+    openBtn.addEventListener('click', function() {
+        modal.classList.add('active');
+        document.body.classList.add('modal-open');
+        document.body.classList.remove('modal-closing');
+    });
+
+    // 关闭模态框
+    function closeModal() {
+        document.body.classList.remove('modal-open');
+        document.body.classList.add('modal-closing');
+        setTimeout(function() {
+            modal.classList.remove('active');
+            document.body.classList.remove('modal-closing');
+        }, 500);
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+
+    // 点击背景关闭
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeModal();
+        }
+    });
+
+    // ESC键关闭
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+
+    // 排序功能
+    var sortBtns = document.querySelectorAll('.sort-btn');
+    sortBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            sortBtns.forEach(function(b) { b.classList.remove('active'); });
+            this.classList.add('active');
+
+            var sortType = this.getAttribute('data-sort');
+            var list = document.getElementById('testimonialsList');
+            var items = Array.from(list.querySelectorAll('.testimonial-full-item'));
+
+            items.sort(function(a, b) {
+                if (sortType === 'latest') {
+                    return new Date(b.getAttribute('data-time')) - new Date(a.getAttribute('data-time'));
+                } else {
+                    return parseInt(b.getAttribute('data-likes')) - parseInt(a.getAttribute('data-likes'));
+                }
+            });
+
+            items.forEach(function(item) { list.appendChild(item); });
+        });
+    });
+
+    // 点赞功能
+    var likedItems = JSON.parse(localStorage.getItem('likedTestimonials') || '[]');
+
+    // 初始化已点赞状态
+    likedItems.forEach(function(id) {
+        var btn = document.querySelector('.like-btn[data-id="' + id + '"]');
+        if (btn) {
+            btn.classList.add('liked');
+        }
+    });
+
+    document.querySelectorAll('.like-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var id = this.getAttribute('data-id');
+            var countEl = this.querySelector('.like-count');
+            var count = parseInt(countEl.textContent);
+
+            if (likedItems.includes(id)) {
+                // 取消点赞
+                likedItems = likedItems.filter(function(item) { return item !== id; });
+                countEl.textContent = count - 1;
+                this.classList.remove('liked');
+                this.closest('.testimonial-full-item').setAttribute('data-likes', count - 1);
+            } else {
+                // 点赞
+                likedItems.push(id);
+                countEl.textContent = count + 1;
+                this.classList.add('liked');
+                this.closest('.testimonial-full-item').setAttribute('data-likes', count + 1);
+
+                // 点赞动画
+                this.style.transform = 'scale(1.2)';
+                setTimeout(function() { btn.style.transform = 'scale(1)'; }, 200);
+            }
+
+            localStorage.setItem('likedTestimonials', JSON.stringify(likedItems));
+        });
+    });
+
+    // 发表评价
+    var reviewForm = document.getElementById('reviewForm');
+    if (reviewForm) {
+        reviewForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            var nickname = this.querySelector('input[name="nickname"]').value;
+            var identity = this.querySelector('select[name="identity"]').value;
+            var content = this.querySelector('textarea[name="content"]').value;
+
+            if (!nickname || !identity || !content) return;
+
+            var list = document.getElementById('testimonialsList');
+            var today = new Date();
+            var dateStr = today.getFullYear() + '-' +
+                String(today.getMonth() + 1).padStart(2, '0') + '-' +
+                String(today.getDate()).padStart(2, '0');
+
+            var avatars = ['🧑', '👩', '👨', '🎒', '📷'];
+            var randomAvatar = avatars[Math.floor(Math.random() * avatars.length)];
+
+            var newItem = document.createElement('div');
+            newItem.className = 'testimonial-full-item';
+            newItem.setAttribute('data-likes', '0');
+            newItem.setAttribute('data-time', dateStr);
+            newItem.innerHTML =
+                '<div class="testimonial-full-content"><p>"' + content + '"</p></div>' +
+                '<div class="testimonial-full-footer">' +
+                '<div class="testimonial-author">' +
+                '<div class="author-avatar">' + randomAvatar + '</div>' +
+                '<div class="author-info"><h4>' + nickname + '</h4><span>' + identity + '</span></div>' +
+                '</div>' +
+                '<div class="testimonial-meta">' +
+                '<span class="testimonial-date">' + dateStr + '</span>' +
+                '<button class="like-btn" data-id="' + Date.now() + '"><i class="fas fa-heart"></i> <span class="like-count">0</span></button>' +
+                '</div></div>';
+
+            list.insertBefore(newItem, list.firstChild);
+
+            // 为新评价的点赞按钮添加事件
+            var newLikeBtn = newItem.querySelector('.like-btn');
+            newLikeBtn.addEventListener('click', function() {
+                var id = this.getAttribute('data-id');
+                var countEl = this.querySelector('.like-count');
+                var count = parseInt(countEl.textContent);
+
+                if (likedItems.includes(id)) {
+                    likedItems = likedItems.filter(function(item) { return item !== id; });
+                    countEl.textContent = count - 1;
+                    this.classList.remove('liked');
+                } else {
+                    likedItems.push(id);
+                    countEl.textContent = count + 1;
+                    this.classList.add('liked');
+                }
+                localStorage.setItem('likedTestimonials', JSON.stringify(likedItems));
+            });
+
+            // 重置表单
+            this.reset();
+
+            // 显示通知
+            var notification = document.createElement('div');
+            notification.style.cssText = 'position:fixed;top:20px;right:20px;background-color:#2ecc71;color:white;padding:15px 20px;border-radius:5px;box-shadow:0 5px 15px rgba(0,0,0,0.2);z-index:3000;max-width:300px;';
+            notification.innerHTML = '<div style="display:flex;align-items:center;justify-content:space-between;"><span>评价发布成功！</span><button style="background:none;border:none;color:white;font-size:1.2rem;cursor:pointer;margin-left:10px;" onclick="this.parentElement.parentElement.remove()">&times;</button></div>';
+            document.body.appendChild(notification);
+            setTimeout(function() { if (notification.parentNode) notification.remove(); }, 3000);
+        });
+    }
+}
 
 // 粒子效果函数
 function initParticles() {
