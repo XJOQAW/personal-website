@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 联系表单
+    // 联系表单 - Web3Forms提交
     var contactForm = document.getElementById('contactForm');
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
@@ -271,12 +271,30 @@ document.addEventListener('DOMContentLoaded', function() {
             submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 发送中...';
             submitButton.disabled = true;
 
-            setTimeout(function() {
-                showNotification('感谢您选择了我，让我们共同创作出更美好的作品！预计回复时间：24小时之内', 'success');
-                contactForm.reset();
+            var formData = new FormData(contactForm);
+            
+            fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                body: formData
+            })
+            .then(function(response) {
+                return response.json();
+            })
+            .then(function(data) {
+                if (data.success) {
+                    showNotification('感谢您选择了我，让我们共同创作出更美好的作品！预计回复时间：24小时之内', 'success');
+                    contactForm.reset();
+                } else {
+                    showNotification('提交失败，请稍后重试或直接联系我', 'error');
+                }
+            })
+            .catch(function(error) {
+                showNotification('提交失败，请稍后重试或直接联系我', 'error');
+            })
+            .finally(function() {
                 submitButton.innerHTML = originalText;
                 submitButton.disabled = false;
-            }, 1500);
+            });
         });
     }
 
