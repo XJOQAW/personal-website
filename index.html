@@ -447,20 +447,20 @@
                         </div>
                     </div>
                     <div class="contact-form" data-aos="fade-left">
-                        <form id="contactForm" action="https://formspree.io/f/your-form-id" method="POST">
+                        <form id="contactForm">
                             <div class="form-group">
-                                <input type="text" name="cn" placeholder="您的CN" required>
+                                <input type="text" name="cn" id="formCN" placeholder="您的CN" required>
                             </div>
                             <div class="form-row">
                                 <div class="form-group">
-                                    <input type="text" name="qq" placeholder="QQ">
+                                    <input type="text" name="qq" id="formQQ" placeholder="QQ">
                                 </div>
                                 <div class="form-group">
-                                    <input type="text" name="wechat" placeholder="微信">
+                                    <input type="text" name="wechat" id="formWechat" placeholder="微信">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <select name="service" required>
+                                <select name="service" id="formService" required>
                                     <option value="">选择服务类型</option>
                                     <option value="cosplay白棚拍摄">cosplay白棚拍摄</option>
                                     <option value="漫展场照拍摄">漫展场照拍摄</option>
@@ -470,7 +470,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <select name="package">
+                                <select name="package" id="formPackage">
                                     <option value="">选择套餐（可选）</option>
                                     <optgroup label="白棚正片">
                                         <option value="白棚正片-基础套餐 ¥150">基础套餐 ¥150</option>
@@ -485,10 +485,13 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <textarea name="message" placeholder="请描述您的需求" rows="5" required></textarea>
+                                <textarea name="message" id="formMessage" placeholder="请描述您的需求" rows="5" required></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">发送咨询</button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> 提交咨询
+                            </button>
                         </form>
+                        <p class="contact-note">提交后将自动跳转到确认页面</p>
                     </div>
                 </div>
             </div>

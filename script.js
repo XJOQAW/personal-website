@@ -261,22 +261,49 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 联系表单
+    // 联系表单 - 跳转到腾讯问卷并预填
     var contactForm = document.getElementById('contactForm');
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            var submitButton = contactForm.querySelector('button[type="submit"]');
-            var originalText = submitButton.textContent;
-            submitButton.textContent = '发送中...';
-            submitButton.disabled = true;
-
+            
+            // 获取表单数据
+            var cn = document.getElementById('formCN').value;
+            var qq = document.getElementById('formQQ').value;
+            var wechat = document.getElementById('formWechat').value;
+            var service = document.getElementById('formService').value;
+            var pkg = document.getElementById('formPackage').value;
+            var message = document.getElementById('formMessage').value;
+            
+            // 构建腾讯问卷预填URL
+            // 注意：这里的参数名需要根据腾讯问卷的实际题目ID来设置
+            // 您需要在腾讯问卷后台查看题目ID
+            var baseUrl = 'https://wj.qq.com/s2/26533311/09f2/';
+            var params = new URLSearchParams();
+            
+            // 如果腾讯问卷支持预填，添加参数
+            // 格式：?题目ID=答案
+            // 您需要替换为实际的题目ID
+            if (cn) params.append('cn', cn);
+            if (qq) params.append('qq', qq);
+            if (wechat) params.append('wechat', wechat);
+            if (service) params.append('service', service);
+            if (pkg) params.append('package', pkg);
+            if (message) params.append('message', message);
+            
+            // 构建完整URL
+            var fullUrl = baseUrl + '?' + params.toString();
+            
+            // 跳转到腾讯问卷
+            window.open(fullUrl, '_blank');
+            
+            // 显示成功提示
+            showNotification('正在跳转到表单页面...', 'success');
+            
+            // 3秒后显示感谢信息
             setTimeout(function() {
-                showNotification('消息发送成功！我会尽快回复您。', 'success');
-                contactForm.reset();
-                submitButton.textContent = originalText;
-                submitButton.disabled = false;
-            }, 1500);
+                showNotification('感谢您选择了我，让我们共同创作出更美好的作品！预计回复时间：24小时之内', 'success');
+            }, 2000);
         });
     }
 
