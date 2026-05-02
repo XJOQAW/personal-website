@@ -626,6 +626,63 @@
         </div>
     </div>
 
+    <!-- 支付模态框 -->
+    <div class="payment-modal-overlay" id="paymentModal">
+        <div class="payment-modal">
+            <div class="payment-modal-header">
+                <h2>确认支付</h2>
+                <button class="modal-close-btn" id="closePaymentModal">&times;</button>
+            </div>
+            <div class="payment-modal-body">
+                <div class="payment-info">
+                    <h3 id="paymentPackageName">套餐名称</h3>
+                    <div class="payment-price" id="paymentPrice">¥0</div>
+                    <p class="payment-description" id="paymentDescription">套餐描述</p>
+                </div>
+                <div class="payment-qrcodes">
+                    <p class="payment-scan-text">请扫描以下二维码完成付款</p>
+                    <div class="payment-qrcode-grid">
+                        <div class="payment-qrcode-item">
+                            <img src="images/wechat-pay.png" alt="微信收款码" class="payment-qrcode-img">
+                            <span>微信支付</span>
+                        </div>
+                        <div class="payment-qrcode-item">
+                            <img src="images/alipay.png" alt="支付宝收款码" class="payment-qrcode-img">
+                            <span>支付宝</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="payment-actions">
+                    <button class="btn btn-primary" id="confirmPayment">
+                        <i class="fas fa-check"></i> 已完成付款
+                    </button>
+                    <button class="btn btn-secondary" id="cancelPayment">
+                        <i class="fas fa-arrow-left"></i> 返回修改
+                    </button>
+                </div>
+                <p class="payment-note">付款后请截图保存，以便核对</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 付款成功模态框 -->
+    <div class="success-modal-overlay" id="successModal">
+        <div class="success-modal">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>付款成功</h2>
+            <p class="success-message">感谢您选择了我，让我们共同创作出更美好的作品！</p>
+            <div class="success-details">
+                <p><strong>预计回复时间：</strong>24小时之内</p>
+                <p><strong>联系方式：</strong>微信 YFTX0616</p>
+            </div>
+            <button class="btn btn-primary" id="closeSuccessModal">
+                <i class="fas fa-home"></i> 返回首页
+            </button>
+        </div>
+    </div>
+
     <!-- 页脚 -->
     <footer class="footer">
         <div class="container">

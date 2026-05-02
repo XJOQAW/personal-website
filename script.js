@@ -261,40 +261,104 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // 联系表单 - Web3Forms提交
+    // 联系表单 - Web3Forms提交 + 支付流程
     var contactForm = document.getElementById('contactForm');
+    var paymentModal = document.getElementById('paymentModal');
+    var successModal = document.getElementById('successModal');
+    var closePaymentModal = document.getElementById('closePaymentModal');
+    var confirmPayment = document.getElementById('confirmPayment');
+    var cancelPayment = document.getElementById('cancelPayment');
+    var closeSuccessModal = document.getElementById('closeSuccessModal');
+    
+    // 套餐信息
+    var packageInfo = {
+        '白棚正片-基础套餐 ¥150': { name: '白棚正片-基础套餐', price: '¥150', description: '2小时拍摄，1套服装造型，1张精修' },
+        '白棚正片-标准套餐 ¥350': { name: '白棚正片-标准套餐', price: '¥350', description: '4小时拍摄，1套服装造型，3张精修' },
+        '白棚正片-高级套餐 ¥550': { name: '白棚正片-高级套餐', price: '¥550', description: '全天拍摄，所有服装造型，每套3张精修' },
+        '场照-基础套餐 ¥21': { name: '场照-基础套餐', price: '¥21', description: '单张精修，有动作参考和指导' },
+        '场照-标准套餐 ¥80': { name: '场照-标准套餐', price: '¥80', description: '四图，精修4张，有动作参考和指导' },
+        '场照-高级套餐 ¥190': { name: '场照-高级套餐', price: '¥190', description: '12张图保9张，精修3张，全方位策划与指导' }
+    };
+    
+    var currentFormData = null;
+
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            var submitButton = contactForm.querySelector('button[type="submit"]');
-            var originalText = submitButton.innerHTML;
-            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 发送中...';
-            submitButton.disabled = true;
-
-            var formData = new FormData(contactForm);
             
+            // 获取套餐信息
+            var packageSelect = contactForm.querySelector('select[name="套餐选择"]');
+            var selectedPackage = packageSelect.value;
+            
+            if (!selectedPackage) {
+                showNotification('请选择套餐后再提交', 'error');
+                return;
+            }
+            
+            // 保存表单数据
+            currentFormData = new FormData(contactForm);
+            
+            // 显示支付模态框
+            var info = packageInfo[selectedPackage];
+            if (info) {
+                document.getElementById('paymentPackageName').textContent = info.name;
+                document.getElementById('paymentPrice').textContent = info.price;
+                document.getElementById('paymentDescription').textContent = info.description;
+            }
+            
+            paymentModal.classList.add('active');
+            document.body.classList.add('modal-open');
+        });
+    }
+    
+    // 关闭支付模态框
+    if (closePaymentModal) {
+        closePaymentModal.addEventListener('click', function() {
+            paymentModal.classList.remove('active');
+            document.body.classList.remove('modal-open');
+        });
+    }
+    
+    // 取消支付
+    if (cancelPayment) {
+        cancelPayment.addEventListener('click', function() {
+            paymentModal.classList.remove('active');
+            document.body.classList.remove('modal-open');
+        });
+    }
+    
+    // 确认付款
+    if (confirmPayment) {
+        confirmPayment.addEventListener('click', function() {
+            // 发送邮件通知
             fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
-                body: formData
+                body: currentFormData
             })
             .then(function(response) {
                 return response.json();
             })
             .then(function(data) {
-                if (data.success) {
-                    showNotification('感谢您选择了我，让我们共同创作出更美好的作品！预计回复时间：24小时之内', 'success');
-                    contactForm.reset();
-                } else {
-                    showNotification('提交失败，请稍后重试或直接联系我', 'error');
-                }
+                // 关闭支付模态框
+                paymentModal.classList.remove('active');
+                
+                // 显示成功模态框
+                successModal.classList.add('active');
+                
+                // 重置表单
+                contactForm.reset();
             })
             .catch(function(error) {
-                showNotification('提交失败，请稍后重试或直接联系我', 'error');
-            })
-            .finally(function() {
-                submitButton.innerHTML = originalText;
-                submitButton.disabled = false;
+                showNotification('提交失败，请直接联系我', 'error');
             });
+        });
+    }
+    
+    // 关闭成功模态框
+    if (closeSuccessModal) {
+        closeSuccessModal.addEventListener('click', function() {
+            successModal.classList.remove('active');
+            document.body.classList.remove('modal-open');
         });
     }
 
