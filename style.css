@@ -2287,8 +2287,8 @@ body.modal-closing::after {
 .payment-modal {
     background-color: var(--card-bg);
     border-radius: 20px;
-    width: 90%;
-    max-width: 500px;
+    width: 95%;
+    max-width: 700px;
     max-height: 90vh;
     overflow-y: auto;
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
@@ -2323,21 +2323,30 @@ body.modal-closing::after {
     padding: 25px;
 }
 
-.payment-info {
+.payment-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.payment-left {
     text-align: center;
-    margin-bottom: 25px;
-    padding-bottom: 25px;
+}
+
+.payment-info {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
     border-bottom: 1px solid var(--bg-dark);
 }
 
 .payment-info h3 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     color: var(--text-color);
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .payment-price {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--primary-color);
     margin-bottom: 5px;
@@ -2345,74 +2354,141 @@ body.modal-closing::after {
 
 .payment-description {
     color: var(--text-light);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
 }
 
 .payment-qrcodes {
-    margin-bottom: 25px;
+    margin-bottom: 15px;
 }
 
 .payment-scan-text {
-    text-align: center;
     color: var(--text-light);
-    margin-bottom: 15px;
-    font-size: 0.95rem;
-}
-
-.payment-qrcode-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-.payment-qrcode-item {
-    text-align: center;
-    background: var(--bg-light);
-    padding: 15px;
-    border-radius: 12px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
 }
 
 .payment-qrcode-img {
     width: 100%;
-    max-width: 180px;
+    max-width: 200px;
     height: auto;
     border-radius: 8px;
+    margin-bottom: 8px;
+}
+
+.payment-scan-hint {
+    display: block;
+    color: var(--text-light);
+    font-size: 0.8rem;
+}
+
+.payment-right {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.upload-section h4 {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin-bottom: 8px;
+}
+
+.upload-hint {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+}
+
+.upload-area {
+    border: 2px dashed var(--bg-dark);
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    background: var(--bg-light);
+}
+
+.upload-area:hover {
+    border-color: var(--primary-color);
+    background: rgba(255, 107, 157, 0.05);
+}
+
+.upload-area i {
+    font-size: 2rem;
+    color: var(--primary-color);
     margin-bottom: 10px;
 }
 
-.payment-qrcode-item span {
-    display: block;
+.upload-area p {
+    color: var(--text-light);
     font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--text-color);
+}
+
+.upload-preview {
+    text-align: center;
+}
+
+.upload-preview img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 2px solid var(--bg-dark);
+}
+
+.upload-remove {
+    background: none;
+    border: 1px solid var(--text-light);
+    color: var(--text-light);
+    padding: 5px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: var(--transition);
+}
+
+.upload-remove:hover {
+    border-color: #e74c3c;
+    color: #e74c3c;
 }
 
 .payment-actions {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-bottom: 15px;
 }
 
 .payment-actions .btn {
     width: 100%;
 }
 
-.payment-note {
-    text-align: center;
-    color: var(--text-light);
-    font-size: 0.8rem;
+.payment-actions .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .payment-disclaimer {
     text-align: center;
     color: #e74c3c;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 500;
-    margin-bottom: 10px;
     padding: 8px;
     background: rgba(231, 76, 60, 0.1);
     border-radius: 6px;
+    margin: 0;
+}
+
+/* 响应式 - 移动端 */
+@media (max-width: 768px) {
+    .payment-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .payment-modal {
+        width: 95%;
+        max-height: 95vh;
+    }
 }
 
 /* 付款成功模态框 */

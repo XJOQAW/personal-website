@@ -634,30 +634,46 @@
                 <button class="modal-close-btn" id="closePaymentModal">&times;</button>
             </div>
             <div class="payment-modal-body">
-                <div class="payment-info">
-                    <h3 id="paymentPackageName">套餐名称</h3>
-                    <div class="payment-price" id="paymentPrice">¥0</div>
-                    <p class="payment-description" id="paymentDescription">套餐描述</p>
-                </div>
-                <div class="payment-qrcodes">
-                    <p class="payment-scan-text">请扫描以下二维码完成付款（金额已锁定）</p>
-                    <div class="payment-qrcode-grid">
-                        <div class="payment-qrcode-item">
+                <div class="payment-content">
+                    <div class="payment-left">
+                        <div class="payment-info">
+                            <h3 id="paymentPackageName">套餐名称</h3>
+                            <div class="payment-price" id="paymentPrice">¥0</div>
+                            <p class="payment-description" id="paymentDescription">套餐描述</p>
+                        </div>
+                        <div class="payment-qrcodes">
+                            <p class="payment-scan-text">请扫描二维码完成付款</p>
                             <img src="images/pay-150.jpg" alt="收款码" class="payment-qrcode-img" id="paymentQRCode">
-                            <span>扫码支付</span>
+                            <span class="payment-scan-hint">扫码后请核对金额</span>
                         </div>
                     </div>
+                    <div class="payment-right">
+                        <div class="upload-section">
+                            <h4><i class="fas fa-camera"></i> 上传付款截图</h4>
+                            <p class="upload-hint">请上传付款成功截图，以便核实</p>
+                            <div class="upload-area" id="uploadArea">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>点击或拖拽图片到此处</p>
+                                <input type="file" id="paymentScreenshot" name="screenshot" accept="image/*" required hidden>
+                            </div>
+                            <div class="upload-preview" id="uploadPreview" style="display:none;">
+                                <img id="previewImage" src="" alt="预览">
+                                <button type="button" class="upload-remove" id="removeScreenshot">
+                                    <i class="fas fa-times"></i> 重新上传
+                                </button>
+                            </div>
+                        </div>
+                        <div class="payment-actions">
+                            <button class="btn btn-primary" id="confirmPayment" disabled>
+                                <i class="fas fa-check"></i> 已完成付款并提交
+                            </button>
+                            <button class="btn btn-secondary" id="cancelPayment">
+                                <i class="fas fa-arrow-left"></i> 返回修改
+                            </button>
+                        </div>
+                        <p class="payment-disclaimer">⚠️ 请确保已实际完成付款，未付款订单将视为无效</p>
+                    </div>
                 </div>
-                <div class="payment-actions">
-                    <button class="btn btn-primary" id="confirmPayment">
-                        <i class="fas fa-check"></i> 已完成付款
-                    </button>
-                    <button class="btn btn-secondary" id="cancelPayment">
-                        <i class="fas fa-arrow-left"></i> 返回修改
-                    </button>
-                </div>
-                <p class="payment-disclaimer">⚠️ 请确保已实际完成付款，未付款订单将视为无效</p>
-                <p class="payment-note">付款后请截图保存，以便核对</p>
             </div>
         </div>
     </div>

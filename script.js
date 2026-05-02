@@ -281,6 +281,7 @@ document.addEventListener('DOMContentLoaded', function() {
     };
     
     var currentFormData = null;
+    var screenshotUploaded = false;
 
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
@@ -307,9 +308,88 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('paymentQRCode').src = info.qrImage;
             }
             
+            // 重置上传状态
+            screenshotUploaded = false;
+            document.getElementById('uploadPreview').style.display = 'none';
+            document.getElementById('uploadArea').style.display = 'block';
+            document.getElementById('confirmPayment').disabled = true;
+            
             paymentModal.classList.add('active');
             document.body.classList.add('modal-open');
         });
+    }
+    
+    // 文件上传功能
+    var uploadArea = document.getElementById('uploadArea');
+    var paymentScreenshot = document.getElementById('paymentScreenshot');
+    var uploadPreview = document.getElementById('uploadPreview');
+    var previewImage = document.getElementById('previewImage');
+    var removeScreenshot = document.getElementById('removeScreenshot');
+    
+    if (uploadArea && paymentScreenshot) {
+        // 点击上传区域触发文件选择
+        uploadArea.addEventListener('click', function() {
+            paymentScreenshot.click();
+        });
+        
+        // 拖拽上传
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--primary-color)';
+            uploadArea.style.background = 'rgba(255, 107, 157, 0.1)';
+        });
+        
+        uploadArea.addEventListener('dragleave', function() {
+            uploadArea.style.borderColor = 'var(--bg-dark)';
+            uploadArea.style.background = 'var(--bg-light)';
+        });
+        
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--bg-dark)';
+            uploadArea.style.background = 'var(--bg-light)';
+            
+            if (e.dataTransfer.files.length > 0) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+        
+        // 文件选择变化
+        paymentScreenshot.addEventListener('change', function() {
+            if (this.files.length > 0) {
+                handleFile(this.files[0]);
+            }
+        });
+        
+        // 处理文件
+        function handleFile(file) {
+            if (!file.type.startsWith('image/')) {
+                showNotification('请上传图片文件', 'error');
+                return;
+            }
+            
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                uploadArea.style.display = 'none';
+                uploadPreview.style.display = 'block';
+                screenshotUploaded = true;
+                document.getElementById('confirmPayment').disabled = false;
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        // 移除截图
+        if (removeScreenshot) {
+            removeScreenshot.addEventListener('click', function() {
+                paymentScreenshot.value = '';
+                previewImage.src = '';
+                uploadArea.style.display = 'block';
+                uploadPreview.style.display = 'none';
+                screenshotUploaded = false;
+                document.getElementById('confirmPayment').disabled = true;
+            });
+        }
     }
     
     // 关闭支付模态框
@@ -331,6 +411,27 @@ document.addEventListener('DOMContentLoaded', function() {
     // 确认付款
     if (confirmPayment) {
         confirmPayment.addEventListener('click', function() {
+            if (!screenshotUploaded) {
+                showNotification('请先上传付款截图', 'error');
+                return;
+            }
+            
+            // 二次确认
+            var packageName = document.getElementById('paymentPackageName').textContent;
+            var price = document.getElementById('paymentPrice').textContent;
+            if (!confirm('请确认您已支付 ' + price + '（' + packageName + '）？')) {
+                return;
+            }
+            
+            confirmPayment.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 提交中...';
+            confirmPayment.disabled = true;
+            
+            // 添加截图到表单数据
+            var screenshotFile = document.getElementById('paymentScreenshot').files[0];
+            if (screenshotFile) {
+                currentFormData.append('screenshot', screenshotFile);
+            }
+            
             // 发送邮件通知
             fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
@@ -348,9 +449,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // 重置表单
                 contactForm.reset();
+                screenshotUploaded = false;
+                document.getElementById('uploadPreview').style.display = 'none';
+                document.getElementById('uploadArea').style.display = 'block';
             })
             .catch(function(error) {
                 showNotification('提交失败，请直接联系我', 'error');
+            })
+            .finally(function() {
+                confirmPayment.innerHTML = '<i class="fas fa-check"></i> 已完成付款并提交';
+                confirmPayment.disabled = false;
             });
         });
     }
