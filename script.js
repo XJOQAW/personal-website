@@ -253,6 +253,7 @@ function initTestimonialsModal() {
 
     // 打开模态框
     openBtn.addEventListener('click', function() {
+        modal.classList.remove('closing');
         modal.classList.add('active');
         document.body.classList.add('modal-open');
         document.body.classList.remove('modal-closing');
@@ -260,15 +261,20 @@ function initTestimonialsModal() {
 
     // 关闭模态框
     function closeModal() {
+        modal.classList.add('closing');
         document.body.classList.remove('modal-open');
         document.body.classList.add('modal-closing');
         setTimeout(function() {
             modal.classList.remove('active');
+            modal.classList.remove('closing');
             document.body.classList.remove('modal-closing');
-        }, 500);
+        }, 400);
     }
 
-    closeBtn.addEventListener('click', closeModal);
+    closeBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        closeModal();
+    });
 
     // 点击背景关闭
     modal.addEventListener('click', function(e) {

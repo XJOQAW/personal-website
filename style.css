@@ -1783,22 +1783,23 @@ html {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0);
+    background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
     z-index: 2000;
     display: flex;
     align-items: center;
     justify-content: center;
+    pointer-events: none;
     opacity: 0;
-    visibility: hidden;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.4s ease, backdrop-filter 0.4s ease;
 }
 
 .testimonials-modal-overlay.active {
     opacity: 1;
-    visibility: visible;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
+    pointer-events: auto;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
 }
 
 /* 评价模态框 */
@@ -1810,14 +1811,23 @@ html {
     max-height: 85vh;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
-    transform: scale(0.8) translateY(30px);
-    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
+    transform: scale(0.3);
+    opacity: 0;
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
     overflow: hidden;
 }
 
 .testimonials-modal-overlay.active .testimonials-modal {
-    transform: scale(1) translateY(0);
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* 关闭时的缩小动画 */
+.testimonials-modal-overlay.closing .testimonials-modal {
+    transform: scale(0.3);
+    opacity: 0;
+    transition: transform 0.35s cubic-bezier(0.55, 0, 1, 0.45), opacity 0.25s ease;
 }
 
 .testimonials-modal-header {
@@ -2039,15 +2049,18 @@ body.modal-open {
     overflow: hidden;
 }
 
-body.modal-open main {
-    filter: blur(5px);
-    transition: filter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
+body.modal-open > main,
+body.modal-open > nav,
+body.modal-open > footer {
+    filter: blur(8px);
+    transition: filter 0.4s ease;
 }
 
-body.modal-closing main {
+body.modal-closing > main,
+body.modal-closing > nav,
+body.modal-closing > footer {
     filter: blur(0px);
-    transition: filter 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: filter 0.4s ease;
 }
 
 /* 教程分享样式 */
