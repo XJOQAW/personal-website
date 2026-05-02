@@ -1212,9 +1212,15 @@ html {
     z-index: 0;
 }
 
+/* 打字机效果标题不可用 */
 .section {
     position: relative;
-    overflow: hidden;
+    overflow: visible;
+}
+
+.section > .container {
+    position: relative;
+    z-index: 1;
 }
 
 /* 技能进度条美化 */
@@ -1256,6 +1262,11 @@ html {
     text-align: center;
     background: linear-gradient(135deg, var(--bg-light) 0%, #fff5f8 100%);
     padding-top: 70px;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
 }
 
 .hero-title {
