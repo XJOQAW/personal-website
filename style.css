@@ -14,15 +14,6 @@
     transition: opacity 0.5s ease;
 }
 
-.splash-screen.hidden {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.splash-screen.gone {
-    display: none;
-}
-
 /* 相机背面整体 */
 .camera-back {
     display: flex;
@@ -31,6 +22,79 @@
     animation: cameraFloat 3s ease-in-out infinite;
     filter: drop-shadow(0 0 30px rgba(255, 107, 157, 0.3)) drop-shadow(0 30px 60px rgba(0, 0, 0, 0.5));
     position: relative;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform, opacity;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.camera-back::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    bottom: -5px;
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.2) 0%, rgba(196, 77, 255, 0.2) 100%);
+    border-radius: 15px;
+    z-index: -1;
+}
+
+@keyframes cameraFloat {
+    0%, 100% { transform: translateZ(0) translateY(0); }
+    50% { transform: translateZ(0) translateY(-10px); }
+}
+
+/* 按下快门效果 */
+.camera-back.pressed {
+    transform: translateZ(0) scale(0.96);
+    animation: none;
+    transition: transform 0.1s ease;
+}
+
+/* 显示屏变黑 */
+.camera-back.screen-black .screen-content {
+    background: #000 !important;
+    transition: background 0.2s ease;
+}
+
+.camera-back.screen-black .screen-content * {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* 旋转放大动画 - 只转一圈，无卡顿 */
+.camera-back.rotate {
+    animation: none;
+    animation: cameraRotate 1s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+@keyframes cameraRotate {
+    0% { 
+        transform: translateZ(0) scale(1) rotate(0deg); 
+        opacity: 1;
+    }
+    100% { 
+        transform: translateZ(0) scale(2.5) rotate(360deg); 
+        opacity: 0;
+    }
+}
+
+/* 开屏淡出 */
+.splash-screen.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.splash-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.splash-screen.gone {
+    display: none;
 }
 
 .camera-back::before {
