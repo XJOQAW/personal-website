@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>个人主页 - 二次元摄影师</title>
+    <title>二次元摄影师 - 用严谨丈量创作</title>
     <!-- 引入AOS.js用于滚动动画 -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <!-- 引入Google字体 -->
@@ -35,94 +35,307 @@
 
     <!-- 主页内容 -->
     <main>
-        <!-- 自我介绍部分 -->
+        <!-- 英雄区域 - 简洁设计 -->
+        <section id="hero" class="section hero-section">
+            <div class="container">
+                <div class="hero-content" data-aos="fade-up">
+                    <h1 class="hero-title">用严谨丈量创作</h1>
+                    <p class="hero-subtitle">二次元人像摄影与后期艺术家</p>
+                    <div class="hero-buttons">
+                        <a href="#services" class="btn btn-primary">了解服务</a>
+                        <a href="portfolio.html" class="btn btn-secondary">查看作品</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 抽屉式自我介绍 -->
         <section id="about" class="section about-section">
             <div class="container">
-                <div class="about-content" data-aos="fade-up">
-                    <div class="about-text">
-                        <h1 class="section-title">你好，我是<span class="highlight">二次元摄影师</span></h1>
-                        <div class="about-description">
-                            <p><strong>关于我：用严谨丈量创作的二次元摄影师</strong></p>
-                            <p>在二次元人像摄影与后期的领域里，我始终相信，好作品是严密逻辑与感性审美的结合体。</p>
-                            
-                            <h4>从头部博主到个人约拍，始终如一的品控</h4>
-                            <p>在过往的实战中，我曾多次操刀百万级知名博主的视觉拍摄，也为无数热爱二次元的个体提供过定制化服务。跨越不同量级的合作经验，让我更懂得如何挖掘每一位出镜者特有的辨识度，也让我具备了应对各种复杂拍摄需求的能力与底气。</p>
-                            
-                            <h4>百分百的前置策划预案</h4>
-                            <p>我拒绝盲盒式的拍摄体验。为了最大限度保障产出质量，在正式开拍前，我会提供一份完整的拍摄策划案。将脑海中的构图、光影及潜在问题进行具象化前置，确保我们在按下第一次快门前，就已经对最终成片有了高度共识。</p>
-                            
-                            <h4>可控的现场情绪与极致的耐心</h4>
-                            <p>现场的变量很多，但我的创作情绪始终可控。我愿意倾注极大的耐心去打磨每一个快门瞬间，捕捉最细腻的情绪表达。我希望我的镜头不仅能输出优质的视觉画面，更能提供一种安定的情绪价值，让每一次合作都成为一次纯粹且享受的创作旅程。</p>
-                        </div>
-                        <div class="about-stats">
-                            <div class="stat-item" data-aos="fade-up" data-aos-delay="100">
-                                <span class="stat-number">5+</span>
-                                <span class="stat-label">年经验</span>
+                <div class="about-drawer" data-aos="fade-up">
+                    <button class="drawer-toggle" id="aboutDrawerToggle">
+                        <span class="drawer-icon"><i class="fas fa-user"></i></span>
+                        <span class="drawer-title">关于我</span>
+                        <span class="drawer-arrow"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                    <div class="drawer-content" id="aboutDrawerContent">
+                        <div class="about-content">
+                            <div class="about-text">
+                                <h3>用严谨丈量创作的二次元摄影师</h3>
+                                <p>在二次元人像摄影与后期的领域里，我始终相信，好作品是严密逻辑与感性审美的结合体。</p>
+                                
+                                <h4>从头部博主到个人约拍，始终如一的品控</h4>
+                                <p>在过往的实战中，我曾多次操刀百万级知名博主的视觉拍摄，也为无数热爱二次元的个体提供过定制化服务。跨越不同量级的合作经验，让我更懂得如何挖掘每一位出镜者特有的辨识度，也让我具备了应对各种复杂拍摄需求的能力与底气。</p>
+                                
+                                <h4>百分百的前置策划预案</h4>
+                                <p>我拒绝盲盒式的拍摄体验。为了最大限度保障产出质量，在正式开拍前，我会提供一份完整的拍摄策划案。将脑海中的构图、光影及潜在问题进行具象化前置，确保我们在按下第一次快门前，就已经对最终成片有了高度共识。</p>
+                                
+                                <h4>可控的现场情绪与极致的耐心</h4>
+                                <p>现场的变量很多，但我的创作情绪始终可控。我愿意倾注极大的耐心去打磨每一个快门瞬间，捕捉最细腻的情绪表达。我希望我的镜头不仅能输出优质的视觉画面，更能提供一种安定的情绪价值，让每一次合作都成为一次纯粹且享受的创作旅程。</p>
                             </div>
-                            <div class="stat-item" data-aos="fade-up" data-aos-delay="200">
-                                <span class="stat-number">200+</span>
-                                <span class="stat-label">完成项目</span>
+                            <div class="about-stats">
+                                <div class="stat-item">
+                                    <span class="stat-number">5+</span>
+                                    <span class="stat-label">年经验</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">200+</span>
+                                    <span class="stat-label">完成项目</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number">50+</span>
+                                    <span class="stat-label">满意客户</span>
+                                </div>
                             </div>
-                            <div class="stat-item" data-aos="fade-up" data-aos-delay="300">
-                                <span class="stat-number">50+</span>
-                                <span class="stat-label">满意客户</span>
-                            </div>
-                        </div>
-                        <a href="portfolio.html" class="btn btn-primary">查看我的作品</a>
-                    </div>
-                    <div class="about-image" data-aos="fade-left" data-aos-delay="200">
-                        <div class="image-placeholder">
-                            <i class="fas fa-camera"></i>
-                            <p>个人照片</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 技能专长部分 -->
-        <section id="skills" class="section skills-section">
+        <!-- 二次元风格功能按钮 -->
+        <section id="features" class="section features-section">
             <div class="container">
-                <h2 class="section-title" data-aos="fade-up">技能专长</h2>
-                <div class="skills-grid">
-                    <div class="skill-card" data-aos="fade-up" data-aos-delay="100">
-                        <div class="skill-icon">
-                            <i class="fas fa-camera-retro"></i>
+                <h2 class="section-title" data-aos="fade-up">我的服务</h2>
+                <div class="features-grid">
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="feature-icon">
+                            <div class="anime-character">📸</div>
                         </div>
-                        <h3 class="skill-title">二次元人像摄影</h3>
-                        <p class="skill-description">精通二次元人像拍摄，擅长捕捉角色神韵与情绪表达，具备丰富的头部博主合作经验</p>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="width: 95%"></div>
+                        <h3 class="feature-title">约拍咨询</h3>
+                        <p class="feature-description">了解您的需求，提供专业建议</p>
+                        <button class="feature-btn" data-target="contact">立即咨询</button>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="feature-icon">
+                            <div class="anime-character">🎨</div>
+                        </div>
+                        <h3 class="feature-title">查看作品</h3>
+                        <p class="feature-description">浏览我的摄影作品集</p>
+                        <a href="portfolio.html" class="feature-btn">浏览作品</a>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="feature-icon">
+                            <div class="anime-character">📋</div>
+                        </div>
+                        <h3 class="feature-title">服务流程</h3>
+                        <p class="feature-description">了解完整的拍摄流程</p>
+                        <button class="feature-btn" data-target="services">查看流程</button>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                        <div class="feature-icon">
+                            <div class="anime-character">💰</div>
+                        </div>
+                        <h3 class="feature-title">价格套餐</h3>
+                        <p class="feature-description">查看不同套餐的价格</p>
+                        <button class="feature-btn" data-target="pricing">查看价格</button>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+                        <div class="feature-icon">
+                            <div class="anime-character">⭐</div>
+                        </div>
+                        <h3 class="feature-title">客户评价</h3>
+                        <p class="feature-description">看看客户的反馈</p>
+                        <button class="feature-btn" data-target="testimonials">查看评价</button>
+                    </div>
+                    <div class="feature-card" data-aos="fade-up" data-aos-delay="600">
+                        <div class="feature-icon">
+                            <div class="anime-character">📚</div>
+                        </div>
+                        <h3 class="feature-title">教程分享</h3>
+                        <p class="feature-description">学习摄影和后期技巧</p>
+                        <button class="feature-btn" data-target="tutorials">查看教程</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 服务流程部分 -->
+        <section id="services" class="section services-section">
+            <div class="container">
+                <h2 class="section-title" data-aos="fade-up">服务流程</h2>
+                <div class="services-timeline">
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="100">
+                        <div class="timeline-number">1</div>
+                        <div class="timeline-content">
+                            <h3>咨询沟通</h3>
+                            <p>了解客户需求，确定拍摄风格</p>
                         </div>
                     </div>
-                    <div class="skill-card" data-aos="fade-up" data-aos-delay="200">
-                        <div class="skill-icon">
-                            <i class="fas fa-magic"></i>
-                        </div>
-                        <h3 class="skill-title">后期处理与调色</h3>
-                        <p class="skill-description">熟练使用Photoshop、Lightroom等软件，擅长二次元风格调色、精修与创意合成</p>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="width: 90%"></div>
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="200">
+                        <div class="timeline-number">2</div>
+                        <div class="timeline-content">
+                            <h3>方案策划</h3>
+                            <p>提供拍摄策划方案，包括场地、服装、道具等</p>
                         </div>
                     </div>
-                    <div class="skill-card" data-aos="fade-up" data-aos-delay="300">
-                        <div class="skill-icon">
-                            <i class="fas fa-palette"></i>
-                        </div>
-                        <h3 class="skill-title">色彩理论与审美</h3>
-                        <p class="skill-description">深入理解色彩心理学，能够通过色彩传达情感，具备独特的二次元美学视角</p>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="width: 85%"></div>
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="300">
+                        <div class="timeline-number">3</div>
+                        <div class="timeline-content">
+                            <h3>拍摄执行</h3>
+                            <p>专业拍摄，确保质量</p>
                         </div>
                     </div>
-                    <div class="skill-card" data-aos="fade-up" data-aos-delay="400">
-                        <div class="skill-icon">
-                            <i class="fas fa-lightbulb"></i>
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="400">
+                        <div class="timeline-number">4</div>
+                        <div class="timeline-content">
+                            <h3>后期处理</h3>
+                            <p>精修调色，创意合成</p>
                         </div>
-                        <h3 class="skill-title">策划与沟通</h3>
-                        <p class="skill-description">提供完整的拍摄策划方案，注重前期沟通，确保拍摄过程高效顺畅</p>
-                        <div class="skill-bar">
-                            <div class="skill-progress" style="width: 80%"></div>
+                    </div>
+                    <div class="timeline-item" data-aos="fade-up" data-aos-delay="500">
+                        <div class="timeline-number">5</div>
+                        <div class="timeline-content">
+                            <h3>交付成品</h3>
+                            <p>提供可修改的高清成品，老师可做自己的风格化调整</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 价格套餐部分 -->
+        <section id="pricing" class="section pricing-section">
+            <div class="container">
+                <h2 class="section-title" data-aos="fade-up">价格套餐</h2>
+                <div class="pricing-grid">
+                    <div class="pricing-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="pricing-header">
+                            <h3 class="pricing-title">基础套餐</h3>
+                            <div class="pricing-price">¥999</div>
+                            <div class="pricing-description">适合个人约拍</div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> 2小时拍摄时间</li>
+                            <li><i class="fas fa-check"></i> 1套服装造型</li>
+                            <li><i class="fas fa-check"></i> 20张精修照片</li>
+                            <li><i class="fas fa-check"></i> 基础后期处理</li>
+                            <li><i class="fas fa-check"></i> 3个工作日内交付</li>
+                        </ul>
+                        <button class="btn btn-primary pricing-btn">选择套餐</button>
+                    </div>
+                    <div class="pricing-card featured" data-aos="fade-up" data-aos-delay="200">
+                        <div class="pricing-badge">推荐</div>
+                        <div class="pricing-header">
+                            <h3 class="pricing-title">标准套餐</h3>
+                            <div class="pricing-price">¥1999</div>
+                            <div class="pricing-description">适合深度创作</div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> 4小时拍摄时间</li>
+                            <li><i class="fas fa-check"></i> 2套服装造型</li>
+                            <li><i class="fas fa-check"></i> 40张精修照片</li>
+                            <li><i class="fas fa-check"></i> 高级后期处理</li>
+                            <li><i class="fas fa-check"></i> 创意合成效果</li>
+                            <li><i class="fas fa-check"></i> 5个工作日内交付</li>
+                        </ul>
+                        <button class="btn btn-primary pricing-btn">选择套餐</button>
+                    </div>
+                    <div class="pricing-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="pricing-header">
+                            <h3 class="pricing-title">高级套餐</h3>
+                            <div class="pricing-price">¥3999</div>
+                            <div class="pricing-description">适合商业合作</div>
+                        </div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check"></i> 全天拍摄时间</li>
+                            <li><i class="fas fa-check"></i> 3套服装造型</li>
+                            <li><i class="fas fa-check"></i> 80张精修照片</li>
+                            <li><i class="fas fa-check"></i> 专业后期处理</li>
+                            <li><i class="fas fa-check"></i> 创意合成效果</li>
+                            <li><i class="fas fa-check"></i> 场地布置指导</li>
+                            <li><i class="fas fa-check"></i> 7个工作日内交付</li>
+                        </ul>
+                        <button class="btn btn-primary pricing-btn">选择套餐</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 客户评价部分 -->
+        <section id="testimonials" class="section testimonials-section">
+            <div class="container">
+                <h2 class="section-title" data-aos="fade-up">客户评价</h2>
+                <div class="testimonials-slider">
+                    <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="testimonial-content">
+                            <p>"摄影师非常专业，从前期沟通到后期修图都很细心。拍出来的效果比我想象的还要好，完全还原了我想要的角色感觉！"</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👩</div>
+                            <div class="author-info">
+                                <h4>小樱</h4>
+                                <span>cosplay爱好者</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="testimonial-content">
+                            <p>"合作过很多摄影师，这位是最有耐心的。拍摄前提供了详细的策划方案，拍摄过程中不断沟通调整，最终效果非常满意。"</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👨</div>
+                            <div class="author-info">
+                                <h4>动漫博主小明</h4>
+                                <span>百万粉丝博主</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="testimonial-content">
+                            <p>"后期处理能力很强，能把普通的照片变成艺术品。而且交付的成品还可以自己调整，非常贴心。"</p>
+                        </div>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">👩</div>
+                            <div class="author-info">
+                                <h4>二次元爱好者</h4>
+                                <span>个人约拍客户</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 教程分享部分 -->
+        <section id="tutorials" class="section tutorials-section">
+            <div class="container">
+                <h2 class="section-title" data-aos="fade-up">教程分享</h2>
+                <div class="tutorials-grid">
+                    <div class="tutorial-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="tutorial-image">
+                            <div class="image-placeholder">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                        </div>
+                        <div class="tutorial-content">
+                            <h3>二次元人像拍摄技巧</h3>
+                            <p>学习如何捕捉角色神韵，拍出有灵魂的二次元人像</p>
+                            <button class="btn btn-secondary">阅读教程</button>
+                        </div>
+                    </div>
+                    <div class="tutorial-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="tutorial-image">
+                            <div class="image-placeholder">
+                                <i class="fas fa-magic"></i>
+                            </div>
+                        </div>
+                        <div class="tutorial-content">
+                            <h3>后期调色基础教程</h3>
+                            <p>掌握二次元风格调色技巧，让照片更有氛围感</p>
+                            <button class="btn btn-secondary">阅读教程</button>
+                        </div>
+                    </div>
+                    <div class="tutorial-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="tutorial-image">
+                            <div class="image-placeholder">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                        </div>
+                        <div class="tutorial-content">
+                            <h3>拍摄策划方案制作</h3>
+                            <p>学习如何制作完整的拍摄策划方案</p>
+                            <button class="btn btn-secondary">阅读教程</button>
                         </div>
                     </div>
                 </div>
@@ -149,6 +362,20 @@
                                 <p><a href="https://www.douyin.com/user/MS4wLjABAAAA1R_6aqng4qj4f9OXLkgdyWPbxn-EnNk16b9Oz66aQnE-h29bpFbJYI4jKGm5RnkF?from_tab_name=main" target="_blank" rel="noopener noreferrer">YFTX0000</a></p>
                             </div>
                         </div>
+                        <div class="contact-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h3>工作时间</h3>
+                                <p>周一至周日 9:00-21:00</p>
+                            </div>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h3>服务范围</h3>
+                                <p>全国可飞（需报销差旅）</p>
+                            </div>
+                        </div>
                     </div>
                     <div class="contact-form" data-aos="fade-left">
                         <form id="contactForm" action="https://formspree.io/f/your-form-id" method="POST">
@@ -159,12 +386,18 @@
                                 <input type="email" name="email" placeholder="您的邮箱" required>
                             </div>
                             <div class="form-group">
-                                <input type="text" name="subject" placeholder="主题">
+                                <select name="service" required>
+                                    <option value="">选择服务类型</option>
+                                    <option value="portrait">人像摄影</option>
+                                    <option value="cosplay">cosplay拍摄</option>
+                                    <option value="commercial">商业合作</option>
+                                    <option value="other">其他</option>
+                                </select>
                             </div>
                             <div class="form-group">
-                                <textarea name="message" placeholder="您的消息" rows="5" required></textarea>
+                                <textarea name="message" placeholder="请描述您的需求" rows="5" required></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">发送消息</button>
+                            <button type="submit" class="btn btn-primary">发送咨询</button>
                         </form>
                     </div>
                 </div>
@@ -184,7 +417,7 @@
                 </div>
                 <div class="footer-social">
                     <a href="#"><i class="fab fa-weixin"></i></a>
-                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.douyin.com/user/MS4wLjABAAAA1R_6aqng4qj4f9OXLkgdyWPbxn-EnNk16b9Oz66aQnE-h29bpFbJYI4jKGm5RnkF?from_tab_name=main" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
             <div class="footer-bottom">

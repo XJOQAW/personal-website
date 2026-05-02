@@ -758,4 +758,182 @@ function initAnimeEffects() {
     document.head.appendChild(smoothScrollStyles);
     
     console.log('二次元风格交互效果初始化完成！');
+    
+    // 抽屉式自我介绍功能
+    initDrawers();
+    
+    // 果冻挤压动画
+    initJellyAnimations();
+    
+    // 功能按钮交互
+    initFeatureButtons();
+});
+
+// 抽屉式自我介绍功能
+function initDrawers() {
+    const drawerToggles = document.querySelectorAll('.drawer-toggle');
+    
+    drawerToggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target') || 'aboutDrawerContent';
+            const content = document.getElementById(targetId);
+            
+            if (content) {
+                // 切换active类
+                this.classList.toggle('active');
+                content.classList.toggle('active');
+                
+                // 添加果冻动画
+                this.classList.add('jelly-animation');
+                setTimeout(() => {
+                    this.classList.remove('jelly-animation');
+                }, 600);
+                
+                // 如果是打开抽屉，滚动到抽屉位置
+                if (content.classList.contains('active')) {
+                    setTimeout(() => {
+                        const drawerRect = this.getBoundingClientRect();
+                        const navHeight = document.querySelector('.navbar') ? document.querySelector('.navbar').offsetHeight : 0;
+                        const targetPosition = window.pageYOffset + drawerRect.top - navHeight - 20;
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }, 300);
+                }
+            }
+        });
+    });
 }
+
+// 果冻挤压动画
+function initJellyAnimations() {
+    // 为所有按钮添加果冻动画
+    const buttons = document.querySelectorAll('.btn, .feature-btn, .pricing-btn, .portfolio-btn');
+    
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            // 添加果冻动画类
+            this.classList.add('jelly-animation');
+            
+            // 动画结束后移除类
+            setTimeout(() => {
+                this.classList.remove('jelly-animation');
+            }, 600);
+        });
+        
+        // 鼠标悬停时的轻微果冻效果
+        button.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05)';
+            this.style.transition = 'transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+    });
+    
+    // 为卡片添加悬停果冻效果
+    const cards = document.querySelectorAll('.feature-card, .pricing-card, .testimonial-card, .tutorial-card');
+    
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-10px) scale(1.02)';
+            this.style.transition = 'transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+}
+
+// 功能按钮交互
+function initFeatureButtons() {
+    const featureButtons = document.querySelectorAll('.feature-btn[data-target]');
+    
+    featureButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+                // 添加果冻动画
+                this.classList.add('jelly-animation');
+                setTimeout(() => {
+                    this.classList.remove('jelly-animation');
+                }, 600);
+                
+                // 滚动到目标位置
+                const navHeight = document.querySelector('.navbar') ? document.querySelector('.navbar').offsetHeight : 0;
+                const targetPosition = targetElement.offsetTop - navHeight;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+                
+                // 如果目标是抽屉，打开它
+                if (targetElement.classList.contains('drawer-content')) {
+                    const toggle = document.querySelector(`[data-target="${targetId}"]`);
+                    if (toggle && !targetElement.classList.contains('active')) {
+                        toggle.click();
+                    }
+                }
+            }
+        });
+    });
+    
+    // 为价格套餐按钮添加点击效果
+    const pricingButtons = document.querySelectorAll('.pricing-btn');
+    
+    pricingButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // 滚动到联系表单
+            const contactSection = document.getElementById('contact');
+            if (contactSection) {
+                const navHeight = document.querySelector('.navbar') ? document.querySelector('.navbar').offsetHeight : 0;
+                const targetPosition = contactSection.offsetTop - navHeight;
+                
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+                
+                // 在联系表单中预填套餐信息
+                const serviceSelect = document.querySelector('select[name="service"]');
+                const messageTextarea = document.querySelector('textarea[name="message"]');
+                
+                if (serviceSelect) {
+                    serviceSelect.value = 'portrait';
+                }
+                
+                if (messageTextarea) {
+                    const pricingCard = this.closest('.pricing-card');
+                    const packageName = pricingCard.querySelector('.pricing-title').textContent;
+                    const packagePrice = pricingCard.querySelector('.pricing-price').textContent;
+                    messageTextarea.value = `我想咨询${packageName}（${packagePrice}），请提供更多信息。`;
+                }
+            }
+        });
+    });
+}
+
+// 页面加载动画
+window.addEventListener('load', function() {
+    // 隐藏加载动画（如果有的话）
+    const loader = document.querySelector('.loading');
+    if (loader) {
+        loader.classList.add('hidden');
+    }
+    
+    // 触发初始动画
+    document.body.classList.add('loaded');
+    
+    // 添加页面加载完成的果冻效果
+    document.body.classList.add('jelly-animation');
+    setTimeout(() => {
+        document.body.classList.remove('jelly-animation');
+    }, 600);
+});
