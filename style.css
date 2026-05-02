@@ -8,11 +8,11 @@
     /* 中性色 */
     --text-color: #333333;
     --text-light: #666666;
-    --bg-color: #ffffff;
-    --bg-light: #f8f9fa;
-    --bg-dark: #e9ecef;
-    --card-bg: #ffffff;
-    --shadow-color: rgba(0, 0, 0, 0.1);
+    --bg-color: #fff5f8;
+    --bg-light: #ffe8ef;
+    --bg-dark: #ffd6e0;
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --shadow-color: rgba(255, 107, 157, 0.15);
     
     /* 间距 */
     --section-padding: 80px 0;
@@ -27,13 +27,13 @@
 
 /* 暗色模式变量 */
 [data-theme="dark"] {
-    --text-color: #f8f9fa;
-    --text-light: #adb5bd;
-    --bg-color: #1a1a2e;
-    --bg-light: #16213e;
-    --bg-dark: #0f3460;
-    --card-bg: #16213e;
-    --shadow-color: rgba(0, 0, 0, 0.3);
+    --text-color: #f0e6f6;
+    --text-light: #b8a9c8;
+    --bg-color: #0d0b1a;
+    --bg-light: #1a1530;
+    --bg-dark: #2d2550;
+    --card-bg: rgba(26, 21, 48, 0.95);
+    --shadow-color: rgba(75, 0, 130, 0.3);
 }
 
 /* 重置样式 */
@@ -53,6 +53,46 @@ body {
     background-color: var(--bg-color);
     line-height: 1.6;
     transition: var(--transition);
+    overflow-x: hidden;
+}
+
+/* 背景动画 - 浅色模式 */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(255, 107, 157, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(196, 77, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(69, 183, 209, 0.08) 0%, transparent 50%);
+    z-index: -1;
+    animation: bgFloat 15s ease-in-out infinite;
+}
+
+/* 背景动画 - 深色模式 */
+[data-theme="dark"] body::before {
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(75, 0, 130, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 107, 157, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(69, 183, 209, 0.1) 0%, transparent 50%);
+}
+
+@keyframes bgFloat {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    25% {
+        transform: translate(-2%, -2%) scale(1.02);
+    }
+    50% {
+        transform: translate(2%, 1%) scale(0.98);
+    }
+    75% {
+        transform: translate(-1%, 2%) scale(1.01);
+    }
 }
 
 /* 容器 */
@@ -163,6 +203,71 @@ body {
 /* 通用部分样式 */
 .section {
     padding: var(--section-padding);
+    position: relative;
+}
+
+/* 装饰性emoji - 选中的section角落添加 */
+.section:nth-child(3)::before,
+.section:nth-child(5)::before,
+.section:nth-child(7)::before {
+    content: '✨';
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    animation: emojiFloat 3s ease-in-out infinite;
+}
+
+.section:nth-child(3)::after,
+.section:nth-child(5)::after,
+.section:nth-child(7)::after {
+    content: '🌸';
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.5rem;
+    opacity: 0.6;
+    animation: emojiFloat 3s ease-in-out infinite reverse;
+}
+
+[data-theme="dark"] .section:nth-child(3)::before,
+[data-theme="dark"] .section:nth-child(5)::before,
+[data-theme="dark"] .section:nth-child(7)::before {
+    content: '🌙';
+}
+
+[data-theme="dark"] .section:nth-child(3)::after,
+[data-theme="dark"] .section:nth-child(5)::after,
+[data-theme="dark"] .section:nth-child(7)::after {
+    content: '⭐';
+}
+
+@keyframes emojiFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-10px) rotate(10deg);
+    }
+}
+
+/* 卡片角落装饰 */
+.feature-card:nth-child(1)::before,
+.pricing-card:nth-child(2)::before,
+.tutorial-card:nth-child(1)::before {
+    content: '💫';
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 1rem;
+    z-index: 1;
+}
+
+[data-theme="dark"] .feature-card:nth-child(1)::before,
+[data-theme="dark"] .pricing-card:nth-child(2)::before,
+[data-theme="dark"] .tutorial-card:nth-child(1)::before {
+    content: '🌟';
 }
 
 .section-title {
@@ -1283,8 +1388,39 @@ html {
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: linear-gradient(135deg, var(--bg-light) 0%, #fff5f8 100%);
     padding-top: 70px;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 30% 40%, rgba(255, 107, 157, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(196, 77, 255, 0.15) 0%, transparent 50%);
+    animation: heroGlow 8s ease-in-out infinite;
+}
+
+[data-theme="dark"] .hero-section::before {
+    background: 
+        radial-gradient(circle at 30% 40%, rgba(75, 0, 130, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(255, 107, 157, 0.2) 0%, transparent 50%);
+}
+
+@keyframes heroGlow {
+    0%, 100% {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
 }
 
 .hero-content {
@@ -1419,7 +1555,26 @@ html {
 
 /* 二次元风格功能按钮样式 */
 .features-section {
-    background: linear-gradient(135deg, var(--bg-light) 0%, #f0f8ff 100%);
+    position: relative;
+}
+
+.features-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 10% 50%, rgba(255, 107, 157, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 90% 50%, rgba(69, 183, 209, 0.08) 0%, transparent 40%);
+    z-index: -1;
+}
+
+[data-theme="dark"] .features-section::before {
+    background: 
+        radial-gradient(circle at 10% 50%, rgba(75, 0, 130, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 50%, rgba(255, 107, 157, 0.08) 0%, transparent 40%);
 }
 
 .features-grid {
@@ -1531,6 +1686,24 @@ html {
 /* 服务流程时间线样式 */
 .services-section {
     background-color: var(--bg-color);
+    position: relative;
+}
+
+.services-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 50% 20%, rgba(255, 107, 157, 0.06) 0%, transparent 50%);
+    z-index: -1;
+}
+
+[data-theme="dark"] .services-section::before {
+    background: 
+        radial-gradient(circle at 50% 20%, rgba(75, 0, 130, 0.12) 0%, transparent 50%);
 }
 
 .services-timeline {
@@ -1603,7 +1776,26 @@ html {
 
 /* 价格套餐样式 */
 .pricing-section {
-    background: linear-gradient(135deg, var(--bg-light) 0%, #fff0f5 100%);
+    position: relative;
+}
+
+.pricing-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 30% 70%, rgba(255, 107, 157, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 70% 30%, rgba(196, 77, 255, 0.06) 0%, transparent 50%);
+    z-index: -1;
+}
+
+[data-theme="dark"] .pricing-section::before {
+    background: 
+        radial-gradient(circle at 30% 70%, rgba(75, 0, 130, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 70% 30%, rgba(255, 107, 157, 0.06) 0%, transparent 50%);
 }
 
 .pricing-grid {
@@ -2128,7 +2320,26 @@ body.modal-closing::after {
 
 /* 教程分享样式 */
 .tutorials-section {
-    background: linear-gradient(135deg, var(--bg-light) 0%, #f0f8ff 100%);
+    position: relative;
+}
+
+.tutorials-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 80% 20%, rgba(69, 183, 209, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 20% 80%, rgba(255, 107, 157, 0.06) 0%, transparent 50%);
+    z-index: -1;
+}
+
+[data-theme="dark"] .tutorials-section::before {
+    background: 
+        radial-gradient(circle at 80% 20%, rgba(75, 0, 130, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 20% 80%, rgba(69, 183, 209, 0.06) 0%, transparent 50%);
 }
 
 .tutorials-grid {

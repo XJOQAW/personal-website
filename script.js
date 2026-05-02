@@ -14,6 +14,38 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, 2000);
 
+    // 视差滚动效果
+    window.addEventListener('scroll', function() {
+        var scrolled = window.pageYOffset;
+        var parallaxElements = document.querySelectorAll('.hero-content, .section-title');
+        
+        parallaxElements.forEach(function(el, index) {
+            var speed = 0.3 + (index * 0.1);
+            var yPos = -(scrolled * speed);
+            el.style.transform = 'translateY(' + yPos + 'px)';
+        });
+    });
+
+    // 元素飘入动画 - 为卡片添加
+    var animatedElements = document.querySelectorAll('.feature-card, .pricing-card, .testimonial-card, .tutorial-card, .timeline-item');
+    
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0) scale(1)';
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    animatedElements.forEach(function(el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px) scale(0.95)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+
     // 暗色模式切换
     const themeToggle = document.getElementById('themeToggle');
     const html = document.documentElement;
