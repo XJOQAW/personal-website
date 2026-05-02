@@ -184,6 +184,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (pricingCard) {
                     var packageName = pricingCard.querySelector('.pricing-title').textContent;
                     var packagePrice = pricingCard.querySelector('.pricing-price').textContent;
+                    
+                    // 自动选择套餐
+                    var packageSelect = document.querySelector('select[name="package"]');
+                    if (packageSelect) {
+                        var packageValue = packageName + ' ' + packagePrice;
+                        for (var i = 0; i < packageSelect.options.length; i++) {
+                            if (packageSelect.options[i].value === packageValue) {
+                                packageSelect.selectedIndex = i;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    // 预填消息
                     var messageTextarea = document.querySelector('textarea[name="message"]');
                     if (messageTextarea) {
                         messageTextarea.value = '我想咨询' + packageName + '（' + packagePrice + '），请提供更多信息。';
