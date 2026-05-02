@@ -1,16 +1,107 @@
-// 开屏动画
+// 开屏动画 - 相机快门效果
 window.addEventListener('load', function() {
     var splashScreen = document.getElementById('splashScreen');
-    if (splashScreen) {
-        // 1.5秒后开始打开快门
-        setTimeout(function() {
-            splashScreen.classList.add('open');
-            // 动画结束后隐藏
-            setTimeout(function() {
-                splashScreen.classList.add('hidden');
-            }, 800);
-        }, 1500);
+    var cameraBody = splashScreen ? splashScreen.querySelector('.camera-body') : null;
+    var titleWrap = splashScreen ? splashScreen.querySelector('.splash-title-wrap') : null;
+    var flash = splashScreen ? splashScreen.querySelector('.camera-flash') : null;
+    
+    if (!splashScreen || !cameraBody) return;
+    
+    // 检测设备类型
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    var isAndroid = /Android/.test(navigator.userAgent);
+    
+    // 创建快门音效（使用Web Audio API，兼容性更好）
+    var audioContext = null;
+    
+    function playShutterSound() {
+        try {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            
+            // 创建快门音效
+            var oscillator = audioContext.createOscillator();
+            var gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.1);
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.15);
+        } catch (e) {
+            console.log('音效播放失败，继续动画');
+        }
     }
+    
+    // 动画序列
+    function startAnimation() {
+        // 1. 显示标题
+        setTimeout(function() {
+            if (titleWrap) titleWrap.classList.add('show');
+        }, 300);
+        
+        // 2. 按下快门效果
+        setTimeout(function() {
+            cameraBody.classList.add('pressed');
+            if (flash) flash.classList.add('flash');
+            playShutterSound();
+        }, 1200);
+        
+        // 3. 黑屏闪烁
+        setTimeout(function() {
+            splashScreen.classList.add('flash-black');
+            cameraBody.classList.remove('pressed');
+        }, 1500);
+        
+        // 4. 旋转放大消失
+        setTimeout(function() {
+            splashScreen.classList.remove('flash-black');
+            cameraBody.classList.add('rotate');
+        }, 1800);
+        
+        // 5. 隐藏开屏
+        setTimeout(function() {
+            splashScreen.classList.add('hidden');
+            setTimeout(function() {
+                splashScreen.classList.add('gone');
+            }, 500);
+        }, 2500);
+    }
+    
+    // 处理用户交互（解决iOS/Android自动播放限制）
+    function handleFirstInteraction() {
+        // 初始化音频上下文
+        if (!audioContext) {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        
+        // 开始动画
+        startAnimation();
+        
+        // 移除事件监听
+        document.removeEventListener('touchstart', handleFirstInteraction);
+        document.removeEventListener('click', handleFirstInteraction);
+        document.removeEventListener('scroll', handleFirstInteraction);
+    }
+    
+    // 监听用户首次交互
+    document.addEventListener('touchstart', handleFirstInteraction, { once: true });
+    document.addEventListener('click', handleFirstInteraction, { once: true });
+    document.addEventListener('scroll', handleFirstInteraction, { once: true });
+    
+    // 如果3秒内没有交互，自动开始动画（无音效）
+    setTimeout(function() {
+        if (!splashScreen.classList.contains('hidden')) {
+            startAnimation();
+        }
+    }, 3000);
 });
 
 document.addEventListener('DOMContentLoaded', function() {

@@ -13,16 +13,25 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- 开屏动画 -->
+    <!-- 开屏动画 - 相机快门效果 -->
     <div class="splash-screen" id="splashScreen">
-        <div class="splash-shutter splash-shutter-top"></div>
-        <div class="splash-shutter splash-shutter-bottom"></div>
-        <div class="splash-content">
-            <div class="splash-icon">📸</div>
+        <div class="camera-body">
+            <div class="camera-lens">
+                <div class="lens-inner"></div>
+            </div>
+            <div class="camera-flash"></div>
+            <div class="camera-text">📸</div>
+        </div>
+        <div class="splash-title-wrap">
             <h1 class="splash-title">一方通行</h1>
-            <p class="splash-subtitle">二次元摄影</p>
+            <p class="splash-subtitle">摄影 · 创作 · 美好</p>
         </div>
     </div>
+
+    <!-- 快门音效 -->
+    <audio id="shutterSound" preload="auto">
+        <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=" type="audio/wav">
+    </audio>
 
     <!-- 导航栏 -->
     <nav class="navbar">
