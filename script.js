@@ -1,3 +1,18 @@
+// 开屏动画
+window.addEventListener('load', function() {
+    var splashScreen = document.getElementById('splashScreen');
+    if (splashScreen) {
+        // 1.5秒后开始打开快门
+        setTimeout(function() {
+            splashScreen.classList.add('open');
+            // 动画结束后隐藏
+            setTimeout(function() {
+                splashScreen.classList.add('hidden');
+            }, 800);
+        }, 1500);
+    }
+});
+
 document.addEventListener('DOMContentLoaded', function() {
     AOS.init({
         duration: 800,
@@ -14,16 +29,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, 2000);
 
-    // 视差滚动效果
+    // 视差滚动效果 - 只对hero区域生效
     window.addEventListener('scroll', function() {
         var scrolled = window.pageYOffset;
-        var parallaxElements = document.querySelectorAll('.hero-content, .section-title');
+        var heroContent = document.querySelector('.hero-content');
         
-        parallaxElements.forEach(function(el, index) {
-            var speed = 0.3 + (index * 0.1);
-            var yPos = -(scrolled * speed);
-            el.style.transform = 'translateY(' + yPos + 'px)';
-        });
+        if (heroContent && scrolled < window.innerHeight) {
+            var yPos = -(scrolled * 0.3);
+            heroContent.style.transform = 'translateY(' + yPos + 'px)';
+        }
     });
 
     // 元素飘入动画 - 为卡片添加
