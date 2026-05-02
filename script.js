@@ -936,4 +936,97 @@ window.addEventListener('load', function() {
     setTimeout(() => {
         document.body.classList.remove('jelly-animation');
     }, 600);
+    
+    // 初始化悬停提示功能
+    initHoverTooltips();
 });
+
+// 悬停提示功能
+function initHoverTooltips() {
+    // 为抽屉按钮添加悬停提示
+    const drawerToggles = document.querySelectorAll('.drawer-toggle');
+    
+    drawerToggles.forEach(toggle => {
+        const tooltip = toggle.querySelector('.hover-tooltip');
+        if (tooltip) {
+            // 根据抽屉状态更新提示内容
+            const updateTooltipContent = () => {
+                const targetId = toggle.getAttribute('data-target') || 'aboutDrawerContent';
+                const content = document.getElementById(targetId);
+                
+                if (content) {
+                    if (content.classList.contains('active')) {
+                        tooltip.textContent = '点击收起详细内容';
+                    } else {
+                        // 获取抽屉内容的简略描述
+                        const contentText = content.textContent.trim();
+                        const shortDescription = contentText.substring(0, 50) + '...';
+                        tooltip.textContent = `点击展开查看: ${shortDescription}`;
+                    }
+                }
+            };
+            
+            // 初始更新
+            updateTooltipContent();
+            
+            // 监听抽屉状态变化
+            toggle.addEventListener('click', () => {
+                setTimeout(updateTooltipContent, 100);
+            });
+        }
+    });
+    
+    // 为联系方式链接添加悬停提示
+    const contactLinks = document.querySelectorAll('.contact-link');
+    
+    contactLinks.forEach(link => {
+        const tooltip = link.querySelector('.hover-tooltip');
+        if (tooltip) {
+            // 获取链接目标
+            const href = link.getAttribute('href');
+            if (href) {
+                // 根据链接类型设置不同的提示内容
+                if (href.includes('douyin.com')) {
+                    tooltip.textContent = '点击跳转到抖音主页';
+                } else if (href.includes('weixin')) {
+                    tooltip.textContent = '点击复制微信号';
+                } else {
+                    tooltip.textContent = '点击跳转到相关页面';
+                }
+            }
+        }
+    });
+    
+    // 为所有带悬停提示的元素添加鼠标事件
+    const elementsWithTooltips = document.querySelectorAll('[class*="hover-tooltip"]');
+    
+    elementsWithTooltips.forEach(element => {
+        const parent = element.parentElement;
+        if (parent) {
+            parent.addEventListener('mouseenter', () => {
+                // 确保提示在视口内
+                const tooltipRect = element.getBoundingClientRect();
+                const viewportWidth = window.innerWidth;
+                
+                if (tooltipRect.right > viewportWidth) {
+                    element.style.left = 'auto';
+                    element.style.right = '0';
+                    element.style.transform = 'none';
+                }
+                
+                if (tooltipRect.left < 0) {
+                    element.style.left = '0';
+                    element.style.right = 'auto';
+                    element.style.transform = 'none';
+                }
+            });
+            
+            parent.addEventListener('mouseleave', () => {
+                // 重置提示位置
+                element.style.left = '50%';
+                element.style.right = 'auto';
+                element.style.transform = 'translateX(-50%)';
+            });
+        }
+    });
+}
