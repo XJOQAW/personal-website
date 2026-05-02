@@ -119,6 +119,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, 2000);
 
+    // 一方通行标题动画 - 点击重播
+    var heroTitleWrap = document.getElementById('heroTitleWrap');
+    var heroTitle = document.getElementById('heroTitle');
+    
+    if (heroTitleWrap && heroTitle) {
+        heroTitleWrap.addEventListener('click', function() {
+            heroTitle.classList.remove('replay');
+            // 强制重排以重启动画
+            void heroTitle.offsetWidth;
+            heroTitle.classList.add('replay');
+            
+            // 动画结束后移除replay类
+            setTimeout(function() {
+                heroTitle.classList.remove('replay');
+            }, 1500);
+        });
+    }
+
     // 视差滚动效果 - 只对hero区域生效
     window.addEventListener('scroll', function() {
         var scrolled = window.pageYOffset;
