@@ -13,22 +13,40 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- 开屏动画 - 相机快门效果 -->
+    <!-- 开屏动画 - 现代相机背面 -->
     <div class="splash-screen" id="splashScreen">
-        <div class="camera-body">
-            <div class="camera-top">
-                <div class="camera-flash"></div>
-                <div class="camera-viewfinder"></div>
-            </div>
-            <div class="camera-lens-outer">
-                <div class="camera-lens-middle">
-                    <div class="camera-lens-inner">
-                        <div class="camera-lens-center"></div>
+        <div class="camera-back">
+            <!-- 左侧翻转屏 -->
+            <div class="camera-screen">
+                <div class="screen-content">
+                    <div class="screen-grid">
+                        <div class="grid-line h1"></div>
+                        <div class="grid-line h2"></div>
+                        <div class="grid-line v1"></div>
+                        <div class="grid-line v2"></div>
+                    </div>
+                    <div class="screen-focus">
+                        <div class="focus-point"></div>
+                    </div>
+                    <div class="screen-info">
+                        <span class="iso">ISO 400</span>
+                        <span class="aperture">f/2.8</span>
                     </div>
                 </div>
             </div>
-            <div class="camera-bottom">
-                <div class="camera-grip"></div>
+            <!-- 右侧机身 -->
+            <div class="camera-body-right">
+                <div class="camera-evf">
+                    <div class="evf-inner"></div>
+                </div>
+                <div class="camera-controls">
+                    <div class="control-dial"></div>
+                    <div class="control-buttons">
+                        <div class="btn-small"></div>
+                        <div class="btn-small"></div>
+                    </div>
+                </div>
+                <div class="camera-grip-right"></div>
             </div>
         </div>
         <div class="splash-title-wrap">
