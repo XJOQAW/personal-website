@@ -121,9 +121,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 var portfolioItem = this.closest('.portfolio-item');
                 var title = portfolioItem.querySelector('.portfolio-title').textContent;
                 var description = portfolioItem.querySelector('.portfolio-description').textContent;
+                var img = portfolioItem.querySelector('.portfolio-img');
+                var placeholder = portfolioItem.querySelector('.image-placeholder');
 
                 modal.querySelector('.modal-title').textContent = title;
                 modal.querySelector('.modal-description').textContent = description;
+                
+                // 设置图片
+                var modalImg = modal.querySelector('.modal-img');
+                if (img) {
+                    modalImg.src = img.src;
+                    modalImg.alt = title;
+                    modalImg.style.display = 'block';
+                } else if (placeholder) {
+                    // 如果是占位符，显示占位符信息
+                    modalImg.src = '';
+                    modalImg.alt = placeholder.querySelector('p').textContent;
+                    modalImg.style.display = 'none';
+                }
+                
                 modal.style.display = 'flex';
                 document.body.style.overflow = 'hidden';
             });
