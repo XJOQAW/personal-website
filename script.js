@@ -426,11 +426,24 @@ document.addEventListener('DOMContentLoaded', function() {
             confirmPayment.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 提交中...';
             confirmPayment.disabled = true;
             
+            // 记录付款时间
+            var now = new Date();
+            var paymentTimeStr = now.getFullYear() + '-' + 
+                String(now.getMonth() + 1).padStart(2, '0') + '-' + 
+                String(now.getDate()).padStart(2, '0') + ' ' + 
+                String(now.getHours()).padStart(2, '0') + ':' + 
+                String(now.getMinutes()).padStart(2, '0') + ':' + 
+                String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('paymentTime').value = paymentTimeStr;
+            
             // 添加截图到表单数据
             var screenshotFile = document.getElementById('paymentScreenshot').files[0];
             if (screenshotFile) {
                 currentFormData.append('screenshot', screenshotFile);
             }
+            
+            // 更新隐藏字段
+            currentFormData.set('付款时间', paymentTimeStr);
             
             // 发送邮件通知
             fetch('https://api.web3forms.com/submit', {
