@@ -452,6 +452,12 @@
                             <input type="hidden" name="subject" value="一方通行 - 新预约咨询">
                             <input type="hidden" name="from_name" value="一方通行网站">
                             <input type="hidden" name="付款时间" id="paymentTime" value="">
+                            <!-- 安全：蜜罐字段 - 正常用户看不到，机器人会自动填写 -->
+                            <div style="position:absolute;left:-9999px;" aria-hidden="true">
+                                <input type="text" name="honeypot" tabindex="-1" autocomplete="off">
+                            </div>
+                            <!-- 安全：记录表单加载时间 -->
+                            <input type="hidden" name="formLoadTime" id="formLoadTime" value="">
                             <div class="form-group">
                                 <input type="text" name="CN" placeholder="您的CN" required>
                             </div>
@@ -663,6 +669,11 @@
                                     <i class="fas fa-times"></i> 重新上传
                                 </button>
                             </div>
+                        </div>
+                        <div class="transaction-section">
+                            <h4><i class="fas fa-receipt"></i> 交易单号</h4>
+                            <p class="upload-hint">填写微信/支付宝交易单号，便于核实</p>
+                            <input type="text" name="交易单号" id="transactionId" placeholder="请输入交易单号" required>
                         </div>
                         <div class="payment-actions">
                             <button class="btn btn-primary" id="confirmPayment" disabled>

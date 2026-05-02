@@ -270,6 +270,17 @@ document.addEventListener('DOMContentLoaded', function() {
     var cancelPayment = document.getElementById('cancelPayment');
     var closeSuccessModal = document.getElementById('closeSuccessModal');
     
+    // 安全：记录表单加载时间
+    var formLoadTime = Date.now();
+    var formLoadTimeField = document.getElementById('formLoadTime');
+    if (formLoadTimeField) {
+        formLoadTimeField.value = formLoadTime;
+    }
+    
+    // 安全：频率限制（5分钟内不能重复提交）
+    var lastSubmitTime = localStorage.getItem('lastSubmitTime') || 0;
+    var SUBMIT_COOLDOWN = 5 * 60 * 1000; // 5分钟
+    
     // 套餐信息
     var packageInfo = {
         '白棚正片-基础套餐 ¥150': { name: '白棚正片-基础套餐', price: '¥150', description: '2小时拍摄，1套服装造型，1张精修', qrImage: 'images/pay-150.jpg' },
@@ -287,6 +298,28 @@ document.addEventListener('DOMContentLoaded', function() {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // 安全检查1：蜜罐字段 - 如果被填写说明是机器人
+            var honeypot = contactForm.querySelector('input[name="honeypot"]');
+            if (honeypot && honeypot.value) {
+                showNotification('提交失败，请重试', 'error');
+                return;
+            }
+            
+            // 安全检查2：时间检测 - 表单加载后3秒内提交说明是机器人
+            var currentTime = Date.now();
+            var timeDiff = currentTime - formLoadTime;
+            if (timeDiff < 3000) {
+                showNotification('请仔细填写信息后再提交', 'error');
+                return;
+            }
+            
+            // 安全检查3：频率限制 - 5分钟内不能重复提交
+            if (currentTime - lastSubmitTime < SUBMIT_COOLDOWN) {
+                var remainingTime = Math.ceil((SUBMIT_COOLDOWN - (currentTime - lastSubmitTime)) / 1000);
+                showNotification('请等待' + remainingTime + '秒后再提交', 'error');
+                return;
+            }
+            
             // 获取套餐信息
             var packageSelect = contactForm.querySelector('select[name="套餐选择"]');
             var selectedPackage = packageSelect.value;
@@ -295,6 +328,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 showNotification('请选择套餐后再提交', 'error');
                 return;
             }
+            
+            // 更新最后提交时间
+            lastSubmitTime = currentTime;
+            localStorage.setItem('lastSubmitTime', currentTime);
             
             // 保存表单数据
             currentFormData = new FormData(contactForm);
@@ -413,6 +450,13 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmPayment.addEventListener('click', function() {
             if (!screenshotUploaded) {
                 showNotification('请先上传付款截图', 'error');
+                return;
+            }
+            
+            // 验证交易单号
+            var transactionId = document.getElementById('transactionId').value.trim();
+            if (!transactionId) {
+                showNotification('请填写交易单号', 'error');
                 return;
             }
             

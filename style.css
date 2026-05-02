@@ -2453,6 +2453,34 @@ body.modal-closing::after {
     color: #e74c3c;
 }
 
+.transaction-section {
+    margin-top: 15px;
+}
+
+.transaction-section h4 {
+    font-size: 1rem;
+    color: var(--text-color);
+    margin-bottom: 8px;
+}
+
+.transaction-section input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--bg-dark);
+    border-radius: 8px;
+    font-family: var(--font-family);
+    font-size: 0.9rem;
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition: var(--transition);
+}
+
+.transaction-section input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.15);
+}
+
 .payment-actions {
     display: flex;
     flex-direction: column;
