@@ -327,7 +327,7 @@ function initTestimonialsModal() {
             modal.classList.remove('active');
             modal.classList.remove('closing');
             document.body.classList.remove('modal-closing');
-        }, 400);
+        }, 300);
     }
 
     closeBtn.addEventListener('click', function(e) {
