@@ -382,6 +382,18 @@ body {
     color: var(--text-light);
 }
 
+.contact-item a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: var(--transition);
+    border-bottom: 1px solid transparent;
+}
+
+.contact-item a:hover {
+    color: var(--secondary-color);
+    border-bottom-color: var(--secondary-color);
+}
+
 /* 联系表单 */
 .contact-form {
     background-color: var(--card-bg);
