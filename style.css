@@ -1649,6 +1649,44 @@ html {
     border-radius: 0 15px 0 10px;
 }
 
+/* 价格套餐标签页 */
+.pricing-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.pricing-tab {
+    padding: 10px 30px;
+    border: 2px solid var(--primary-color);
+    background: transparent;
+    color: var(--primary-color);
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.pricing-tab:hover {
+    background: rgba(255, 107, 157, 0.1);
+}
+
+.pricing-tab.active {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border-color: transparent;
+}
+
+.pricing-panel {
+    display: none;
+}
+
+.pricing-panel.active {
+    display: block;
+}
+
 .pricing-referral {
     text-align: center;
     margin-top: 30px;

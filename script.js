@@ -174,6 +174,26 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // 价格套餐标签页切换
+    var pricingTabs = document.querySelectorAll('.pricing-tab');
+    var pricingPanels = document.querySelectorAll('.pricing-panel');
+
+    if (pricingTabs.length > 0) {
+        pricingTabs.forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                var targetPanel = this.getAttribute('data-tab');
+                
+                // 更新标签状态
+                pricingTabs.forEach(function(t) { t.classList.remove('active'); });
+                this.classList.add('active');
+                
+                // 更新面板显示
+                pricingPanels.forEach(function(panel) { panel.classList.remove('active'); });
+                document.getElementById('panel-' + targetPanel).classList.add('active');
+            });
+        });
+    }
+
     // 功能按钮 - 滚动到对应区域
     document.querySelectorAll('.feature-btn[data-target]').forEach(function(button) {
         button.addEventListener('click', function() {
@@ -197,14 +217,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.scrollTo({ top: targetPosition, behavior: 'smooth' });
 
                 var pricingCard = this.closest('.pricing-card');
-                if (pricingCard) {
+                var pricingPanel = this.closest('.pricing-panel');
+                if (pricingCard && pricingPanel) {
                     var packageName = pricingCard.querySelector('.pricing-title').textContent;
+                    var panelId = pricingPanel.id;
+                    var packageType = panelId === 'panel-studio' ? '白棚正片' : '场照';
                     
                     // 自动选择套餐
                     var packageSelect = document.querySelector('select[name="package"]');
                     if (packageSelect) {
+                        var targetValue = packageType + '-' + packageName;
                         for (var i = 0; i < packageSelect.options.length; i++) {
-                            if (packageSelect.options[i].textContent.indexOf(packageName) !== -1) {
+                            if (packageSelect.options[i].value.indexOf(targetValue) !== -1) {
                                 packageSelect.selectedIndex = i;
                                 break;
                             }

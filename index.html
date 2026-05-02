@@ -199,59 +199,120 @@
         <section id="pricing" class="section pricing-section">
             <div class="container">
                 <h2 class="section-title" data-aos="fade-up">价格套餐</h2>
-                <div class="pricing-grid">
-                    <div class="pricing-card" data-aos="fade-up" data-aos-delay="100">
-                        <div class="pricing-badge">限时7折</div>
-                        <div class="pricing-header">
-                            <h3 class="pricing-title">基础套餐</h3>
-                            <div class="pricing-price">¥150</div>
-                            <div class="pricing-description">适合个人约拍</div>
+                <div class="pricing-tabs" data-aos="fade-up">
+                    <button class="pricing-tab active" data-tab="studio">白棚正片</button>
+                    <button class="pricing-tab" data-tab="event">场照</button>
+                </div>
+                
+                <!-- 白棚正片套餐 -->
+                <div class="pricing-panel active" id="panel-studio">
+                    <div class="pricing-grid">
+                        <div class="pricing-card" data-aos="fade-up" data-aos-delay="100">
+                            <div class="pricing-badge">限时7折</div>
+                            <div class="pricing-header">
+                                <h3 class="pricing-title">基础套餐</h3>
+                                <div class="pricing-price">¥150</div>
+                                <div class="pricing-description">适合个人约拍</div>
+                            </div>
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check"></i> 2小时拍摄时间</li>
+                                <li><i class="fas fa-check"></i> 1套服装造型</li>
+                                <li><i class="fas fa-check"></i> 1张精修照片</li>
+                                <li><i class="fas fa-check"></i> 拍摄6张图，保底4张图</li>
+                                <li><i class="fas fa-check"></i> 全方位完整策划</li>
+                                <li><i class="fas fa-check"></i> 隔天或当天交付</li>
+                            </ul>
+                            <button class="btn btn-primary pricing-btn">选择套餐</button>
                         </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> 2小时拍摄时间</li>
-                            <li><i class="fas fa-check"></i> 1套服装造型</li>
-                            <li><i class="fas fa-check"></i> 1张精修照片</li>
-                            <li><i class="fas fa-check"></i> 拍摄6张图，保底4张图</li>
-                            <li><i class="fas fa-check"></i> 全方位完整策划</li>
-                            <li><i class="fas fa-check"></i> 隔天或当天交付</li>
-                        </ul>
-                        <button class="btn btn-primary pricing-btn">选择套餐</button>
-                    </div>
-                    <div class="pricing-card featured" data-aos="fade-up" data-aos-delay="200">
-                        <div class="pricing-badge">限时7折</div>
-                        <div class="pricing-header">
-                            <h3 class="pricing-title">标准套餐</h3>
-                            <div class="pricing-price">¥350</div>
-                            <div class="pricing-description">适合深度创作</div>
+                        <div class="pricing-card featured" data-aos="fade-up" data-aos-delay="200">
+                            <div class="pricing-badge">限时7折</div>
+                            <div class="pricing-header">
+                                <h3 class="pricing-title">标准套餐</h3>
+                                <div class="pricing-price">¥350</div>
+                                <div class="pricing-description">适合深度创作</div>
+                            </div>
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check"></i> 4小时拍摄时间</li>
+                                <li><i class="fas fa-check"></i> 1套服装造型</li>
+                                <li><i class="fas fa-check"></i> 3张精修照片</li>
+                                <li><i class="fas fa-check"></i> 拍摄12张图，保底9张图</li>
+                                <li><i class="fas fa-check"></i> 全方位完整策划</li>
+                                <li><i class="fas fa-check"></i> 7个工作日内交付</li>
+                            </ul>
+                            <button class="btn btn-primary pricing-btn">选择套餐</button>
                         </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> 4小时拍摄时间</li>
-                            <li><i class="fas fa-check"></i> 1套服装造型</li>
-                            <li><i class="fas fa-check"></i> 3张精修照片</li>
-                            <li><i class="fas fa-check"></i> 拍摄12张图，保底9张图</li>
-                            <li><i class="fas fa-check"></i> 全方位完整策划</li>
-                            <li><i class="fas fa-check"></i> 7个工作日内交付</li>
-                        </ul>
-                        <button class="btn btn-primary pricing-btn">选择套餐</button>
-                    </div>
-                    <div class="pricing-card" data-aos="fade-up" data-aos-delay="300">
-                        <div class="pricing-badge">限时7折</div>
-                        <div class="pricing-header">
-                            <h3 class="pricing-title">高级套餐</h3>
-                            <div class="pricing-price">¥550</div>
-                            <div class="pricing-description">适合商业合作</div>
+                        <div class="pricing-card" data-aos="fade-up" data-aos-delay="300">
+                            <div class="pricing-badge">限时7折</div>
+                            <div class="pricing-header">
+                                <h3 class="pricing-title">高级套餐</h3>
+                                <div class="pricing-price">¥550</div>
+                                <div class="pricing-description">适合商业合作</div>
+                            </div>
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check"></i> 全天拍摄时间</li>
+                                <li><i class="fas fa-check"></i> 拍摄所有准备的服装造型</li>
+                                <li><i class="fas fa-check"></i> 每套造型3张精修照片</li>
+                                <li><i class="fas fa-check"></i> 每套造型拍摄12张图，保底9张图</li>
+                                <li><i class="fas fa-check"></i> 全方位完整策划</li>
+                                <li><i class="fas fa-check"></i> 30个工作日内交付每套造型的精修所有片</li>
+                            </ul>
+                            <button class="btn btn-primary pricing-btn">选择套餐</button>
                         </div>
-                        <ul class="pricing-features">
-                            <li><i class="fas fa-check"></i> 全天拍摄时间</li>
-                            <li><i class="fas fa-check"></i> 拍摄所有准备的服装造型</li>
-                            <li><i class="fas fa-check"></i> 每套造型3张精修照片</li>
-                            <li><i class="fas fa-check"></i> 每套造型拍摄12张图，保底9张图</li>
-                            <li><i class="fas fa-check"></i> 全方位完整策划</li>
-                            <li><i class="fas fa-check"></i> 30个工作日内交付每套造型的精修所有片</li>
-                        </ul>
-                        <button class="btn btn-primary pricing-btn">选择套餐</button>
                     </div>
                 </div>
+                
+                <!-- 场照套餐 -->
+                <div class="pricing-panel" id="panel-event">
+                    <div class="pricing-grid">
+                        <div class="pricing-card" data-aos="fade-up" data-aos-delay="100">
+                            <div class="pricing-badge">限时7折</div>
+                            <div class="pricing-header">
+                                <h3 class="pricing-title">基础套餐</h3>
+                                <div class="pricing-price">¥21</div>
+                                <div class="pricing-description">单张精修</div>
+                            </div>
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check"></i> 单张精修照片</li>
+                                <li><i class="fas fa-check"></i> 有动作参考</li>
+                                <li><i class="fas fa-check"></i> 有动作指导</li>
+                                <li><i class="fas fa-check"></i> 当天或隔天交付</li>
+                            </ul>
+                            <button class="btn btn-primary pricing-btn">选择套餐</button>
+                        </div>
+                        <div class="pricing-card featured" data-aos="fade-up" data-aos-delay="200">
+                            <div class="pricing-badge">限时7折</div>
+                            <div class="pricing-header">
+                                <h3 class="pricing-title">标准套餐</h3>
+                                <div class="pricing-price">¥80</div>
+                                <div class="pricing-description">四图套餐</div>
+                            </div>
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check"></i> 拍摄4张图</li>
+                                <li><i class="fas fa-check"></i> 精修4张</li>
+                                <li><i class="fas fa-check"></i> 有动作参考</li>
+                                <li><i class="fas fa-check"></i> 有动作指导</li>
+                                <li><i class="fas fa-check"></i> 一周内交付</li>
+                            </ul>
+                            <button class="btn btn-primary pricing-btn">选择套餐</button>
+                        </div>
+                        <div class="pricing-card" data-aos="fade-up" data-aos-delay="300">
+                            <div class="pricing-badge">限时7折</div>
+                            <div class="pricing-header">
+                                <h3 class="pricing-title">高级套餐</h3>
+                                <div class="pricing-price">¥190</div>
+                                <div class="pricing-description">全方位服务</div>
+                            </div>
+                            <ul class="pricing-features">
+                                <li><i class="fas fa-check"></i> 12张图保9张图</li>
+                                <li><i class="fas fa-check"></i> 精修3张</li>
+                                <li><i class="fas fa-check"></i> 带全方位策划与指导</li>
+                                <li><i class="fas fa-check"></i> 一周内交付</li>
+                            </ul>
+                            <button class="btn btn-primary pricing-btn">选择套餐</button>
+                        </div>
+                    </div>
+                </div>
+                
                 <p class="pricing-referral" data-aos="fade-up">推荐给朋友可以获得专属返点</p>
             </div>
         </section>
@@ -411,9 +472,16 @@
                             <div class="form-group">
                                 <select name="package">
                                     <option value="">选择套餐（可选）</option>
-                                    <option value="基础套餐 ¥150">基础套餐 ¥150</option>
-                                    <option value="标准套餐 ¥350">标准套餐 ¥350</option>
-                                    <option value="高级套餐 ¥550">高级套餐 ¥550</option>
+                                    <optgroup label="白棚正片">
+                                        <option value="白棚正片-基础套餐 ¥150">基础套餐 ¥150</option>
+                                        <option value="白棚正片-标准套餐 ¥350">标准套餐 ¥350</option>
+                                        <option value="白棚正片-高级套餐 ¥550">高级套餐 ¥550</option>
+                                    </optgroup>
+                                    <optgroup label="场照">
+                                        <option value="场照-基础套餐 ¥21">基础套餐 ¥21（单张）</option>
+                                        <option value="场照-标准套餐 ¥80">标准套餐 ¥80（四图）</option>
+                                        <option value="场照-高级套餐 ¥190">高级套餐 ¥190</option>
+                                    </optgroup>
                                 </select>
                             </div>
                             <div class="form-group">
