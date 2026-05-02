@@ -1615,18 +1615,27 @@ html {
 
 .pricing-badge {
     position: absolute;
-    top: 20px;
-    right: -30px;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    top: 0;
+    right: 0;
+    background: linear-gradient(135deg, #ff4444, #ff6b6b);
     color: white;
-    padding: 5px 40px;
-    transform: rotate(45deg);
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    z-index: 2;
+    border-radius: 0 15px 0 10px;
+}
+
+.pricing-referral {
+    text-align: center;
+    margin-top: 30px;
+    color: var(--text-light);
     font-size: 0.9rem;
-    font-weight: 600;
+    font-style: italic;
 }
 
 .pricing-header {
-    padding: 30px;
+    padding: 35px 30px 30px;
     text-align: center;
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
