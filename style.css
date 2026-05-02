@@ -1375,7 +1375,7 @@ body::before {
     font-size: 0.9rem;
 }
 
-/* 响应式设计 */
+/* 响应式设计 - 移动端保持和PC端一致的布局 */
 @media (max-width: 768px) {
     .nav-menu {
         position: fixed;
@@ -1389,6 +1389,186 @@ body::before {
         align-items: center;
         transition: var(--transition);
     }
+
+    .nav-menu.active {
+        left: 0;
+    }
+
+    .hamburger {
+        display: block;
+    }
+
+    .hamburger.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    .hamburger.active .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    .container {
+        padding: 0 15px;
+    }
+
+    .section {
+        padding: 40px 0;
+    }
+
+    /* 保持PC端的多列布局，只缩小间距 */
+    .features-grid {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 12px;
+    }
+
+    .feature-card {
+        padding: 15px 10px;
+    }
+
+    .anime-character {
+        font-size: 1.8rem;
+    }
+
+    .feature-title {
+        font-size: 0.85rem;
+    }
+
+    .feature-description {
+        font-size: 0.7rem;
+    }
+
+    .feature-btn {
+        padding: 6px 12px;
+        font-size: 0.75rem;
+    }
+
+    .pricing-grid {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 12px;
+    }
+
+    .pricing-header {
+        padding: 15px 10px;
+    }
+
+    .pricing-title {
+        font-size: 0.9rem;
+    }
+
+    .pricing-price {
+        font-size: 1.5rem;
+    }
+
+    .pricing-description {
+        font-size: 0.75rem;
+    }
+
+    .pricing-features {
+        padding: 10px 12px;
+    }
+
+    .pricing-features li {
+        font-size: 0.75rem;
+        padding: 6px 0;
+    }
+
+    .testimonials-slider {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+    }
+
+    .tutorials-grid {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+    }
+
+    .contact-content {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .timeline-content {
+        padding: 12px;
+    }
+
+    .timeline-content h3 {
+        font-size: 0.9rem;
+    }
+
+    .timeline-content p {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0 10px;
+    }
+
+    .section {
+        padding: 30px 0;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+    }
+
+    .features-grid {
+        grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+        gap: 8px;
+    }
+
+    .feature-card {
+        padding: 10px 6px;
+    }
+
+    .anime-character {
+        font-size: 1.5rem;
+    }
+
+    .feature-title {
+        font-size: 0.75rem;
+    }
+
+    .feature-description {
+        font-size: 0.65rem;
+    }
+
+    .feature-btn {
+        padding: 5px 8px;
+        font-size: 0.65rem;
+    }
+
+    .pricing-grid {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 8px;
+    }
+
+    .pricing-price {
+        font-size: 1.2rem;
+    }
+
+    .pricing-features li {
+        font-size: 0.7rem;
+    }
+
+    .testimonials-slider {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 8px;
+    }
+
+    .tutorials-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 8px;
+    }
+
+    .contact-content {
+        grid-template-columns: 1fr;
+    }
+}
 
     .nav-menu.active {
         left: 0;
