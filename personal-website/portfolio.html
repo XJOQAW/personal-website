@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>作品集 - 二次元摄影师</title>
+    <!-- 引入AOS.js用于滚动动画 -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- 引入Google字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- 引入Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">二次元摄影师</a>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="portfolio.html" class="nav-link active">作品集</a>
+                <a href="index.html#contact" class="nav-link">联系我</a>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+            <button class="hamburger" id="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- 作品集内容 -->
+    <main>
+        <section class="section portfolio-section">
+            <div class="container">
+                <h1 class="section-title" data-aos="fade-up">二次元摄影作品集</h1>
+                <p class="section-subtitle" data-aos="fade-up" data-aos-delay="100">
+                    用严谨丈量创作，用镜头捕捉二次元世界的美好瞬间
+                </p>
+                
+                <!-- 作品筛选按钮 -->
+                <div class="portfolio-filters" data-aos="fade-up" data-aos-delay="200">
+                    <button class="filter-btn active" data-filter="all">全部作品</button>
+                    <button class="filter-btn" data-filter="portrait">二次元人像</button>
+                    <button class="filter-btn" data-filter="landscape">场景拍摄</button>
+                    <button class="filter-btn" data-filter="creative">创意合成</button>
+                    <button class="filter-btn" data-filter="commercial">商业合作</button>
+                </div>
+
+                <!-- 作品网格 -->
+                <div class="portfolio-grid">
+                    <!-- 作品1 -->
+                    <div class="portfolio-item" data-category="portrait" data-aos="fade-up" data-aos-delay="100">
+                        <div class="portfolio-image">
+                            <div class="image-placeholder">
+                                <i class="fas fa-image"></i>
+                                <p>二次元人像作品1</p>
+                            </div>
+                            <div class="portfolio-overlay">
+                                <h3 class="portfolio-title">二次元人像摄影</h3>
+                                <p class="portfolio-description">捕捉角色神韵与情绪表达</p>
+                                <button class="portfolio-btn">查看详情</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 作品2 -->
+                    <div class="portfolio-item" data-category="landscape" data-aos="fade-up" data-aos-delay="200">
+                        <div class="portfolio-image">
+                            <div class="image-placeholder">
+                                <i class="fas fa-image"></i>
+                                <p>场景拍摄作品1</p>
+                            </div>
+                            <div class="portfolio-overlay">
+                                <h3 class="portfolio-title">场景拍摄</h3>
+                                <p class="portfolio-description">精心搭建的二次元场景</p>
+                                <button class="portfolio-btn">查看详情</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 作品3 -->
+                    <div class="portfolio-item" data-category="creative" data-aos="fade-up" data-aos-delay="300">
+                        <div class="portfolio-image">
+                            <div class="image-placeholder">
+                                <i class="fas fa-image"></i>
+                                <p>创意合成作品1</p>
+                            </div>
+                            <div class="portfolio-overlay">
+                                <h3 class="portfolio-title">创意合成</h3>
+                                <p class="portfolio-description">二次元与现实的创意融合</p>
+                                <button class="portfolio-btn">查看详情</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 作品4 -->
+                    <div class="portfolio-item" data-category="commercial" data-aos="fade-up" data-aos-delay="400">
+                        <div class="portfolio-image">
+                            <div class="image-placeholder">
+                                <i class="fas fa-image"></i>
+                                <p>商业合作作品1</p>
+                            </div>
+                            <div class="portfolio-overlay">
+                                <h3 class="portfolio-title">商业合作</h3>
+                                <p class="portfolio-description">与品牌或博主的合作项目</p>
+                                <button class="portfolio-btn">查看详情</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 作品5 -->
+                    <div class="portfolio-item" data-category="portrait" data-aos="fade-up" data-aos-delay="500">
+                        <div class="portfolio-image">
+                            <div class="image-placeholder">
+                                <i class="fas fa-image"></i>
+                                <p>二次元人像作品2</p>
+                            </div>
+                            <div class="portfolio-overlay">
+                                <h3 class="portfolio-title">角色cosplay</h3>
+                                <p class="portfolio-description">精准还原角色特质</p>
+                                <button class="portfolio-btn">查看详情</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 作品6 -->
+                    <div class="portfolio-item" data-category="landscape" data-aos="fade-up" data-aos-delay="600">
+                        <div class="portfolio-image">
+                            <div class="image-placeholder">
+                                <i class="fas fa-image"></i>
+                                <p>场景拍摄作品2</p>
+                            </div>
+                            <div class="portfolio-overlay">
+                                <h3 class="portfolio-title">主题场景</h3>
+                                <p class="portfolio-description">沉浸式二次元体验</p>
+                                <button class="portfolio-btn">查看详情</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 作品详情模态框 -->
+                <div class="modal" id="portfolioModal">
+                    <div class="modal-content">
+                        <button class="modal-close">&times;</button>
+                        <div class="modal-image">
+                            <div class="image-placeholder">
+                                <i class="fas fa-image"></i>
+                                <p>作品大图</p>
+                            </div>
+                        </div>
+                        <div class="modal-info">
+                            <h3 class="modal-title">作品标题</h3>
+                            <p class="modal-description">作品描述</p>
+                            <div class="modal-meta">
+                                <span><i class="fas fa-calendar"></i> 2024年</span>
+                                <span><i class="fas fa-tag"></i> 人像摄影</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">二次元摄影师</div>
+                <div class="footer-links">
+                    <a href="index.html">首页</a>
+                    <a href="portfolio.html">作品集</a>
+                    <a href="index.html#contact">联系我</a>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="#"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 二次元摄影师. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 引入AOS.js -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
