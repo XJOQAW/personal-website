@@ -141,6 +141,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // 水波纹点击效果 - hero区域
+    var heroSection = document.getElementById('hero');
+    if (heroSection) {
+        heroSection.addEventListener('click', function(e) {
+            var ripple = document.createElement('div');
+            ripple.className = 'ripple';
+            ripple.style.left = e.clientX + 'px';
+            ripple.style.top = e.clientY + 'px';
+            heroSection.appendChild(ripple);
+            
+            setTimeout(function() {
+                ripple.remove();
+            }, 800);
+        });
+    }
+
     // 元素飘入动画 - 为卡片添加
     var animatedElements = document.querySelectorAll('.feature-card, .pricing-card, .testimonial-card, .tutorial-card, .timeline-item');
     
