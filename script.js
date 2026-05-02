@@ -56,15 +56,14 @@ window.addEventListener('load', function() {
             playShutterSound();
         }, 1200);
         
-        // 3. 黑屏闪烁
+        // 3. 显示屏变黑
         setTimeout(function() {
-            splashScreen.classList.add('flash-black');
             cameraBack.classList.remove('pressed');
+            cameraBack.classList.add('screen-black');
         }, 1500);
         
-        // 4. 旋转放大消失
+        // 4. 旋转放大消失（先快后慢）
         setTimeout(function() {
-            splashScreen.classList.remove('flash-black');
             cameraBack.classList.add('rotate');
         }, 1800);
         
@@ -74,7 +73,7 @@ window.addEventListener('load', function() {
             setTimeout(function() {
                 splashScreen.classList.add('gone');
             }, 500);
-        }, 2500);
+        }, 3000);
     }
     
     // 处理用户交互

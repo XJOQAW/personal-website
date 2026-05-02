@@ -225,14 +225,35 @@
     transition: transform 0.1s ease;
 }
 
+/* 显示屏变黑 */
+.camera-back.screen-black .screen-content {
+    background: #000 !important;
+    transition: background 0.2s ease;
+}
+
+.camera-back.screen-black .screen-content * {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+/* 旋转放大动画 - 先快后慢 */
 .camera-back.rotate {
-    animation: cameraRotate 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    animation: cameraRotate 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 @keyframes cameraRotate {
-    0% { transform: scale(0.98) rotate(0deg); }
-    50% { transform: scale(0.5) rotate(180deg); opacity: 0.5; }
-    100% { transform: scale(2.5) rotate(360deg); opacity: 0; }
+    0% { 
+        transform: scale(1) rotate(0deg); 
+        opacity: 1;
+    }
+    40% { 
+        transform: scale(1.8) rotate(180deg); 
+        opacity: 0.8;
+    }
+    100% { 
+        transform: scale(3) rotate(360deg); 
+        opacity: 0;
+    }
 }
 
 /* 黑屏闪烁 */
