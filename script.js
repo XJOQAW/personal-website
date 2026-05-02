@@ -85,6 +85,65 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // 作品集筛选功能
+    var filterButtons = document.querySelectorAll('.filter-btn');
+    var portfolioItems = document.querySelectorAll('.portfolio-item');
+
+    if (filterButtons.length > 0 && portfolioItems.length > 0) {
+        filterButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                filterButtons.forEach(function(btn) { btn.classList.remove('active'); });
+                this.classList.add('active');
+
+                var filterValue = this.getAttribute('data-filter');
+
+                portfolioItems.forEach(function(item) {
+                    var category = item.getAttribute('data-category');
+                    if (filterValue === 'all' || category === filterValue) {
+                        item.style.display = 'block';
+                        item.style.animation = 'fadeInUp 0.5s ease forwards';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+    }
+
+    // 作品集模态框
+    var portfolioButtons = document.querySelectorAll('.portfolio-btn');
+    var modal = document.getElementById('portfolioModal');
+    var modalClose = document.querySelector('.modal-close');
+
+    if (portfolioButtons.length > 0 && modal) {
+        portfolioButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                var portfolioItem = this.closest('.portfolio-item');
+                var title = portfolioItem.querySelector('.portfolio-title').textContent;
+                var description = portfolioItem.querySelector('.portfolio-description').textContent;
+
+                modal.querySelector('.modal-title').textContent = title;
+                modal.querySelector('.modal-description').textContent = description;
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        if (modalClose) {
+            modalClose.addEventListener('click', function() {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+        }
+
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+    }
+
     // 抽屉功能
     document.querySelectorAll('.drawer-toggle').forEach(function(toggle) {
         toggle.addEventListener('click', function() {
