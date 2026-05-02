@@ -511,8 +511,64 @@ body::before {
 .nav-logo {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--primary-color);
     text-decoration: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-logo-text {
+    display: inline-flex;
+    gap: 2px;
+    background: linear-gradient(135deg, #ff6b9d 0%, #c44dff 50%, #45b7d1 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: navLogoGradient 3s ease-in-out infinite;
+    font-family: 'Ma Shan Zheng', 'ZCOOL XiaoWei', 'STKaiti', 'KaiTi', cursive;
+}
+
+@keyframes navLogoGradient {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.nav-char {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: navCharAppear 0.4s ease forwards;
+}
+
+.nav-char:nth-child(1) { animation-delay: 0.1s; }
+.nav-char:nth-child(2) { animation-delay: 0.2s; }
+.nav-char:nth-child(3) { animation-delay: 0.3s; }
+.nav-char:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes navCharAppear {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* 悬停效果 */
+.nav-logo:hover .nav-char {
+    animation: navCharBounce 0.3s ease;
+}
+
+.nav-logo:hover .nav-char:nth-child(1) { animation-delay: 0s; }
+.nav-logo:hover .nav-char:nth-child(2) { animation-delay: 0.05s; }
+.nav-logo:hover .nav-char:nth-child(3) { animation-delay: 0.1s; }
+.nav-logo:hover .nav-char:nth-child(4) { animation-delay: 0.15s; }
+
+@keyframes navCharBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
 }
 
 .nav-menu {

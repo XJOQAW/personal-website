@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <!-- 引入Font Awesome图标 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
     <!-- 开屏动画 - 现代相机背面 -->
@@ -58,7 +58,14 @@
     <!-- 导航栏 -->
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="nav-logo" onclick="event.preventDefault(); window.scrollTo({top:0,behavior:'smooth'})">一方通行</a>
+            <a href="index.html" class="nav-logo" onclick="event.preventDefault(); window.scrollTo({top:0,behavior:'smooth'})">
+                <span class="nav-logo-text" id="navLogoText">
+                    <span class="nav-char">一</span>
+                    <span class="nav-char">方</span>
+                    <span class="nav-char">通</span>
+                    <span class="nav-char">行</span>
+                </span>
+            </a>
             <div class="nav-menu">
                 <a href="index.html" class="nav-link active">首页</a>
                 <a href="portfolio.html" class="nav-link">作品集</a>
@@ -782,6 +789,6 @@
 
     <!-- 引入AOS.js -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="script.js?v=5"></script>
+    <script src="script.js?v=6"></script>
 </body>
 </html>
