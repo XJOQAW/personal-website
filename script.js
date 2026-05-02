@@ -272,12 +272,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 套餐信息
     var packageInfo = {
-        '白棚正片-基础套餐 ¥150': { name: '白棚正片-基础套餐', price: '¥150', description: '2小时拍摄，1套服装造型，1张精修', qrImage: 'images/pay-150.png' },
-        '白棚正片-标准套餐 ¥350': { name: '白棚正片-标准套餐', price: '¥350', description: '4小时拍摄，1套服装造型，3张精修', qrImage: 'images/pay-350.png' },
-        '白棚正片-高级套餐 ¥550': { name: '白棚正片-高级套餐', price: '¥550', description: '全天拍摄，所有服装造型，每套3张精修', qrImage: 'images/pay-550.png' },
-        '场照-基础套餐 ¥21': { name: '场照-基础套餐', price: '¥21', description: '单张精修，有动作参考和指导', qrImage: 'images/pay-21.png' },
-        '场照-标准套餐 ¥80': { name: '场照-标准套餐', price: '¥80', description: '四图，精修4张，有动作参考和指导', qrImage: 'images/pay-80.png' },
-        '场照-高级套餐 ¥190': { name: '场照-高级套餐', price: '¥190', description: '12张图保9张，精修3张，全方位策划与指导', qrImage: 'images/pay-190.png' }
+        '白棚正片-基础套餐 ¥150': { name: '白棚正片-基础套餐', price: '¥150', description: '2小时拍摄，1套服装造型，1张精修', qrImage: 'images/pay-150.jpg' },
+        '白棚正片-标准套餐 ¥350': { name: '白棚正片-标准套餐', price: '¥350', description: '4小时拍摄，1套服装造型，3张精修', qrImage: 'images/pay-350.jpg' },
+        '白棚正片-高级套餐 ¥550': { name: '白棚正片-高级套餐', price: '¥550', description: '全天拍摄，所有服装造型，每套3张精修', qrImage: 'images/pay-550.jpg' },
+        '场照-基础套餐 ¥21': { name: '场照-基础套餐', price: '¥21', description: '单张精修，有动作参考和指导', qrImage: 'images/pay-21.jpg' },
+        '场照-标准套餐 ¥80': { name: '场照-标准套餐', price: '¥80', description: '四图，精修4张，有动作参考和指导', qrImage: 'images/pay-80.jpg' },
+        '场照-高级套餐 ¥190': { name: '场照-高级套餐', price: '¥190', description: '12张图保9张，精修3张，全方位策划与指导', qrImage: 'images/pay-190.jpg' }
     };
     
     var currentFormData = null;
