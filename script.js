@@ -50,30 +50,34 @@ window.addEventListener('load', function() {
             if (titleWrap) titleWrap.classList.add('show');
         }, 200);
         
-        // 2. 按下快门 + 闪光
+        // 2. 按下快门 + 快门声
         setTimeout(function() {
             cameraBack.classList.add('pressed');
             playShutterSound();
-        }, 1200);
+        }, 1000);
         
         // 3. 显示屏变黑
         setTimeout(function() {
             cameraBack.classList.remove('pressed');
             cameraBack.classList.add('screen-black');
-        }, 1500);
+        }, 1200);
         
-        // 4. 旋转放大消失（先快后慢）
+        // 4. 旋转放大（旋转时就渐变出主页）
         setTimeout(function() {
             cameraBack.classList.add('rotate');
-        }, 1800);
+            // 旋转到一半时就开始淡出开屏
+            setTimeout(function() {
+                splashScreen.classList.add('fade-out');
+            }, 400);
+        }, 1400);
         
-        // 5. 隐藏开屏
+        // 5. 完全隐藏开屏
         setTimeout(function() {
             splashScreen.classList.add('hidden');
             setTimeout(function() {
                 splashScreen.classList.add('gone');
-            }, 500);
-        }, 3000);
+            }, 300);
+        }, 2200);
     }
     
     // 处理用户交互

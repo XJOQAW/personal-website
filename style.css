@@ -250,9 +250,12 @@
     transition: opacity 0.2s ease;
 }
 
-/* 旋转放大动画 - 先快后慢 */
+/* 旋转放大动画 - 先快后慢，只转一圈 */
 .camera-back.rotate {
-    animation: cameraRotate 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: cameraRotate 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    will-change: transform, opacity;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 @keyframes cameraRotate {
@@ -260,23 +263,16 @@
         transform: scale(1) rotate(0deg); 
         opacity: 1;
     }
-    40% { 
-        transform: scale(1.8) rotate(180deg); 
-        opacity: 0.8;
-    }
     100% { 
-        transform: scale(3) rotate(360deg); 
+        transform: scale(2.5) rotate(360deg); 
         opacity: 0;
     }
 }
 
-/* 黑屏闪烁 */
-.splash-screen.flash-black {
-    background: #000 !important;
-}
-
-.splash-screen.flash-black .camera-back {
+/* 开屏淡出 */
+.splash-screen.fade-out {
     opacity: 0;
+    transition: opacity 0.6s ease;
 }
 
 /* 标题区域 */
