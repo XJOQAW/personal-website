@@ -1460,12 +1460,13 @@ body::before {
 
     /* 功能按钮 */
     .features-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        padding: 0 5px;
     }
 
     .feature-card {
-        padding: 20px 12px;
+        padding: 15px 8px;
     }
 
     .feature-card::before {
@@ -1473,109 +1474,144 @@ body::before {
     }
 
     .anime-character {
-        font-size: 2rem;
+        font-size: 1.8rem;
+        margin-bottom: 8px;
     }
 
     .feature-title {
-        font-size: 0.95rem;
+        font-size: 0.8rem;
+        margin-bottom: 6px;
     }
 
     .feature-description {
-        font-size: 0.8rem;
-        margin-bottom: 12px;
+        display: none;
     }
 
     .feature-btn {
-        padding: 8px 16px;
-        font-size: 0.8rem;
+        padding: 6px 10px;
+        font-size: 0.7rem;
     }
 
     /* 服务流程 */
     .services-timeline::before {
-        left: 20px;
+        left: 15px;
     }
 
     .timeline-item,
     .timeline-item:nth-child(odd) {
         flex-direction: column;
         align-items: flex-start;
-        padding-left: 55px;
+        padding-left: 45px;
     }
 
     .timeline-number {
         position: absolute;
         left: 0;
-        width: 40px;
-        height: 40px;
-        font-size: 1rem;
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
     }
 
     .timeline-content {
         width: 100%;
-        padding: 15px;
+        padding: 12px;
     }
 
     .timeline-content h3 {
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
 
     .timeline-content p {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
 
     /* 价格套餐 */
     .pricing-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+
+    .pricing-card {
+        border-radius: 10px;
     }
 
     .pricing-card.featured {
         transform: none;
     }
 
-    .pricing-card.featured:hover {
-        transform: translateY(-5px);
-    }
-
     .pricing-header {
-        padding: 20px;
+        padding: 12px 8px;
     }
 
     .pricing-title {
-        font-size: 1.1rem;
+        font-size: 0.85rem;
     }
 
     .pricing-price {
-        font-size: 2rem;
+        font-size: 1.3rem;
+    }
+
+    .pricing-description {
+        font-size: 0.7rem;
     }
 
     .pricing-features {
-        padding: 15px 20px;
+        padding: 10px 12px;
     }
 
     .pricing-features li {
-        font-size: 0.85rem;
-        padding: 8px 0;
+        font-size: 0.75rem;
+        padding: 5px 0;
     }
 
     /* 客户评价 */
     .testimonials-slider {
-        grid-template-columns: 1fr;
-        gap: 15px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
 
     .testimonial-card {
-        padding: 20px;
+        padding: 12px;
     }
 
     .testimonial-content p {
+        font-size: 0.8rem;
+    }
+
+    .testimonial-author {
+        gap: 8px;
+    }
+
+    .author-avatar {
+        width: 30px;
+        height: 30px;
         font-size: 0.9rem;
+    }
+
+    .author-info h4 {
+        font-size: 0.8rem;
+    }
+
+    .author-info span {
+        font-size: 0.7rem;
     }
 
     /* 教程分享 */
     .tutorials-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .tutorial-content {
+        padding: 12px;
+    }
+
+    .tutorial-content h3 {
+        font-size: 0.85rem;
+    }
+
+    .tutorial-content p {
+        font-size: 0.75rem;
     }
 
     /* 联系方式 */
@@ -1603,64 +1639,78 @@ body::before {
 
 @media (max-width: 480px) {
     .nav-container {
-        padding: 0 15px;
+        padding: 0 10px;
     }
 
     .hero-title-animated {
-        font-size: 2.2rem;
-        letter-spacing: 6px;
+        font-size: 2rem;
+        letter-spacing: 5px;
     }
 
     .hero-tagline {
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
 
     .section-title {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
 
     .features-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
     }
 
     .feature-card {
-        padding: 15px 10px;
+        padding: 12px 6px;
     }
 
     .feature-title {
-        font-size: 0.85rem;
-    }
-
-    .feature-description {
-        display: none;
+        font-size: 0.75rem;
     }
 
     .feature-btn {
-        padding: 6px 12px;
-        font-size: 0.75rem;
+        padding: 5px 8px;
+        font-size: 0.65rem;
     }
 
     .anime-character {
         font-size: 1.5rem;
-        margin-bottom: 8px;
+    }
+
+    .pricing-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
     }
 
     .pricing-price {
-        font-size: 1.8rem;
+        font-size: 1.1rem;
+    }
+
+    .pricing-features li {
+        font-size: 0.7rem;
+    }
+
+    .testimonials-slider {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+
+    .tutorials-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
     }
 
     .drawer-toggle {
-        padding: 15px 20px;
-        font-size: 1rem;
+        padding: 12px 15px;
+        font-size: 0.9rem;
     }
 
     .stat-number {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
     }
 
     .stat-label {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
     }
 }
 
@@ -2071,28 +2121,30 @@ html {
 .ripple {
     position: absolute;
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(255, 107, 157, 0.3) 0%, rgba(196, 77, 255, 0.1) 50%, transparent 70%);
+    background: radial-gradient(circle, rgba(255, 107, 157, 0.5) 0%, rgba(196, 77, 255, 0.3) 40%, transparent 70%);
     pointer-events: none;
-    animation: rippleExpand 0.8s ease-out forwards;
+    animation: rippleExpand 1s ease-out forwards;
     z-index: 0;
+    width: 0;
+    height: 0;
 }
 
 [data-theme="dark"] .ripple {
-    background: radial-gradient(circle, rgba(255, 107, 157, 0.2) 0%, rgba(75, 0, 130, 0.1) 50%, transparent 70%);
+    background: radial-gradient(circle, rgba(255, 107, 157, 0.4) 0%, rgba(196, 77, 255, 0.2) 40%, transparent 70%);
 }
 
 @keyframes rippleExpand {
     0% {
         width: 0;
         height: 0;
-        opacity: 0.6;
+        opacity: 1;
     }
     100% {
-        width: 400px;
-        height: 400px;
+        width: 500px;
+        height: 500px;
         opacity: 0;
-        margin-left: -200px;
-        margin-top: -200px;
+        margin-left: -250px;
+        margin-top: -250px;
     }
 }
 
