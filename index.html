@@ -4,19 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>一方通行 - 用严谨丈量创作</title>
-    <!-- 引入AOS.js用于滚动动画 -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <!-- 引入Google字体 -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
-    <!-- 引入Font Awesome图标 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=21">
+    <link rel="stylesheet" href="style.css?v=22">
 </head>
 <body>
-    <!-- 开屏动画 - 现代相机背面 -->
+    <!-- 开屏动画 -->
     <div class="splash-screen" id="splashScreen">
         <div class="camera-back">
-            <!-- 左侧翻转屏 -->
             <div class="camera-screen">
                 <div class="screen-content">
                     <div class="screen-grid">
@@ -34,7 +30,6 @@
                     </div>
                 </div>
             </div>
-            <!-- 右侧机身 -->
             <div class="camera-body-right">
                 <div class="camera-evf">
                     <div class="evf-inner"></div>
@@ -56,39 +51,42 @@
     </div>
 
     <!-- 导航栏 -->
-    <nav class="navbar">
+    <nav class="navbar" id="navbar">
         <div class="nav-container">
-            <a href="index.html" class="nav-logo" onclick="event.preventDefault(); window.scrollTo({top:0,behavior:'smooth'})">
-                <span class="nav-logo-text" id="navLogoText">
+            <a href="#" class="nav-logo" onclick="event.preventDefault(); window.scrollTo({top:0,behavior:'smooth'})">
+                <span class="nav-logo-text">
                     <span class="nav-char">一</span>
                     <span class="nav-char">方</span>
                     <span class="nav-char">通</span>
                     <span class="nav-char">行</span>
                 </span>
             </a>
-            <div class="nav-menu">
-                <a href="index.html" class="nav-link active">首页</a>
+            <div class="nav-menu" id="navMenu">
+                <a href="#hero" class="nav-link active">首页</a>
+                <a href="#features" class="nav-link">服务</a>
+                <a href="#pricing" class="nav-link">价格</a>
                 <a href="portfolio.html" class="nav-link">作品集</a>
                 <a href="#contact" class="nav-link">联系我</a>
+            </div>
+            <div class="nav-actions">
                 <button class="theme-toggle" id="themeToggle">
                     <i class="fas fa-moon"></i>
                 </button>
-            </div>
-            <!-- 登录按钮 -->
-            <div class="auth-section" id="authSection">
-                <button class="auth-btn login-btn" id="showLoginBtn">
-                    <i class="fas fa-sign-in-alt"></i> 登录
-                </button>
-            </div>
-            <!-- 用户信息（登录后显示） -->
-            <div class="user-section" id="userSection" style="display:none;">
-                <div class="user-info" id="userInfoBtn">
-                    <div class="user-avatar" id="userAvatar">👤</div>
-                    <span class="user-name" id="userName">用户</span>
+                <div class="auth-section" id="authSection">
+                    <button class="auth-btn login-btn" id="showLoginBtn">
+                        <i class="fas fa-user"></i>
+                        <span>登录</span>
+                    </button>
                 </div>
-                <button class="auth-btn logout-btn" id="logoutBtn">
-                    <i class="fas fa-sign-out-alt"></i>
-                </button>
+                <div class="user-section" id="userSection" style="display:none;">
+                    <div class="user-info" id="userInfoBtn">
+                        <div class="user-avatar" id="userAvatar">👤</div>
+                        <span class="user-name" id="userName">用户</span>
+                    </div>
+                    <button class="auth-btn logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
             </div>
             <button class="hamburger" id="hamburger">
                 <span class="bar"></span>
@@ -100,66 +98,103 @@
 
     <!-- 主页内容 -->
     <main>
-        <!-- 英雄区域 - 简洁设计 -->
-        <section id="hero" class="section hero-section">
-            <div class="container">
-                <div class="hero-content">
-                    <div class="hero-title-wrap" id="heroTitleWrap">
-                        <h1 class="hero-title-animated" id="heroTitle">
-                            <span class="char" data-delay="0">一</span>
-                            <span class="char" data-delay="1">方</span>
-                            <span class="char" data-delay="2">通</span>
-                            <span class="char" data-delay="3">行</span>
-                        </h1>
-                        <div class="hero-title-line"></div>
+        <!-- 英雄区域 -->
+        <section id="hero" class="hero-section">
+            <div class="hero-particles" id="heroParticles"></div>
+            <div class="hero-content">
+                <div class="hero-badge" data-aos="fade-down">
+                    <span>✨ 二次元摄影 · 后期制作</span>
+                </div>
+                <h1 class="hero-title" data-aos="fade-up" data-aos-delay="100">
+                    <span class="title-line">用</span>
+                    <span class="title-line highlight">严谨</span>
+                    <span class="title-line">丈量</span>
+                    <span class="title-line highlight">创作</span>
+                </h1>
+                <p class="hero-subtitle" data-aos="fade-up" data-aos-delay="200">
+                    从前期策划到后期精修，每一个细节都经过精心打磨
+                </p>
+                <div class="hero-stats" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-item">
+                        <span class="stat-number" data-count="200">0</span>
+                        <span class="stat-label">完成作品</span>
                     </div>
-                    <p class="hero-tagline">用严谨丈量创作</p>
-                    <p class="hero-subtitle">二次元人像摄影与后期艺术家</p>
-                    <div class="hero-buttons">
-                        <a href="#services" class="btn btn-primary">了解服务</a>
-                        <a href="portfolio.html" class="btn btn-secondary">查看作品</a>
+                    <div class="stat-item">
+                        <span class="stat-number" data-count="50">0</span>
+                        <span class="stat-label">满意客户</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" data-count="5">0</span>
+                        <span class="stat-label">年经验</span>
                     </div>
                 </div>
+                <div class="hero-cta" data-aos="fade-up" data-aos-delay="400">
+                    <a href="#features" class="btn btn-primary btn-glow">
+                        <span>探索服务</span>
+                        <i class="fas fa-arrow-down"></i>
+                    </a>
+                    <a href="portfolio.html" class="btn btn-outline">
+                        <span>查看作品</span>
+                        <i class="fas fa-images"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <div class="mouse">
+                    <div class="wheel"></div>
+                </div>
+                <span>向下滚动</span>
             </div>
         </section>
 
-        <!-- 抽屉式自我介绍 -->
+        <!-- 关于我 - 抽屉式 -->
         <section id="about" class="section about-section">
             <div class="container">
-                <div class="about-drawer" data-aos="fade-up">
-                    <button class="drawer-toggle" id="aboutDrawerToggle">
-                        <span class="drawer-icon"><i class="fas fa-user"></i></span>
-                        <span class="drawer-title">关于我</span>
-                        <span class="drawer-arrow"><i class="fas fa-chevron-down"></i></span>
-                        <div class="hover-tooltip">点击展开查看详细自我介绍</div>
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">关于我</span>
+                    <h2 class="section-title">用镜头讲述故事</h2>
+                    <p class="section-desc">每一次快门，都是一次与美的对话</p>
+                </div>
+                <div class="about-card" data-aos="fade-up" data-aos-delay="100">
+                    <button class="about-toggle" id="aboutToggle">
+                        <div class="toggle-left">
+                            <div class="toggle-icon">📸</div>
+                            <div class="toggle-text">
+                                <h3>了解更多关于我</h3>
+                                <p>点击展开详细自我介绍</p>
+                            </div>
+                        </div>
+                        <div class="toggle-arrow">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
                     </button>
-                    <div class="drawer-content" id="aboutDrawerContent">
-                        <div class="about-content">
+                    <div class="about-content" id="aboutContent">
+                        <div class="about-grid">
                             <div class="about-text">
-                                <h3>用严谨丈量创作的二次元摄影师</h3>
-                                <p>在二次元人像摄影与后期的领域里，我始终相信，好作品是严密逻辑与感性审美的结合体。</p>
-                                
                                 <h4>从头部博主到个人约拍，始终如一的品控</h4>
-                                <p>在过往的实战中，我曾多次操刀百万级知名博主的后期制作，也为无数热爱二次元的个体提供过定制化服务。跨越不同量级的合作经验，让我更懂得如何挖掘每一位出镜者特有的辨识度，也让我具备了应对各种复杂拍摄需求的能力与底气。</p>
+                                <p>在过往的实战中，我曾多次操刀百万级知名博主的后期制作，也为无数热爱二次元的个体提供过定制化服务。</p>
                                 
                                 <h4>百分百的前置策划预案</h4>
-                                <p>我拒绝盲盒式的拍摄体验。为了最大限度保障产出质量，在正式开拍前，我会提供一份完整的拍摄策划案。将脑海中的构图、光影及潜在问题进行具象化前置，确保我们在按下第一次快门前，就已经对最终成片有了高度共识。</p>
+                                <p>我拒绝盲盒式的拍摄体验。为了最大限度保障产出质量，在正式开拍前，我会提供一份完整的拍摄策划案。</p>
                                 
                                 <h4>可控的现场情绪与极致的耐心</h4>
-                                <p>现场的变量很多，但我的创作情绪始终可控。我愿意倾注极大的耐心去打磨每一个快门瞬间，捕捉最细腻的情绪表达。我希望我的镜头不仅能输出优质的视觉画面，更能提供一种安定的情绪价值，让每一次合作都成为一次纯粹且享受的创作旅程。</p>
+                                <p>现场的变量很多，但我的创作情绪始终可控。我愿意倾注极大的耐心去打磨每一个快门瞬间。</p>
                             </div>
-                            <div class="about-stats">
-                                <div class="stat-item">
-                                    <span class="stat-number">1年+</span>
-                                    <span class="stat-label">经验</span>
+                            <div class="about-highlights">
+                                <div class="highlight-item">
+                                    <div class="highlight-icon">🎯</div>
+                                    <h4>精准策划</h4>
+                                    <p>每个细节都提前规划</p>
                                 </div>
-                                <div class="stat-item">
-                                    <span class="stat-number">200+</span>
-                                    <span class="stat-label">完成项目</span>
+                                <div class="highlight-item">
+                                    <div class="highlight-icon">💎</div>
+                                    <h4>品质保证</h4>
+                                    <p>后期精修，追求极致</p>
                                 </div>
-                                <div class="stat-item">
-                                    <span class="stat-number">50+</span>
-                                    <span class="stat-label">满意客户</span>
+                                <div class="highlight-item">
+                                    <div class="highlight-icon">🤝</div>
+                                    <h4>贴心服务</h4>
+                                    <p>全程沟通，无忧拍摄</p>
                                 </div>
                             </div>
                         </div>
@@ -168,111 +203,144 @@
             </div>
         </section>
 
-        <!-- 二次元风格功能按钮 -->
+        <!-- 服务特色 -->
         <section id="features" class="section features-section">
             <div class="container">
-                <h2 class="section-title" data-aos="fade-up">我的服务</h2>
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">我的服务</span>
+                    <h2 class="section-title">专业服务，精心打造</h2>
+                    <p class="section-desc">为您提供全方位的摄影与后期服务</p>
+                </div>
                 <div class="features-grid">
                     <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="feature-glow"></div>
                         <div class="feature-icon">
-                            <div class="anime-character">📸</div>
+                            <div class="icon-bg">📸</div>
                         </div>
-                        <h3 class="feature-title">约拍咨询</h3>
-                        <p class="feature-description">了解您的需求，提供专业建议</p>
+                        <h3>约拍咨询</h3>
+                        <p>了解您的需求，提供专业建议</p>
                         <button class="feature-btn" data-target="contact">立即咨询</button>
                     </div>
                     <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="feature-glow"></div>
                         <div class="feature-icon">
-                            <div class="anime-character">🎨</div>
+                            <div class="icon-bg">🎨</div>
                         </div>
-                        <h3 class="feature-title">查看作品</h3>
-                        <p class="feature-description">浏览我的摄影作品集</p>
+                        <h3>查看作品</h3>
+                        <p>浏览我的摄影作品集</p>
                         <a href="portfolio.html" class="feature-btn">浏览作品</a>
                     </div>
                     <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="feature-glow"></div>
                         <div class="feature-icon">
-                            <div class="anime-character">📋</div>
+                            <div class="icon-bg">📋</div>
                         </div>
-                        <h3 class="feature-title">服务流程</h3>
-                        <p class="feature-description">了解完整的拍摄流程</p>
+                        <h3>服务流程</h3>
+                        <p>了解完整的拍摄流程</p>
                         <button class="feature-btn" data-target="services">查看流程</button>
                     </div>
                     <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                        <div class="feature-glow"></div>
                         <div class="feature-icon">
-                            <div class="anime-character">💰</div>
+                            <div class="icon-bg">💰</div>
                         </div>
-                        <h3 class="feature-title">价格套餐</h3>
-                        <p class="feature-description">查看不同套餐的价格</p>
+                        <h3>价格套餐</h3>
+                        <p>查看不同套餐的价格</p>
                         <button class="feature-btn" data-target="pricing">查看价格</button>
                     </div>
                     <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+                        <div class="feature-glow"></div>
                         <div class="feature-icon">
-                            <div class="anime-character">⭐</div>
+                            <div class="icon-bg">⭐</div>
                         </div>
-                        <h3 class="feature-title">客户评价</h3>
-                        <p class="feature-description">看看客户的反馈</p>
+                        <h3>客户评价</h3>
+                        <p>看看客户的反馈</p>
                         <button class="feature-btn" data-target="testimonials">查看评价</button>
                     </div>
                     <div class="feature-card" data-aos="fade-up" data-aos-delay="600">
+                        <div class="feature-glow"></div>
                         <div class="feature-icon">
-                            <div class="anime-character">📚</div>
+                            <div class="icon-bg">📚</div>
                         </div>
-                        <h3 class="feature-title">教程分享</h3>
-                        <p class="feature-description">学习摄影和后期技巧</p>
+                        <h3>教程分享</h3>
+                        <p>学习摄影和后期技巧</p>
                         <button class="feature-btn" data-target="tutorials">查看教程</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 服务流程部分 -->
+        <!-- 服务流程 -->
         <section id="services" class="section services-section">
             <div class="container">
-                <h2 class="section-title" data-aos="fade-up">服务流程</h2>
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">服务流程</span>
+                    <h2 class="section-title">专业流程，品质保障</h2>
+                    <p class="section-desc">从咨询到交付，每一步都精心把控</p>
+                </div>
                 <div class="services-timeline">
                     <div class="timeline-item" data-aos="fade-up" data-aos-delay="100">
-                        <div class="timeline-number">1</div>
+                        <div class="timeline-dot">
+                            <span>01</span>
+                        </div>
                         <div class="timeline-content">
+                            <div class="timeline-icon">💬</div>
                             <h3>咨询沟通</h3>
-                            <p>了解客户需求，确定拍摄风格</p>
+                            <p>了解客户需求，确定拍摄风格，提供专业建议</p>
                         </div>
                     </div>
                     <div class="timeline-item" data-aos="fade-up" data-aos-delay="200">
-                        <div class="timeline-number">2</div>
+                        <div class="timeline-dot">
+                            <span>02</span>
+                        </div>
                         <div class="timeline-content">
+                            <div class="timeline-icon">📝</div>
                             <h3>方案策划</h3>
                             <p>提供拍摄策划方案，包括场地、服装、道具等</p>
                         </div>
                     </div>
                     <div class="timeline-item" data-aos="fade-up" data-aos-delay="300">
-                        <div class="timeline-number">3</div>
+                        <div class="timeline-dot">
+                            <span>03</span>
+                        </div>
                         <div class="timeline-content">
+                            <div class="timeline-icon">📷</div>
                             <h3>拍摄执行</h3>
-                            <p>专业拍摄，确保质量</p>
+                            <p>专业拍摄，确保质量，全程沟通调整</p>
                         </div>
                     </div>
                     <div class="timeline-item" data-aos="fade-up" data-aos-delay="400">
-                        <div class="timeline-number">4</div>
+                        <div class="timeline-dot">
+                            <span>04</span>
+                        </div>
                         <div class="timeline-content">
+                            <div class="timeline-icon">✨</div>
                             <h3>后期处理</h3>
-                            <p>精修调色，创意合成</p>
+                            <p>精修调色，创意合成，打造完美效果</p>
                         </div>
                     </div>
                     <div class="timeline-item" data-aos="fade-up" data-aos-delay="500">
-                        <div class="timeline-number">5</div>
+                        <div class="timeline-dot">
+                            <span>05</span>
+                        </div>
                         <div class="timeline-content">
+                            <div class="timeline-icon">🎉</div>
                             <h3>交付成品</h3>
-                            <p>提供可修改的高清成品，老师可做自己的风格化调整</p>
+                            <p>提供可修改的高清成品，支持风格化调整</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 价格套餐部分 -->
+        <!-- 价格套餐 -->
         <section id="pricing" class="section pricing-section">
             <div class="container">
-                <h2 class="section-title" data-aos="fade-up">价格套餐</h2>
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">价格套餐</span>
+                    <h2 class="section-title">透明定价，物超所值</h2>
+                    <p class="section-desc">选择适合您的套餐，开始创作之旅</p>
+                </div>
                 <div class="pricing-tabs" data-aos="fade-up">
                     <button class="pricing-tab active" data-tab="studio">白棚正片</button>
                     <button class="pricing-tab" data-tab="event">场照</button>
@@ -328,7 +396,7 @@
                                 <li><i class="fas fa-check"></i> 每套造型3张精修照片</li>
                                 <li><i class="fas fa-check"></i> 每套造型拍摄12张图，保底9张图</li>
                                 <li><i class="fas fa-check"></i> 全方位完整策划</li>
-                                <li><i class="fas fa-check"></i> 30个工作日内交付每套造型的精修所有片</li>
+                                <li><i class="fas fa-check"></i> 30个工作日内交付</li>
                             </ul>
                             <button class="btn btn-primary pricing-btn">选择套餐</button>
                         </div>
@@ -391,14 +459,19 @@
             </div>
         </section>
 
-        <!-- 客户评价部分 -->
+        <!-- 客户评价 -->
         <section id="testimonials" class="section testimonials-section">
             <div class="container">
-                <h2 class="section-title" data-aos="fade-up">客户评价</h2>
-                <div class="testimonials-slider">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">客户评价</span>
+                    <h2 class="section-title">真实反馈，信赖之选</h2>
+                    <p class="section-desc">听听客户们怎么说</p>
+                </div>
+                <div class="testimonials-grid">
                     <div class="testimonial-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="testimonial-quote">"</div>
                         <div class="testimonial-content">
-                            <p>"摄影师非常专业，从前期沟通到后期修图都很细心。拍出来的效果比我想象的还要好，完全还原了我想要的角色感觉！"</p>
+                            <p>摄影师非常专业，从前期沟通到后期修图都很细心。拍出来的效果比我想象的还要好！</p>
                         </div>
                         <div class="testimonial-author">
                             <div class="author-avatar">👩</div>
@@ -407,10 +480,18 @@
                                 <span>cosplay爱好者</span>
                             </div>
                         </div>
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
                     </div>
                     <div class="testimonial-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="testimonial-quote">"</div>
                         <div class="testimonial-content">
-                            <p>"合作过很多摄影师，这位是最有耐心的。拍摄前提供了详细的策划方案，拍摄过程中不断沟通调整，最终效果非常满意。"</p>
+                            <p>合作过很多摄影师，这位是最有耐心的。拍摄前提供了详细的策划方案，最终效果非常满意。</p>
                         </div>
                         <div class="testimonial-author">
                             <div class="author-avatar">👨</div>
@@ -419,10 +500,18 @@
                                 <span>百万粉丝博主</span>
                             </div>
                         </div>
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
                     </div>
                     <div class="testimonial-card" data-aos="fade-up" data-aos-delay="300">
+                        <div class="testimonial-quote">"</div>
                         <div class="testimonial-content">
-                            <p>"后期处理能力很强，能把普通的照片变成艺术品。而且交付的成品还可以自己调整，非常贴心。"</p>
+                            <p>后期处理能力很强，能把普通的照片变成艺术品。而且交付的成品还可以自己调整，非常贴心。</p>
                         </div>
                         <div class="testimonial-author">
                             <div class="author-avatar">👩</div>
@@ -431,106 +520,83 @@
                                 <span>个人约拍客户</span>
                             </div>
                         </div>
+                        <div class="testimonial-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
                     </div>
                 </div>
                 <div class="testimonials-more" data-aos="fade-up">
-                    <button class="btn btn-secondary" id="openTestimonialsModal">查看更多评价</button>
+                    <button class="btn btn-outline" id="openTestimonialsModal">
+                        <span>查看更多评价</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
                 </div>
             </div>
         </section>
 
-        <!-- 教程分享部分 -->
-        <section id="tutorials" class="section tutorials-section">
-            <div class="container">
-                <h2 class="section-title" data-aos="fade-up">教程分享</h2>
-                <div class="tutorials-grid">
-                    <div class="tutorial-card" data-aos="fade-up" data-aos-delay="100">
-                        <div class="tutorial-image">
-                            <div class="image-placeholder">
-                                <i class="fas fa-camera"></i>
-                            </div>
-                        </div>
-                        <div class="tutorial-content">
-                            <h3>二次元人像拍摄技巧</h3>
-                            <p>学习如何捕捉角色神韵，拍出有灵魂的二次元人像</p>
-                            <button class="btn btn-secondary">阅读教程</button>
-                        </div>
-                    </div>
-                    <div class="tutorial-card" data-aos="fade-up" data-aos-delay="200">
-                        <div class="tutorial-image">
-                            <div class="image-placeholder">
-                                <i class="fas fa-magic"></i>
-                            </div>
-                        </div>
-                        <div class="tutorial-content">
-                            <h3>后期调色基础教程</h3>
-                            <p>掌握二次元风格调色技巧，让照片更有氛围感</p>
-                            <button class="btn btn-secondary">阅读教程</button>
-                        </div>
-                    </div>
-                    <div class="tutorial-card" data-aos="fade-up" data-aos-delay="300">
-                        <div class="tutorial-image">
-                            <div class="image-placeholder">
-                                <i class="fas fa-lightbulb"></i>
-                            </div>
-                        </div>
-                        <div class="tutorial-content">
-                            <h3>拍摄策划方案制作</h3>
-                            <p>学习如何制作完整的拍摄策划方案</p>
-                            <button class="btn btn-secondary">阅读教程</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 联系方式部分 -->
+        <!-- 联系方式 -->
         <section id="contact" class="section contact-section">
             <div class="container">
-                <h2 class="section-title" data-aos="fade-up">联系我</h2>
-                <div class="contact-content">
+                <div class="section-header" data-aos="fade-up">
+                    <span class="section-tag">联系我</span>
+                    <h2 class="section-title">开始您的创作之旅</h2>
+                    <p class="section-desc">随时欢迎咨询，我会在24小时内回复</p>
+                </div>
+                <div class="contact-grid">
                     <div class="contact-info" data-aos="fade-right">
-                        <div class="contact-item">
-                            <i class="fab fa-weixin"></i>
-                            <div>
+                        <div class="contact-card">
+                            <div class="contact-icon">
+                                <i class="fab fa-weixin"></i>
+                            </div>
+                            <div class="contact-details">
                                 <h3>微信</h3>
                                 <p>YFTX0616</p>
                             </div>
                         </div>
-                        <a href="https://www.douyin.com/user/MS4wLjABAAAA1R_6aqng4qj4f9OXLkgdyWPbxn-EnNk16b9Oz66aQnE-h29bpFbJYI4jKGm5RnkF?from_tab_name=main" target="_blank" rel="noopener noreferrer" class="contact-item contact-link">
-                            <i class="fab fa-tiktok"></i>
-                            <div>
+                        <a href="https://www.douyin.com/user/MS4wLjABAAAA1R_6aqng4qj4f9OXLkgdyWPbxn-EnNk16b9Oz66aQnE-h29bpFbJYI4jKGm5RnkF?from_tab_name=main" target="_blank" class="contact-card contact-link">
+                            <div class="contact-icon">
+                                <i class="fab fa-tiktok"></i>
+                            </div>
+                            <div class="contact-details">
                                 <h3>抖音</h3>
                                 <p>YFTX0000</p>
                             </div>
-                            <div class="hover-tooltip">点击跳转到抖音主页</div>
+                            <div class="link-arrow">
+                                <i class="fas fa-external-link-alt"></i>
+                            </div>
                         </a>
-                        <div class="contact-item">
-                            <i class="fas fa-clock"></i>
-                            <div>
+                        <div class="contact-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="contact-details">
                                 <h3>工作时间</h3>
                                 <p>周一至周日 9:00-21:00</p>
                             </div>
                         </div>
-                        <div class="contact-item">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <div>
+                        <div class="contact-card">
+                            <div class="contact-icon">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                            <div class="contact-details">
                                 <h3>服务范围</h3>
                                 <p>全国可飞（需报销差旅）</p>
                             </div>
                         </div>
                     </div>
-                    <div class="contact-form" data-aos="fade-left">
+                    <div class="contact-form-wrapper" data-aos="fade-left">
                         <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
                             <input type="hidden" name="access_key" value="2386150e-5aa8-4115-b47f-552e4c0167bd">
                             <input type="hidden" name="subject" value="一方通行 - 新预约咨询">
                             <input type="hidden" name="from_name" value="一方通行网站">
                             <input type="hidden" name="付款时间" id="paymentTime" value="">
-                            <!-- 安全：蜜罐字段 - 正常用户看不到，机器人会自动填写 -->
                             <div style="position:absolute;left:-9999px;" aria-hidden="true">
                                 <input type="text" name="honeypot" tabindex="-1" autocomplete="off">
                             </div>
-                            <!-- 安全：记录表单加载时间 -->
                             <input type="hidden" name="formLoadTime" id="formLoadTime" value="">
                             <div class="form-group">
                                 <input type="text" name="CN" placeholder="您的CN" required>
@@ -569,21 +635,62 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <textarea name="需求描述" placeholder="请描述您的需求（选填）" rows="5"></textarea>
+                                <textarea name="需求描述" placeholder="请描述您的需求（选填）" rows="4"></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-paper-plane"></i> 提交咨询
+                            <button type="submit" class="btn btn-primary btn-block">
+                                <i class="fas fa-paper-plane"></i>
+                                <span>提交咨询</span>
                             </button>
                         </form>
-                        <p class="contact-note">提交后我会在24小时内回复您</p>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-logo">一方通行</div>
+                    <p class="footer-desc">用严谨丈量创作，用镜头捕捉美好</p>
+                </div>
+                <div class="footer-links">
+                    <h4>快速链接</h4>
+                    <a href="#hero">首页</a>
+                    <a href="#features">服务</a>
+                    <a href="portfolio.html">作品集</a>
+                    <a href="#contact">联系我</a>
+                </div>
+                <div class="footer-social">
+                    <h4>关注我</h4>
+                    <a href="#"><i class="fab fa-weixin"></i></a>
+                    <a href="https://www.douyin.com/user/MS4wLjABAAAA1R_6aqng4qj4f9OXLkgdyWPbxn-EnNk16b9Oz66aQnE-h29bpFbJYI4jKGm5RnkF?from_tab_name=main" target="_blank"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 一方通行. 保留所有权利.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 模态框 -->
+    <div class="modal-overlay" id="portfolioModal">
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-image">
+                <img src="" alt="" class="modal-img">
+            </div>
+            <div class="modal-info">
+                <h3 class="modal-title"></h3>
+                <p class="modal-description"></p>
+            </div>
+        </div>
+    </div>
+
     <!-- 评价模态框 -->
-    <div class="testimonials-modal-overlay" id="testimonialsModal">
+    <div class="modal-overlay" id="testimonialsModal">
         <div class="testimonials-modal">
             <div class="testimonials-modal-header">
                 <h2>全部评价</h2>
@@ -595,93 +702,57 @@
             </div>
             <div class="testimonials-modal-body">
                 <div class="testimonials-list" id="testimonialsList">
-                    <div class="testimonial-full-item" data-likes="12" data-time="2026-04-28">
-                        <div class="testimonial-full-content">
-                            <p>"摄影师非常专业，从前期沟通到后期修图都很细心。拍出来的效果比我想象的还要好，完全还原了我想要的角色感觉！"</p>
+                    <div class="testimonial-item" data-likes="12" data-time="2026-04-28">
+                        <div class="testimonial-item-content">
+                            <p>"摄影师非常专业，从前期沟通到后期修图都很细心。拍出来的效果比我想象的还要好！"</p>
                         </div>
-                        <div class="testimonial-full-footer">
-                            <div class="testimonial-author">
-                                <div class="author-avatar">👩</div>
-                                <div class="author-info">
+                        <div class="testimonial-item-footer">
+                            <div class="testimonial-item-author">
+                                <div class="author-avatar-small">👩</div>
+                                <div>
                                     <h4>小樱</h4>
                                     <span>cosplay爱好者</span>
                                 </div>
                             </div>
-                            <div class="testimonial-meta">
-                                <span class="testimonial-date">2026-04-28</span>
+                            <div class="testimonial-item-meta">
+                                <span class="date">2026-04-28</span>
                                 <button class="like-btn" data-id="1"><i class="fas fa-heart"></i> <span class="like-count">12</span></button>
                             </div>
                         </div>
                     </div>
-                    <div class="testimonial-full-item" data-likes="8" data-time="2026-04-25">
-                        <div class="testimonial-full-content">
-                            <p>"合作过很多摄影师，这位是最有耐心的。拍摄前提供了详细的策划方案，拍摄过程中不断沟通调整，最终效果非常满意。"</p>
+                    <div class="testimonial-item" data-likes="8" data-time="2026-04-25">
+                        <div class="testimonial-item-content">
+                            <p>"合作过很多摄影师，这位是最有耐心的。拍摄前提供了详细的策划方案，最终效果非常满意。"</p>
                         </div>
-                        <div class="testimonial-full-footer">
-                            <div class="testimonial-author">
-                                <div class="author-avatar">👨</div>
-                                <div class="author-info">
+                        <div class="testimonial-item-footer">
+                            <div class="testimonial-item-author">
+                                <div class="author-avatar-small">👨</div>
+                                <div>
                                     <h4>动漫博主小明</h4>
                                     <span>百万粉丝博主</span>
                                 </div>
                             </div>
-                            <div class="testimonial-meta">
-                                <span class="testimonial-date">2026-04-25</span>
+                            <div class="testimonial-item-meta">
+                                <span class="date">2026-04-25</span>
                                 <button class="like-btn" data-id="2"><i class="fas fa-heart"></i> <span class="like-count">8</span></button>
                             </div>
                         </div>
                     </div>
-                    <div class="testimonial-full-item" data-likes="15" data-time="2026-04-20">
-                        <div class="testimonial-full-content">
+                    <div class="testimonial-item" data-likes="15" data-time="2026-04-20">
+                        <div class="testimonial-item-content">
                             <p>"后期处理能力很强，能把普通的照片变成艺术品。而且交付的成品还可以自己调整，非常贴心。"</p>
                         </div>
-                        <div class="testimonial-full-footer">
-                            <div class="testimonial-author">
-                                <div class="author-avatar">👩</div>
-                                <div class="author-info">
+                        <div class="testimonial-item-footer">
+                            <div class="testimonial-item-author">
+                                <div class="author-avatar-small">👩</div>
+                                <div>
                                     <h4>二次元爱好者</h4>
                                     <span>个人约拍客户</span>
                                 </div>
                             </div>
-                            <div class="testimonial-meta">
-                                <span class="testimonial-date">2026-04-20</span>
+                            <div class="testimonial-item-meta">
+                                <span class="date">2026-04-20</span>
                                 <button class="like-btn" data-id="3"><i class="fas fa-heart"></i> <span class="like-count">15</span></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-full-item" data-likes="6" data-time="2026-04-15">
-                        <div class="testimonial-full-content">
-                            <p>"第一次拍cosplay写真，本来很紧张，但摄影师一直在引导我放松，拍出来的效果超出预期！下次还约！"</p>
-                        </div>
-                        <div class="testimonial-full-footer">
-                            <div class="testimonial-author">
-                                <div class="author-avatar">🧑</div>
-                                <div class="author-info">
-                                    <h4>cos新手小白</h4>
-                                    <span>首次约拍</span>
-                                </div>
-                            </div>
-                            <div class="testimonial-meta">
-                                <span class="testimonial-date">2026-04-15</span>
-                                <button class="like-btn" data-id="4"><i class="fas fa-heart"></i> <span class="like-count">6</span></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-full-item" data-likes="20" data-time="2026-04-10">
-                        <div class="testimonial-full-content">
-                            <p>"策划案做得非常详细，从场地到服装到道具都考虑到了，拍摄当天效率很高，完全不浪费时间。强烈推荐给需要商拍的小伙伴！"</p>
-                        </div>
-                        <div class="testimonial-full-footer">
-                            <div class="testimonial-author">
-                                <div class="author-avatar">👨</div>
-                                <div class="author-info">
-                                    <h4>品牌方负责人</h4>
-                                    <span>商业合作</span>
-                                </div>
-                            </div>
-                            <div class="testimonial-meta">
-                                <span class="testimonial-date">2026-04-10</span>
-                                <button class="like-btn" data-id="5"><i class="fas fa-heart"></i> <span class="like-count">20</span></button>
                             </div>
                         </div>
                     </div>
@@ -707,73 +778,8 @@
         </div>
     </div>
 
-    <!-- 登录模态框 -->
-    <div class="login-modal-overlay" id="loginModal">
-        <div class="login-modal">
-            <div class="login-modal-header">
-                <h2 id="loginModalTitle">登录</h2>
-                <button class="modal-close-btn" id="closeLoginModal">&times;</button>
-            </div>
-            <div class="login-modal-body">
-                <div class="login-tabs">
-                    <button class="login-tab active" data-tab="login">登录</button>
-                    <button class="login-tab" data-tab="register">注册</button>
-                </div>
-                <!-- 登录表单 -->
-                <form class="login-form" id="loginForm">
-                    <div class="form-group animated-input">
-                        <i class="fas fa-user input-icon"></i>
-                        <input type="text" id="loginAccount" placeholder="账号或邮箱" required>
-                        <span class="input-highlight"></span>
-                    </div>
-                    <div class="form-group animated-input">
-                        <i class="fas fa-lock input-icon"></i>
-                        <input type="password" id="loginPassword" placeholder="密码" required>
-                        <span class="input-highlight"></span>
-                    </div>
-                    <button type="submit" class="btn btn-primary login-submit">
-                        <i class="fas fa-sign-in-alt"></i> 登录
-                    </button>
-                </form>
-                <!-- 注册表单 -->
-                <form class="login-form" id="registerForm" style="display:none;">
-                    <div class="form-group animated-input">
-                        <i class="fas fa-user input-icon"></i>
-                        <input type="text" id="registerName" placeholder="用户名" required>
-                        <span class="input-highlight"></span>
-                    </div>
-                    <div class="form-group animated-input">
-                        <i class="fas fa-at input-icon"></i>
-                        <input type="text" id="registerAccount" placeholder="自定义账号" required>
-                        <span class="input-highlight"></span>
-                    </div>
-                    <div class="form-group animated-input">
-                        <i class="fas fa-lock input-icon"></i>
-                        <input type="password" id="registerPassword" placeholder="密码（至少6位）" required minlength="6">
-                        <span class="input-highlight"></span>
-                    </div>
-                    <div class="form-group animated-input">
-                        <i class="fas fa-lock input-icon"></i>
-                        <input type="password" id="registerConfirm" placeholder="确认密码" required minlength="6">
-                        <span class="input-highlight"></span>
-                    </div>
-                    <button type="submit" class="btn btn-primary login-submit register-btn">
-                        <i class="fas fa-user-plus"></i> 注册
-                    </button>
-                </form>
-                <div class="login-divider">
-                    <span>或者</span>
-                </div>
-                <button class="btn btn-google" id="googleLoginBtn">
-                    <i class="fab fa-google"></i> 使用Google登录
-                </button>
-                <p class="login-note">登录后可保存您的偏好设置</p>
-            </div>
-        </div>
-    </div>
-
     <!-- 支付模态框 -->
-    <div class="payment-modal-overlay" id="paymentModal">
+    <div class="modal-overlay" id="paymentModal">
         <div class="payment-modal">
             <div class="payment-modal-header">
                 <h2>确认支付</h2>
@@ -829,8 +835,8 @@
         </div>
     </div>
 
-    <!-- 付款成功模态框 -->
-    <div class="success-modal-overlay" id="successModal">
+    <!-- 成功模态框 -->
+    <div class="modal-overlay" id="successModal">
         <div class="success-modal">
             <div class="success-icon">
                 <i class="fas fa-check-circle"></i>
@@ -847,32 +853,79 @@
         </div>
     </div>
 
-    <!-- 页脚 -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">一方通行</div>
-                <div class="footer-links">
-                    <a href="index.html">首页</a>
-                    <a href="portfolio.html">作品集</a>
-                    <a href="#contact">联系我</a>
-                </div>
-                <div class="footer-social">
-                    <a href="#"><i class="fab fa-weixin"></i></a>
-                    <a href="https://www.douyin.com/user/MS4wLjABAAAA1R_6aqng4qj4f9OXLkgdyWPbxn-EnNk16b9Oz66aQnE-h29bpFbJYI4jKGm5RnkF?from_tab_name=main" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok"></i></a>
-                </div>
+    <!-- 登录模态框 -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="login-modal">
+            <div class="login-modal-header">
+                <h2 id="loginModalTitle">登录</h2>
+                <button class="modal-close-btn" id="closeLoginModal">&times;</button>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2026 一方通行. 保留所有权利.</p>
+            <div class="login-modal-body">
+                <div class="login-tabs">
+                    <button class="login-tab active" data-tab="login">登录</button>
+                    <button class="login-tab" data-tab="register">注册</button>
+                </div>
+                <form class="login-form" id="loginForm">
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="loginAccount" placeholder="账号或邮箱" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="loginPassword" placeholder="密码" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-sign-in-alt"></i> 登录
+                    </button>
+                </form>
+                <form class="login-form" id="registerForm" style="display:none;">
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="registerName" placeholder="用户名" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <i class="fas fa-at"></i>
+                            <input type="text" id="registerAccount" placeholder="自定义账号" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="registerPassword" placeholder="密码（至少6位）" required minlength="6">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="registerConfirm" placeholder="确认密码" required minlength="6">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-user-plus"></i> 注册
+                    </button>
+                </form>
+                <div class="login-divider">
+                    <span>或者</span>
+                </div>
+                <button class="btn btn-google" id="googleLoginBtn">
+                    <i class="fab fa-google"></i> 使用Google登录
+                </button>
+                <p class="login-note">登录后可保存您的偏好设置</p>
             </div>
         </div>
-    </footer>
+    </div>
 
-    <!-- 引入AOS.js -->
+    <!-- 引入脚本 -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <!-- 引入Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
-    <script src="script.js?v=19"></script>
+    <script src="script.js?v=22"></script>
 </body>
 </html>
