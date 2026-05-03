@@ -1,3 +1,17 @@
+// Firebase配置和初始化
+var firebaseConfig = {
+    apiKey: "AIzaSyA1pqvmi6UR4LkX0vqz6C6GdgMKUY4ox8w",
+    authDomain: "yifang-website.firebaseapp.com",
+    projectId: "yifang-website",
+    storageBucket: "yifang-website.firebasestorage.app",
+    messagingSenderId: "127736935080",
+    appId: "1:127736935080:web:dae94ee9e4145bf51a889d"
+};
+
+// 初始化Firebase
+firebase.initializeApp(firebaseConfig);
+var auth = firebase.auth();
+
 // 开屏动画 - 页面加载后自动播放
 window.addEventListener('load', function() {
     var splashScreen = document.getElementById('splashScreen');
@@ -1008,6 +1022,165 @@ function initParticles() {
 
     animate();
 }
+
+// Firebase登录系统
+function initAuth() {
+    var loginModal = document.getElementById('loginModal');
+    var showLoginBtn = document.getElementById('showLoginBtn');
+    var closeLoginModal = document.getElementById('closeLoginModal');
+    var authSection = document.getElementById('authSection');
+    var userSection = document.getElementById('userSection');
+    var userAvatar = document.getElementById('userAvatar');
+    var userName = document.getElementById('userName');
+    var logoutBtn = document.getElementById('logoutBtn');
+    var googleLoginBtn = document.getElementById('googleLoginBtn');
+    var loginForm = document.getElementById('loginForm');
+    var registerForm = document.getElementById('registerForm');
+    var loginTabs = document.querySelectorAll('.login-tab');
+
+    if (!loginModal || !showLoginBtn) return;
+
+    // 打开登录模态框
+    showLoginBtn.addEventListener('click', function() {
+        loginModal.classList.add('active');
+    });
+
+    // 关闭登录模态框
+    if (closeLoginModal) {
+        closeLoginModal.addEventListener('click', function() {
+            loginModal.classList.remove('active');
+        });
+    }
+
+    // 点击背景关闭
+    loginModal.addEventListener('click', function(e) {
+        if (e.target === loginModal) {
+            loginModal.classList.remove('active');
+        }
+    });
+
+    // 切换登录/注册标签
+    loginTabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            loginTabs.forEach(function(t) { t.classList.remove('active'); });
+            this.classList.add('active');
+            
+            var tabType = this.getAttribute('data-tab');
+            if (tabType === 'login') {
+                loginForm.style.display = 'flex';
+                registerForm.style.display = 'none';
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'flex';
+            }
+        });
+    });
+
+    // 邮箱密码登录
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var email = document.getElementById('loginEmail').value;
+            var password = document.getElementById('loginPassword').value;
+            
+            auth.signInWithEmailAndPassword(email, password)
+                .then(function() {
+                    loginModal.classList.remove('active');
+                    showNotification('登录成功！', 'success');
+                    loginForm.reset();
+                })
+                .catch(function(error) {
+                    showNotification('登录失败：' + error.message, 'error');
+                });
+        });
+    }
+
+    // 邮箱密码注册
+    if (registerForm) {
+        registerForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var name = document.getElementById('registerName').value;
+            var email = document.getElementById('registerEmail').value;
+            var password = document.getElementById('registerPassword').value;
+            
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(function(result) {
+                    // 更新用户名称
+                    return result.user.updateProfile({ displayName: name });
+                })
+                .then(function() {
+                    loginModal.classList.remove('active');
+                    showNotification('注册成功！', 'success');
+                    registerForm.reset();
+                })
+                .catch(function(error) {
+                    showNotification('注册失败：' + error.message, 'error');
+                });
+        });
+    }
+
+    // Google登录
+    if (googleLoginBtn) {
+        googleLoginBtn.addEventListener('click', function() {
+            var provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then(function() {
+                    loginModal.classList.remove('active');
+                    showNotification('Google登录成功！', 'success');
+                })
+                .catch(function(error) {
+                    showNotification('Google登录失败：' + error.message, 'error');
+                });
+        });
+    }
+
+    // 退出登录
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+            auth.signOut()
+                .then(function() {
+                    showNotification('已退出登录', 'success');
+                })
+                .catch(function(error) {
+                    showNotification('退出失败：' + error.message, 'error');
+                });
+        });
+    }
+
+    // 监听登录状态变化
+    auth.onAuthStateChanged(function(user) {
+        if (user) {
+            // 用户已登录
+            authSection.style.display = 'none';
+            userSection.style.display = 'flex';
+            
+            // 显示用户信息
+            var displayName = user.displayName || '用户';
+            var email = user.email || '';
+            
+            userName.textContent = displayName;
+            
+            // 设置头像
+            if (user.photoURL) {
+                userAvatar.innerHTML = '<img src="' + user.photoURL + '" alt="头像" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+            } else {
+                userAvatar.textContent = displayName.charAt(0).toUpperCase();
+            }
+        } else {
+            // 用户未登录
+            authSection.style.display = 'flex';
+            userSection.style.display = 'none';
+        }
+    });
+}
+
+// 在DOMContentLoaded中初始化登录系统
+document.addEventListener('DOMContentLoaded', function() {
+    // ... 其他初始化代码 ...
+    
+    // 初始化登录系统
+    initAuth();
+});
 
 // 页面加载
 window.addEventListener('load', function() {
