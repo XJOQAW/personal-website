@@ -5,17 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>一方通行 - 二次元摄影</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=30">
+    <link rel="stylesheet" href="style.css?v=31">
 </head>
 <body>
-    <!-- 加载进度条 -->
-    <div class="loader" id="loader">
-        <div class="loader-progress">
-            <div class="loader-bar" id="loaderBar"></div>
-        </div>
-        <span class="loader-text" id="loaderText">0%</span>
-    </div>
-
     <!-- 开屏动画 -->
     <div class="splash" id="splash">
         <div class="splash-camera">
@@ -27,7 +19,7 @@
         </div>
     </div>
 
-    <!-- 隐藏式导航栏 -->
+    <!-- 导航栏 -->
     <nav class="nav" id="nav">
         <div class="nav-inner">
             <a href="#" class="nav-logo" onclick="event.preventDefault();window.scrollTo({top:0,behavior:'smooth'})">一方通行</a>
@@ -62,6 +54,7 @@
         <!-- 英雄区域 -->
         <section class="hero" id="hero">
             <div class="hero-bg"></div>
+            <canvas class="hero-canvas" id="heroCanvas"></canvas>
             <div class="hero-content">
                 <p class="hero-tag">二次元摄影 · 后期制作</p>
                 <h1 class="hero-title">
@@ -73,15 +66,15 @@
                 <p class="hero-desc">从前期策划到后期精修，每一个细节都经过精心打磨</p>
                 <div class="hero-stats">
                     <div class="hero-stat">
-                        <span class="hero-stat-num">200+</span>
+                        <span class="hero-stat-num" data-count="200">0</span>
                         <span class="hero-stat-label">完成作品</span>
                     </div>
                     <div class="hero-stat">
-                        <span class="hero-stat-num">50+</span>
+                        <span class="hero-stat-num" data-count="50">0</span>
                         <span class="hero-stat-label">满意客户</span>
                     </div>
                     <div class="hero-stat">
-                        <span class="hero-stat-num">5+</span>
+                        <span class="hero-stat-num" data-count="5">0</span>
                         <span class="hero-stat-label">年经验</span>
                     </div>
                 </div>
@@ -91,9 +84,7 @@
                 </div>
             </div>
             <div class="hero-scroll">
-                <div class="hero-mouse">
-                    <div class="hero-wheel"></div>
-                </div>
+                <div class="hero-mouse"><div class="hero-wheel"></div></div>
                 <span>向下滚动</span>
             </div>
         </section>
@@ -124,24 +115,15 @@
                             <div class="about-features">
                                 <div class="about-feature">
                                     <span class="about-feature-icon">🎯</span>
-                                    <div>
-                                        <h5>精准策划</h5>
-                                        <p>每个细节都提前规划</p>
-                                    </div>
+                                    <div><h5>精准策划</h5><p>每个细节都提前规划</p></div>
                                 </div>
                                 <div class="about-feature">
                                     <span class="about-feature-icon">💎</span>
-                                    <div>
-                                        <h5>品质保证</h5>
-                                        <p>后期精修，追求极致</p>
-                                    </div>
+                                    <div><h5>品质保证</h5><p>后期精修，追求极致</p></div>
                                 </div>
                                 <div class="about-feature">
                                     <span class="about-feature-icon">🤝</span>
-                                    <div>
-                                        <h5>贴心服务</h5>
-                                        <p>全程沟通，无忧拍摄</p>
-                                    </div>
+                                    <div><h5>贴心服务</h5><p>全程沟通，无忧拍摄</p></div>
                                 </div>
                             </div>
                         </div>
@@ -159,42 +141,12 @@
                     <p>为您提供全方位的摄影与后期服务</p>
                 </div>
                 <div class="services-grid">
-                    <div class="service-card">
-                        <div class="service-icon">📸</div>
-                        <h3>约拍咨询</h3>
-                        <p>了解您的需求，提供专业建议</p>
-                        <button class="service-btn" data-target="contact">立即咨询</button>
-                    </div>
-                    <div class="service-card">
-                        <div class="service-icon">🎨</div>
-                        <h3>查看作品</h3>
-                        <p>浏览我的摄影作品集</p>
-                        <a href="#portfolio" class="service-btn">浏览作品</a>
-                    </div>
-                    <div class="service-card">
-                        <div class="service-icon">📋</div>
-                        <h3>服务流程</h3>
-                        <p>了解完整的拍摄流程</p>
-                        <button class="service-btn" data-target="process">查看流程</button>
-                    </div>
-                    <div class="service-card">
-                        <div class="service-icon">💰</div>
-                        <h3>价格套餐</h3>
-                        <p>查看不同套餐的价格</p>
-                        <button class="service-btn" data-target="pricing">查看价格</button>
-                    </div>
-                    <div class="service-card">
-                        <div class="service-icon">⭐</div>
-                        <h3>客户评价</h3>
-                        <p>看看客户的反馈</p>
-                        <button class="service-btn" data-target="reviews">查看评价</button>
-                    </div>
-                    <div class="service-card">
-                        <div class="service-icon">📚</div>
-                        <h3>教程分享</h3>
-                        <p>学习摄影和后期技巧</p>
-                        <button class="service-btn" data-target="tutorials">查看教程</button>
-                    </div>
+                    <div class="service-card"><div class="service-icon">📸</div><h3>约拍咨询</h3><p>了解您的需求，提供专业建议</p><button class="service-btn" data-target="contact">立即咨询</button></div>
+                    <div class="service-card"><div class="service-icon">🎨</div><h3>查看作品</h3><p>浏览我的摄影作品集</p><a href="#portfolio" class="service-btn">浏览作品</a></div>
+                    <div class="service-card"><div class="service-icon">📋</div><h3>服务流程</h3><p>了解完整的拍摄流程</p><button class="service-btn" data-target="process">查看流程</button></div>
+                    <div class="service-card"><div class="service-icon">💰</div><h3>价格套餐</h3><p>查看不同套餐的价格</p><button class="service-btn" data-target="pricing">查看价格</button></div>
+                    <div class="service-card"><div class="service-icon">⭐</div><h3>客户评价</h3><p>看看客户的反馈</p><button class="service-btn" data-target="reviews">查看评价</button></div>
+                    <div class="service-card"><div class="service-icon">📚</div><h3>教程分享</h3><p>学习摄影和后期技巧</p><button class="service-btn" data-target="tutorials">查看教程</button></div>
                 </div>
             </div>
         </section>
@@ -208,41 +160,11 @@
                     <p>从咨询到交付，每一步都精心把控</p>
                 </div>
                 <div class="process-timeline">
-                    <div class="process-item">
-                        <div class="process-num">01</div>
-                        <div class="process-content">
-                            <h3>咨询沟通</h3>
-                            <p>了解客户需求，确定拍摄风格</p>
-                        </div>
-                    </div>
-                    <div class="process-item">
-                        <div class="process-num">02</div>
-                        <div class="process-content">
-                            <h3>方案策划</h3>
-                            <p>提供拍摄策划方案，包括场地、服装、道具</p>
-                        </div>
-                    </div>
-                    <div class="process-item">
-                        <div class="process-num">03</div>
-                        <div class="process-content">
-                            <h3>拍摄执行</h3>
-                            <p>专业拍摄，确保质量，全程沟通</p>
-                        </div>
-                    </div>
-                    <div class="process-item">
-                        <div class="process-num">04</div>
-                        <div class="process-content">
-                            <h3>后期处理</h3>
-                            <p>精修调色，创意合成，打造完美效果</p>
-                        </div>
-                    </div>
-                    <div class="process-item">
-                        <div class="process-num">05</div>
-                        <div class="process-content">
-                            <h3>交付成品</h3>
-                            <p>提供可修改的高清成品，支持风格化调整</p>
-                        </div>
-                    </div>
+                    <div class="process-item"><div class="process-num">01</div><div class="process-content"><h3>咨询沟通</h3><p>了解客户需求，确定拍摄风格</p></div></div>
+                    <div class="process-item"><div class="process-num">02</div><div class="process-content"><h3>方案策划</h3><p>提供拍摄策划方案，包括场地、服装、道具</p></div></div>
+                    <div class="process-item"><div class="process-num">03</div><div class="process-content"><h3>拍摄执行</h3><p>专业拍摄，确保质量，全程沟通</p></div></div>
+                    <div class="process-item"><div class="process-num">04</div><div class="process-content"><h3>后期处理</h3><p>精修调色，创意合成，打造完美效果</p></div></div>
+                    <div class="process-item"><div class="process-num">05</div><div class="process-content"><h3>交付成品</h3><p>提供可修改的高清成品，支持风格化调整</p></div></div>
                 </div>
             </div>
         </section>
@@ -257,34 +179,10 @@
                 </div>
                 <div class="portfolio-carousel">
                     <div class="portfolio-track" id="portfolioTrack">
-                        <div class="portfolio-slide">
-                            <div class="portfolio-img">📸</div>
-                            <div class="portfolio-info">
-                                <h3>二次元人像</h3>
-                                <p>捕捉角色神韵与情绪表达</p>
-                            </div>
-                        </div>
-                        <div class="portfolio-slide">
-                            <div class="portfolio-img">🎨</div>
-                            <div class="portfolio-info">
-                                <h3>创意合成</h3>
-                                <p>二次元与现实的创意融合</p>
-                            </div>
-                        </div>
-                        <div class="portfolio-slide">
-                            <div class="portfolio-img">📷</div>
-                            <div class="portfolio-info">
-                                <h3>场景拍摄</h3>
-                                <p>精心搭建的二次元场景</p>
-                            </div>
-                        </div>
-                        <div class="portfolio-slide">
-                            <div class="portfolio-img">✨</div>
-                            <div class="portfolio-info">
-                                <h3>后期精修</h3>
-                                <p>专业后期处理与调色</p>
-                            </div>
-                        </div>
+                        <div class="portfolio-slide"><div class="portfolio-img">📸</div><div class="portfolio-info"><h3>二次元人像</h3><p>捕捉角色神韵与情绪表达</p></div></div>
+                        <div class="portfolio-slide"><div class="portfolio-img">🎨</div><div class="portfolio-info"><h3>创意合成</h3><p>二次元与现实的创意融合</p></div></div>
+                        <div class="portfolio-slide"><div class="portfolio-img">📷</div><div class="portfolio-info"><h3>场景拍摄</h3><p>精心搭建的二次元场景</p></div></div>
+                        <div class="portfolio-slide"><div class="portfolio-img">✨</div><div class="portfolio-info"><h3>后期精修</h3><p>专业后期处理与调色</p></div></div>
                     </div>
                     <div class="portfolio-controls">
                         <button class="portfolio-prev" id="portfolioPrev"><i class="fas fa-arrow-left"></i></button>
@@ -308,105 +206,14 @@
                     <button class="pricing-tab" data-tab="event">场照</button>
                 </div>
                 <div class="pricing-grid" id="studioPricing">
-                    <div class="pricing-card">
-                        <div class="pricing-badge">限时7折</div>
-                        <div class="pricing-top">
-                            <h3>基础套餐</h3>
-                            <div class="pricing-price">¥150</div>
-                            <p>适合个人约拍</p>
-                        </div>
-                        <ul class="pricing-list">
-                            <li>✓ 2小时拍摄时间</li>
-                            <li>✓ 1套服装造型</li>
-                            <li>✓ 1张精修照片</li>
-                            <li>✓ 拍摄6张，保底4张</li>
-                            <li>✓ 全方位完整策划</li>
-                            <li>✓ 隔天或当天交付</li>
-                        </ul>
-                        <button class="btn btn-primary pricing-btn">选择套餐</button>
-                    </div>
-                    <div class="pricing-card pricing-featured">
-                        <div class="pricing-badge">限时7折</div>
-                        <div class="pricing-top">
-                            <h3>标准套餐</h3>
-                            <div class="pricing-price">¥350</div>
-                            <p>适合深度创作</p>
-                        </div>
-                        <ul class="pricing-list">
-                            <li>✓ 4小时拍摄时间</li>
-                            <li>✓ 1套服装造型</li>
-                            <li>✓ 3张精修照片</li>
-                            <li>✓ 拍摄12张，保底9张</li>
-                            <li>✓ 全方位完整策划</li>
-                            <li>✓ 7个工作日内交付</li>
-                        </ul>
-                        <button class="btn btn-primary pricing-btn">选择套餐</button>
-                    </div>
-                    <div class="pricing-card">
-                        <div class="pricing-badge">限时7折</div>
-                        <div class="pricing-top">
-                            <h3>高级套餐</h3>
-                            <div class="pricing-price">¥550</div>
-                            <p>适合商业合作</p>
-                        </div>
-                        <ul class="pricing-list">
-                            <li>✓ 全天拍摄时间</li>
-                            <li>✓ 所有准备的服装造型</li>
-                            <li>✓ 每套造型3张精修</li>
-                            <li>✓ 每套拍摄12张，保底9张</li>
-                            <li>✓ 全方位完整策划</li>
-                            <li>✓ 30个工作日内交付</li>
-                        </ul>
-                        <button class="btn btn-primary pricing-btn">选择套餐</button>
-                    </div>
+                    <div class="pricing-card"><div class="pricing-badge">限时7折</div><div class="pricing-top"><h3>基础套餐</h3><div class="pricing-price">¥150</div><p>适合个人约拍</p></div><ul class="pricing-list"><li>✓ 2小时拍摄时间</li><li>✓ 1套服装造型</li><li>✓ 1张精修照片</li><li>✓ 拍摄6张，保底4张</li><li>✓ 全方位完整策划</li><li>✓ 隔天或当天交付</li></ul><button class="btn btn-primary pricing-btn">选择套餐</button></div>
+                    <div class="pricing-card pricing-featured"><div class="pricing-badge">限时7折</div><div class="pricing-top"><h3>标准套餐</h3><div class="pricing-price">¥350</div><p>适合深度创作</p></div><ul class="pricing-list"><li>✓ 4小时拍摄时间</li><li>✓ 1套服装造型</li><li>✓ 3张精修照片</li><li>✓ 拍摄12张，保底9张</li><li>✓ 全方位完整策划</li><li>✓ 7个工作日内交付</li></ul><button class="btn btn-primary pricing-btn">选择套餐</button></div>
+                    <div class="pricing-card"><div class="pricing-badge">限时7折</div><div class="pricing-top"><h3>高级套餐</h3><div class="pricing-price">¥550</div><p>适合商业合作</p></div><ul class="pricing-list"><li>✓ 全天拍摄时间</li><li>✓ 所有准备的服装造型</li><li>✓ 每套造型3张精修</li><li>✓ 每套拍摄12张，保底9张</li><li>✓ 全方位完整策划</li><li>✓ 30个工作日内交付</li></ul><button class="btn btn-primary pricing-btn">选择套餐</button></div>
                 </div>
                 <div class="pricing-grid" id="eventPricing" style="display:none">
-                    <div class="pricing-card">
-                        <div class="pricing-badge">限时7折</div>
-                        <div class="pricing-top">
-                            <h3>基础套餐</h3>
-                            <div class="pricing-price">¥21</div>
-                            <p>单张精修</p>
-                        </div>
-                        <ul class="pricing-list">
-                            <li>✓ 单张精修照片</li>
-                            <li>✓ 有动作参考</li>
-                            <li>✓ 有动作指导</li>
-                            <li>✓ 当天或隔天交付</li>
-                        </ul>
-                        <button class="btn btn-primary pricing-btn">选择套餐</button>
-                    </div>
-                    <div class="pricing-card pricing-featured">
-                        <div class="pricing-badge">限时7折</div>
-                        <div class="pricing-top">
-                            <h3>标准套餐</h3>
-                            <div class="pricing-price">¥80</div>
-                            <p>四图套餐</p>
-                        </div>
-                        <ul class="pricing-list">
-                            <li>✓ 拍摄4张图</li>
-                            <li>✓ 精修4张</li>
-                            <li>✓ 有动作参考</li>
-                            <li>✓ 有动作指导</li>
-                            <li>✓ 一周内交付</li>
-                        </ul>
-                        <button class="btn btn-primary pricing-btn">选择套餐</button>
-                    </div>
-                    <div class="pricing-card">
-                        <div class="pricing-badge">限时7折</div>
-                        <div class="pricing-top">
-                            <h3>高级套餐</h3>
-                            <div class="pricing-price">¥190</div>
-                            <p>全方位服务</p>
-                        </div>
-                        <ul class="pricing-list">
-                            <li>✓ 12张图保9张</li>
-                            <li>✓ 精修3张</li>
-                            <li>✓ 全方位策划与指导</li>
-                            <li>✓ 一周内交付</li>
-                        </ul>
-                        <button class="btn btn-primary pricing-btn">选择套餐</button>
-                    </div>
+                    <div class="pricing-card"><div class="pricing-badge">限时7折</div><div class="pricing-top"><h3>基础套餐</h3><div class="pricing-price">¥21</div><p>单张精修</p></div><ul class="pricing-list"><li>✓ 单张精修照片</li><li>✓ 有动作参考</li><li>✓ 有动作指导</li><li>✓ 当天或隔天交付</li></ul><button class="btn btn-primary pricing-btn">选择套餐</button></div>
+                    <div class="pricing-card pricing-featured"><div class="pricing-badge">限时7折</div><div class="pricing-top"><h3>标准套餐</h3><div class="pricing-price">¥80</div><p>四图套餐</p></div><ul class="pricing-list"><li>✓ 拍摄4张图</li><li>✓ 精修4张</li><li>✓ 有动作参考</li><li>✓ 有动作指导</li><li>✓ 一周内交付</li></ul><button class="btn btn-primary pricing-btn">选择套餐</button></div>
+                    <div class="pricing-card"><div class="pricing-badge">限时7折</div><div class="pricing-top"><h3>高级套餐</h3><div class="pricing-price">¥190</div><p>全方位服务</p></div><ul class="pricing-list"><li>✓ 12张图保9张</li><li>✓ 精修3张</li><li>✓ 全方位策划与指导</li><li>✓ 一周内交付</li></ul><button class="btn btn-primary pricing-btn">选择套餐</button></div>
                 </div>
                 <p class="pricing-note">推荐给朋友可以获得专属返点</p>
             </div>
@@ -421,39 +228,9 @@
                     <p>听听客户们怎么说</p>
                 </div>
                 <div class="reviews-grid">
-                    <div class="review-card">
-                        <div class="review-stars">★★★★★</div>
-                        <p class="review-text">"摄影师非常专业，从前期沟通到后期修图都很细心。拍出来的效果比我想象的还要好！"</p>
-                        <div class="review-author">
-                            <span class="review-avatar">👩</span>
-                            <div>
-                                <strong>小樱</strong>
-                                <span>cosplay爱好者</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="review-card">
-                        <div class="review-stars">★★★★★</div>
-                        <p class="review-text">"合作过很多摄影师，这位是最有耐心的。拍摄前提供了详细的策划方案，最终效果非常满意。"</p>
-                        <div class="review-author">
-                            <span class="review-avatar">👨</span>
-                            <div>
-                                <strong>动漫博主小明</strong>
-                                <span>百万粉丝博主</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="review-card">
-                        <div class="review-stars">★★★★★</div>
-                        <p class="review-text">"后期处理能力很强，能把普通的照片变成艺术品。而且交付的成品还可以自己调整，非常贴心。"</p>
-                        <div class="review-author">
-                            <span class="review-avatar">👩</span>
-                            <div>
-                                <strong>二次元爱好者</strong>
-                                <span>个人约拍客户</span>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"摄影师非常专业，从前期沟通到后期修图都很细心。拍出来的效果比我想象的还要好！"</p><div class="review-author"><span class="review-avatar">👩</span><div><strong>小樱</strong><span>cosplay爱好者</span></div></div></div>
+                    <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"合作过很多摄影师，这位是最有耐心的。拍摄前提供了详细的策划方案，最终效果非常满意。"</p><div class="review-author"><span class="review-avatar">👨</span><div><strong>动漫博主小明</strong><span>百万粉丝博主</span></div></div></div>
+                    <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"后期处理能力很强，能把普通的照片变成艺术品。而且交付的成品还可以自己调整，非常贴心。"</p><div class="review-author"><span class="review-avatar">👩</span><div><strong>二次元爱好者</strong><span>个人约拍客户</span></div></div></div>
                 </div>
                 <button class="btn btn-outline reviews-more" id="reviewsMoreBtn">查看更多评价</button>
             </div>
@@ -469,35 +246,12 @@
                 </div>
                 <div class="contact-grid">
                     <div class="contact-info">
-                        <div class="contact-item">
-                            <div class="contact-icon"><i class="fab fa-weixin"></i></div>
-                            <div>
-                                <h4>微信</h4>
-                                <p>YFTX0616</p>
-                            </div>
-                        </div>
+                        <div class="contact-item"><div class="contact-icon"><i class="fab fa-weixin"></i></div><div><h4>微信</h4><p>YFTX0616</p></div></div>
                         <a href="https://www.douyin.com/user/MS4wLjABAAAA1R_6aqng4qj4f9OXLkgdyWPbxn-EnNk16b9Oz66aQnE-h29bpFbJYI4jKGm5RnkF?from_tab_name=main" target="_blank" class="contact-item contact-link">
-                            <div class="contact-icon"><i class="fab fa-tiktok"></i></div>
-                            <div>
-                                <h4>抖音</h4>
-                                <p>YFTX0000</p>
-                            </div>
-                            <i class="fas fa-arrow-right"></i>
+                            <div class="contact-icon"><i class="fab fa-tiktok"></i></div><div><h4>抖音</h4><p>YFTX0000</p></div><i class="fas fa-arrow-right"></i>
                         </a>
-                        <div class="contact-item">
-                            <div class="contact-icon"><i class="fas fa-clock"></i></div>
-                            <div>
-                                <h4>工作时间</h4>
-                                <p>周一至周日 9:00-21:00</p>
-                            </div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
-                            <div>
-                                <h4>服务范围</h4>
-                                <p>全国可飞（需报销差旅）</p>
-                            </div>
-                        </div>
+                        <div class="contact-item"><div class="contact-icon"><i class="fas fa-clock"></i></div><div><h4>工作时间</h4><p>周一至周日 9:00-21:00</p></div></div>
+                        <div class="contact-item"><div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div><div><h4>服务范围</h4><p>全国可飞（需报销差旅）</p></div></div>
                     </div>
                     <form class="contact-form" id="contactForm" action="https://api.web3forms.com/submit" method="POST">
                         <input type="hidden" name="access_key" value="2386150e-5aa8-4115-b47f-552e4c0167bd">
@@ -520,16 +274,8 @@
                         </div>
                         <select name="套餐选择">
                             <option value="">选择套餐（可选）</option>
-                            <optgroup label="白棚正片">
-                                <option value="白棚正片-基础套餐 ¥150">基础套餐 ¥150</option>
-                                <option value="白棚正片-标准套餐 ¥350">标准套餐 ¥350</option>
-                                <option value="白棚正片-高级套餐 ¥550">高级套餐 ¥550</option>
-                            </optgroup>
-                            <optgroup label="场照">
-                                <option value="场照-基础套餐 ¥21">基础套餐 ¥21</option>
-                                <option value="场照-标准套餐 ¥80">标准套餐 ¥80</option>
-                                <option value="场照-高级套餐 ¥190">高级套餐 ¥190</option>
-                            </optgroup>
+                            <optgroup label="白棚正片"><option value="白棚正片-基础套餐 ¥150">基础套餐 ¥150</option><option value="白棚正片-标准套餐 ¥350">标准套餐 ¥350</option><option value="白棚正片-高级套餐 ¥550">高级套餐 ¥550</option></optgroup>
+                            <optgroup label="场照"><option value="场照-基础套餐 ¥21">基础套餐 ¥21</option><option value="场照-标准套餐 ¥80">标准套餐 ¥80</option><option value="场照-高级套餐 ¥190">高级套餐 ¥190</option></optgroup>
                         </select>
                         <textarea name="需求描述" placeholder="请描述您的需求（选填）" rows="4"></textarea>
                         <button type="submit" class="btn btn-primary btn-full">提交咨询</button>
@@ -543,26 +289,11 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-grid">
-                <div class="footer-brand">
-                    <h3>一方通行</h3>
-                    <p>用严谨丈量创作，用镜头捕捉美好</p>
-                </div>
-                <div class="footer-links">
-                    <h4>快速链接</h4>
-                    <a href="#about">关于</a>
-                    <a href="#services">服务</a>
-                    <a href="#portfolio">作品</a>
-                    <a href="#contact">联系</a>
-                </div>
-                <div class="footer-social">
-                    <h4>关注我</h4>
-                    <a href="#"><i class="fab fa-weixin"></i></a>
-                    <a href="https://www.douyin.com/user/MS4wLjABAAAA1R_6aqng4qj4f9OXLkgdyWPbxn-EnNk16b9Oz66aQnE-h29bpFbJYI4jKGm5RnkF?from_tab_name=main" target="_blank"><i class="fab fa-tiktok"></i></a>
-                </div>
+                <div class="footer-brand"><h3>一方通行</h3><p>用严谨丈量创作，用镜头捕捉美好</p></div>
+                <div class="footer-links"><h4>快速链接</h4><a href="#about">关于</a><a href="#services">服务</a><a href="#portfolio">作品</a><a href="#contact">联系</a></div>
+                <div class="footer-social"><h4>关注我</h4><a href="#"><i class="fab fa-weixin"></i></a><a href="https://www.douyin.com/user/MS4wLjABAAAA1R_6aqng4qj4f9OXLkgdyWPbxn-EnNk16b9Oz66aQnE-h29bpFbJYI4jKGm5RnkF?from_tab_name=main" target="_blank"><i class="fab fa-tiktok"></i></a></div>
             </div>
-            <div class="footer-bottom">
-                <p>© 2026 一方通行. 保留所有权利.</p>
-            </div>
+            <div class="footer-bottom"><p>© 2026 一方通行. 保留所有权利.</p></div>
         </div>
     </footer>
 
@@ -576,39 +307,19 @@
                 <button class="login-tab" data-tab="register">注册</button>
             </div>
             <form class="login-form" id="loginForm">
-                <div class="input-group">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="loginAccount" placeholder="账号" required>
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="loginPassword" placeholder="密码" required>
-                </div>
+                <div class="input-group"><i class="fas fa-user"></i><input type="text" id="loginAccount" placeholder="账号" required></div>
+                <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="密码" required></div>
                 <button type="submit" class="btn btn-primary btn-full">登录</button>
             </form>
             <form class="login-form" id="registerForm" style="display:none">
-                <div class="input-group">
-                    <i class="fas fa-user"></i>
-                    <input type="text" id="registerName" placeholder="用户名" required>
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-at"></i>
-                    <input type="text" id="registerAccount" placeholder="自定义账号" required>
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="registerPassword" placeholder="密码（至少6位）" required minlength="6">
-                </div>
-                <div class="input-group">
-                    <i class="fas fa-lock"></i>
-                    <input type="password" id="registerConfirm" placeholder="确认密码" required minlength="6">
-                </div>
+                <div class="input-group"><i class="fas fa-user"></i><input type="text" id="registerName" placeholder="用户名" required></div>
+                <div class="input-group"><i class="fas fa-at"></i><input type="text" id="registerAccount" placeholder="自定义账号" required></div>
+                <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="registerPassword" placeholder="密码（至少6位）" required minlength="6"></div>
+                <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="registerConfirm" placeholder="确认密码" required minlength="6"></div>
                 <button type="submit" class="btn btn-primary btn-full">注册</button>
             </form>
             <div class="login-divider"><span>或者</span></div>
-            <button class="btn btn-google" id="googleLoginBtn">
-                <i class="fab fa-google"></i> 使用Google登录
-            </button>
+            <button class="btn btn-google" id="googleLoginBtn"><i class="fab fa-google"></i> 使用Google登录</button>
         </div>
     </div>
 
@@ -622,64 +333,14 @@
                 <button class="sort-btn" data-sort="hottest">最热</button>
             </div>
             <div class="reviews-list" id="reviewsList">
-                <div class="review-item" data-likes="12" data-time="2026-04-28">
-                    <div class="review-item-content">
-                        <p>"摄影师非常专业，从前期沟通到后期修图都很细心。拍出来的效果比我想象的还要好！"</p>
-                    </div>
-                    <div class="review-item-footer">
-                        <div class="review-item-author">
-                            <span>👩</span>
-                            <div><strong>小樱</strong><span>cosplay爱好者</span></div>
-                        </div>
-                        <div class="review-item-meta">
-                            <span>2026-04-28</span>
-                            <button class="like-btn" data-id="1"><i class="fas fa-heart"></i> <span>12</span></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="review-item" data-likes="8" data-time="2026-04-25">
-                    <div class="review-item-content">
-                        <p>"合作过很多摄影师，这位是最有耐心的。拍摄前提供了详细的策划方案，最终效果非常满意。"</p>
-                    </div>
-                    <div class="review-item-footer">
-                        <div class="review-item-author">
-                            <span>👨</span>
-                            <div><strong>动漫博主小明</strong><span>百万粉丝博主</span></div>
-                        </div>
-                        <div class="review-item-meta">
-                            <span>2026-04-25</span>
-                            <button class="like-btn" data-id="2"><i class="fas fa-heart"></i> <span>8</span></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="review-item" data-likes="15" data-time="2026-04-20">
-                    <div class="review-item-content">
-                        <p>"后期处理能力很强，能把普通的照片变成艺术品。而且交付的成品还可以自己调整，非常贴心。"</p>
-                    </div>
-                    <div class="review-item-footer">
-                        <div class="review-item-author">
-                            <span>👩</span>
-                            <div><strong>二次元爱好者</strong><span>个人约拍客户</span></div>
-                        </div>
-                        <div class="review-item-meta">
-                            <span>2026-04-20</span>
-                            <button class="like-btn" data-id="3"><i class="fas fa-heart"></i> <span>15</span></button>
-                        </div>
-                    </div>
-                </div>
+                <div class="review-item" data-likes="12" data-time="2026-04-28"><div class="review-item-content"><p>"摄影师非常专业，从前期沟通到后期修图都很细心。拍出来的效果比我想象的还要好！"</p></div><div class="review-item-footer"><div class="review-item-author"><span>👩</span><div><strong>小樱</strong><span>cosplay爱好者</span></div></div><div class="review-item-meta"><span>2026-04-28</span><button class="like-btn" data-id="1"><i class="fas fa-heart"></i> <span>12</span></button></div></div></div>
+                <div class="review-item" data-likes="8" data-time="2026-04-25"><div class="review-item-content"><p>"合作过很多摄影师，这位是最有耐心的。拍摄前提供了详细的策划方案，最终效果非常满意。"</p></div><div class="review-item-footer"><div class="review-item-author"><span>👨</span><div><strong>动漫博主小明</strong><span>百万粉丝博主</span></div></div><div class="review-item-meta"><span>2026-04-25</span><button class="like-btn" data-id="2"><i class="fas fa-heart"></i> <span>8</span></button></div></div></div>
+                <div class="review-item" data-likes="15" data-time="2026-04-20"><div class="review-item-content"><p>"后期处理能力很强，能把普通的照片变成艺术品。而且交付的成品还可以自己调整，非常贴心。"</p></div><div class="review-item-footer"><div class="review-item-author"><span>👩</span><div><strong>二次元爱好者</strong><span>个人约拍客户</span></div></div><div class="review-item-meta"><span>2026-04-20</span><button class="like-btn" data-id="3"><i class="fas fa-heart"></i> <span>15</span></button></div></div></div>
             </div>
             <div class="review-form-section">
                 <h3>发表评价</h3>
                 <form id="reviewForm" class="review-form">
-                    <div class="form-row">
-                        <input type="text" name="nickname" placeholder="昵称" required>
-                        <select name="identity" required>
-                            <option value="">选择身份</option>
-                            <option value="cosplay爱好者">cosplay爱好者</option>
-                            <option value="个人约拍客户">个人约拍客户</option>
-                            <option value="商业合作">商业合作</option>
-                        </select>
-                    </div>
+                    <div class="form-row"><input type="text" name="nickname" placeholder="昵称" required><select name="identity" required><option value="">选择身份</option><option value="cosplay爱好者">cosplay爱好者</option><option value="个人约拍客户">个人约拍客户</option><option value="商业合作">商业合作</option></select></div>
                     <textarea name="content" placeholder="分享您的拍摄体验..." rows="3" required></textarea>
                     <button type="submit" class="btn btn-primary">发布评价</button>
                 </form>
@@ -687,8 +348,18 @@
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
-    <script src="script.js?v=30"></script>
+    <!-- 作品集模态框 -->
+    <div class="modal" id="portfolioModal">
+        <div class="modal-box" style="max-width:800px">
+            <button class="modal-close" id="portfolioClose">&times;</button>
+            <div class="modal-img-box"><img id="modalImg" src="" alt=""></div>
+            <div class="modal-img-info"><h3 id="modalTitle"></h3><p id="modalDesc"></p></div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK（延迟加载） -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js" defer></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js" defer></script>
+    <script src="script.js?v=31"></script>
 </body>
 </html>
