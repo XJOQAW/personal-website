@@ -3589,16 +3589,8 @@ body.modal-closing::after {
     align-items: center;
     gap: 5px;
     white-space: nowrap;
-}
-    padding: 6px 14px;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 5px;
+    position: relative;
+    z-index: 1001;
 }
 
 .login-btn {

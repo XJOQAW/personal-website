@@ -1229,4 +1229,12 @@ window.addEventListener('load', function() {
     var loader = document.querySelector('.loading');
     if (loader) loader.classList.add('hidden');
     document.body.classList.add('loaded');
+    
+    // 确保开屏动画结束后完全隐藏
+    var splashScreen = document.getElementById('splashScreen');
+    if (splashScreen) {
+        setTimeout(function() {
+            splashScreen.style.display = 'none';
+        }, 3000);
+    }
 });
