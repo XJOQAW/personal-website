@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Ma+Shan+Zheng&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
     <!-- 引入Font Awesome图标 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=14">
+    <link rel="stylesheet" href="style.css?v=15">
 </head>
 <body>
     <!-- 开屏动画 - 现代相机背面 -->
@@ -711,7 +711,7 @@
     <div class="login-modal-overlay" id="loginModal">
         <div class="login-modal">
             <div class="login-modal-header">
-                <h2>登录 / 注册</h2>
+                <h2 id="loginModalTitle">登录</h2>
                 <button class="modal-close-btn" id="closeLoginModal">&times;</button>
             </div>
             <div class="login-modal-body">
@@ -721,11 +721,15 @@
                 </div>
                 <!-- 登录表单 -->
                 <form class="login-form" id="loginForm">
-                    <div class="form-group">
-                        <input type="email" id="loginEmail" placeholder="邮箱地址" required>
+                    <div class="form-group animated-input">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" id="loginAccount" placeholder="账号或邮箱" required>
+                        <span class="input-highlight"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group animated-input">
+                        <i class="fas fa-lock input-icon"></i>
                         <input type="password" id="loginPassword" placeholder="密码" required>
+                        <span class="input-highlight"></span>
                     </div>
                     <button type="submit" class="btn btn-primary login-submit">
                         <i class="fas fa-sign-in-alt"></i> 登录
@@ -733,16 +737,27 @@
                 </form>
                 <!-- 注册表单 -->
                 <form class="login-form" id="registerForm" style="display:none;">
-                    <div class="form-group">
+                    <div class="form-group animated-input">
+                        <i class="fas fa-user input-icon"></i>
                         <input type="text" id="registerName" placeholder="用户名" required>
+                        <span class="input-highlight"></span>
                     </div>
-                    <div class="form-group">
-                        <input type="email" id="registerEmail" placeholder="邮箱地址" required>
+                    <div class="form-group animated-input">
+                        <i class="fas fa-at input-icon"></i>
+                        <input type="text" id="registerAccount" placeholder="自定义账号" required>
+                        <span class="input-highlight"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group animated-input">
+                        <i class="fas fa-lock input-icon"></i>
                         <input type="password" id="registerPassword" placeholder="密码（至少6位）" required minlength="6">
+                        <span class="input-highlight"></span>
                     </div>
-                    <button type="submit" class="btn btn-primary login-submit">
+                    <div class="form-group animated-input">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" id="registerConfirm" placeholder="确认密码" required minlength="6">
+                        <span class="input-highlight"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary login-submit register-btn">
                         <i class="fas fa-user-plus"></i> 注册
                     </button>
                 </form>
@@ -858,6 +873,6 @@
     <!-- 引入Firebase -->
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
-    <script src="script.js?v=14"></script>
+    <script src="script.js?v=15"></script>
 </body>
 </html>

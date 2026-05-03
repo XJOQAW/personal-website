@@ -1026,6 +1026,7 @@ function initParticles() {
 // Firebase登录系统
 function initAuth() {
     var loginModal = document.getElementById('loginModal');
+    var loginModalTitle = document.getElementById('loginModalTitle');
     var showLoginBtn = document.getElementById('showLoginBtn');
     var closeLoginModal = document.getElementById('closeLoginModal');
     var authSection = document.getElementById('authSection');
@@ -1069,19 +1070,24 @@ function initAuth() {
             if (tabType === 'login') {
                 loginForm.style.display = 'flex';
                 registerForm.style.display = 'none';
+                loginModalTitle.textContent = '登录';
             } else {
                 loginForm.style.display = 'none';
                 registerForm.style.display = 'flex';
+                loginModalTitle.textContent = '注册';
             }
         });
     });
 
-    // 邮箱密码登录
+    // 登录（使用账号生成的邮箱格式）
     if (loginForm) {
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            var email = document.getElementById('loginEmail').value;
+            var account = document.getElementById('loginAccount').value;
             var password = document.getElementById('loginPassword').value;
+            
+            // 将账号转换为邮箱格式存储
+            var email = account + '@yifang.user';
             
             auth.signInWithEmailAndPassword(email, password)
                 .then(function() {
@@ -1090,18 +1096,45 @@ function initAuth() {
                     loginForm.reset();
                 })
                 .catch(function(error) {
-                    showNotification('登录失败：' + error.message, 'error');
+                    if (error.code === 'auth/user-not-found') {
+                        showNotification('账号不存在，请先注册', 'error');
+                    } else if (error.code === 'auth/wrong-password') {
+                        showNotification('密码错误', 'error');
+                    } else {
+                        showNotification('登录失败：' + error.message, 'error');
+                    }
                 });
         });
     }
 
-    // 邮箱密码注册
+    // 注册
     if (registerForm) {
         registerForm.addEventListener('submit', function(e) {
             e.preventDefault();
             var name = document.getElementById('registerName').value;
-            var email = document.getElementById('registerEmail').value;
+            var account = document.getElementById('registerAccount').value;
             var password = document.getElementById('registerPassword').value;
+            var confirm = document.getElementById('registerConfirm').value;
+            
+            // 验证密码
+            if (password !== confirm) {
+                showNotification('两次密码不一致', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showNotification('密码至少6位', 'error');
+                return;
+            }
+            
+            // 验证账号格式
+            if (!/^[a-zA-Z0-9_]+$/.test(account)) {
+                showNotification('账号只能包含字母、数字和下划线', 'error');
+                return;
+            }
+            
+            // 将账号转换为邮箱格式存储
+            var email = account + '@yifang.user';
             
             auth.createUserWithEmailAndPassword(email, password)
                 .then(function(result) {
@@ -1110,11 +1143,15 @@ function initAuth() {
                 })
                 .then(function() {
                     loginModal.classList.remove('active');
-                    showNotification('注册成功！', 'success');
+                    showNotification('注册成功！欢迎 ' + name, 'success');
                     registerForm.reset();
                 })
                 .catch(function(error) {
-                    showNotification('注册失败：' + error.message, 'error');
+                    if (error.code === 'auth/email-already-in-use') {
+                        showNotification('该账号已被注册', 'error');
+                    } else {
+                        showNotification('注册失败：' + error.message, 'error');
+                    }
                 });
         });
     }
@@ -1157,6 +1194,11 @@ function initAuth() {
             // 显示用户信息
             var displayName = user.displayName || '用户';
             var email = user.email || '';
+            
+            // 如果是自定义账号，显示账号名
+            if (email.includes('@yifang.user')) {
+                displayName = user.displayName || email.split('@')[0];
+            }
             
             userName.textContent = displayName;
             
