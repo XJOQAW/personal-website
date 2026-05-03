@@ -56,7 +56,7 @@ img { max-width:100%; }
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:20px;
     transition:opacity 0.5s;
 }
-.loader.hidden { opacity:0; pointer-events:none; }
+.loader.hidden { opacity:0; pointer-events:none; visibility:hidden; }
 .loader-progress { width:200px; height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
 .loader-bar { width:0%; height:100%; background:linear-gradient(90deg,var(--primary),var(--secondary)); transition:width 0.3s; }
 .loader-text { font-size:14px; color:var(--text-secondary); }

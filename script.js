@@ -1,14 +1,19 @@
 // Firebase配置
-var firebaseConfig = {
-    apiKey: "AIzaSyA1pqvmi6UR4LkX0vqz6C6GdgMKUY4ox8w",
-    authDomain: "yifang-website.firebaseapp.com",
-    projectId: "yifang-website",
-    storageBucket: "yifang-website.firebasestorage.app",
-    messagingSenderId: "127736935080",
-    appId: "1:127736935080:web:dae94ee9e4145bf51a889d"
-};
-firebase.initializeApp(firebaseConfig);
-var auth = firebase.auth();
+try {
+    var firebaseConfig = {
+        apiKey: "AIzaSyA1pqvmi6UR4LkX0vqz6C6GdgMKUY4ox8w",
+        authDomain: "yifang-website.firebaseapp.com",
+        projectId: "yifang-website",
+        storageBucket: "yifang-website.firebasestorage.app",
+        messagingSenderId: "127736935080",
+        appId: "1:127736935080:web:dae94ee9e4145bf51a889d"
+    };
+    firebase.initializeApp(firebaseConfig);
+    var auth = firebase.auth();
+} catch(e) {
+    console.log('Firebase初始化失败，继续加载页面');
+    var auth = null;
+}
 
 document.addEventListener('DOMContentLoaded', function() {
     // 加载进度条
@@ -17,17 +22,23 @@ document.addEventListener('DOMContentLoaded', function() {
     var loaderText = document.getElementById('loaderText');
     var progress = 0;
     var loaderInterval = setInterval(function() {
-        progress += Math.random() * 15;
+        progress += Math.random() * 20 + 5;
         if (progress >= 100) {
             progress = 100;
             clearInterval(loaderInterval);
             setTimeout(function() {
-                loader.classList.add('hidden');
+                if (loader) {
+                    loader.style.opacity = '0';
+                    loader.style.pointerEvents = 'none';
+                    setTimeout(function() {
+                        loader.style.display = 'none';
+                    }, 500);
+                }
             }, 300);
         }
-        loaderBar.style.width = progress + '%';
-        loaderText.textContent = Math.floor(progress) + '%';
-    }, 100);
+        if (loaderBar) loaderBar.style.width = progress + '%';
+        if (loaderText) loaderText.textContent = Math.floor(progress) + '%';
+    }, 80);
 
     // 开屏动画
     var splash = document.getElementById('splash');
@@ -185,6 +196,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 登录表单
     document.getElementById('loginForm').addEventListener('submit', function(e) {
         e.preventDefault();
+        if (!auth) { showNotification('登录功能暂不可用', 'error'); return; }
         var account = document.getElementById('loginAccount').value;
         var password = document.getElementById('loginPassword').value;
         auth.signInWithEmailAndPassword(account + '@yifang.user', password)
@@ -195,6 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 注册表单
     document.getElementById('registerForm').addEventListener('submit', function(e) {
         e.preventDefault();
+        if (!auth) { showNotification('注册功能暂不可用', 'error'); return; }
         var name = document.getElementById('registerName').value;
         var account = document.getElementById('registerAccount').value;
         var password = document.getElementById('registerPassword').value;
@@ -208,24 +221,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Google登录
     document.getElementById('googleLoginBtn').addEventListener('click', function() {
+        if (!auth) { showNotification('登录功能暂不可用', 'error'); return; }
         auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
             .then(function() { closeLogin(); showNotification('Google登录成功！', 'success'); })
             .catch(function(err) { showNotification('登录失败：' + err.message, 'error'); });
     });
 
     // 监听登录状态
-    auth.onAuthStateChanged(function(user) {
-        var authSection = document.getElementById('authSection');
-        var userSection = document.getElementById('userSection');
-        if (user) {
-            authSection.style.display = 'none';
-            userSection.style.display = 'flex';
-            document.getElementById('userName').textContent = user.displayName || user.email.split('@')[0];
-        } else {
-            authSection.style.display = 'block';
-            userSection.style.display = 'none';
-        }
-    });
+    if (auth) {
+        auth.onAuthStateChanged(function(user) {
+            var authSection = document.getElementById('authSection');
+            var userSection = document.getElementById('userSection');
+            if (user) {
+                authSection.style.display = 'none';
+                userSection.style.display = 'flex';
+                document.getElementById('userName').textContent = user.displayName || user.email.split('@')[0];
+            } else {
+                authSection.style.display = 'block';
+                userSection.style.display = 'none';
+            }
+        });
+    }
 
     // 评价模态框
     var reviewsModal = document.getElementById('reviewsModal');
