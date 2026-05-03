@@ -507,6 +507,15 @@ body::before {
     justify-content: space-between;
     align-items: center;
     height: 70px;
+    gap: 15px;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    flex: 1;
+    justify-content: center;
 }
 
 .nav-logo {
@@ -1377,6 +1386,11 @@ body::before {
 
 /* 响应式设计 - 移动端保持和PC端一致的布局 */
 @media (max-width: 768px) {
+    .nav-container {
+        padding: 0 10px;
+        gap: 8px;
+    }
+
     .nav-menu {
         position: fixed;
         top: 70px;
@@ -1385,9 +1399,11 @@ body::before {
         height: calc(100vh - 70px);
         background-color: var(--bg-color);
         flex-direction: column;
-        justify-content: center;
-        align-items: center;
+        justify-content: flex-start;
+        padding-top: 30px;
+        gap: 20px;
         transition: var(--transition);
+        z-index: 999;
     }
 
     .nav-menu.active {
@@ -1395,15 +1411,23 @@ body::before {
     }
 
     .hamburger {
-        display: block;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        cursor: pointer;
+        padding: 5px;
+        z-index: 1001;
     }
 
     .auth-section {
         margin-left: auto;
+        order: 3;
     }
 
     .user-section {
         margin-left: auto;
+        order: 3;
     }
 
     .hamburger.active .bar:nth-child(2) {
@@ -3544,18 +3568,18 @@ body.modal-closing::after {
 .auth-section {
     display: flex;
     align-items: center;
-    margin-left: 10px;
+    flex-shrink: 0;
 }
 
 .user-section {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-left: 10px;
+    flex-shrink: 0;
 }
 
 .auth-btn {
-    padding: 6px 14px;
+    padding: 8px 16px;
     border: none;
     border-radius: 20px;
     cursor: pointer;
@@ -3564,6 +3588,7 @@ body.modal-closing::after {
     display: flex;
     align-items: center;
     gap: 5px;
+    white-space: nowrap;
 }
     padding: 6px 14px;
     border: none;
