@@ -616,8 +616,85 @@ document.addEventListener('DOMContentLoaded', function() {
             if (target) {
                 var navHeight = document.querySelector('.nav') ? document.querySelector('.nav').offsetHeight : 0;
                 window.scrollTo({ top: target.offsetTop - navHeight, behavior: 'smooth' });
+                // 关闭移动端菜单
+                var hamburger = document.getElementById('hamburgerBtn');
+                var mobileMenu = document.getElementById('mobileMenu');
+                if (hamburger && mobileMenu) {
+                    hamburger.classList.remove('active');
+                    mobileMenu.classList.remove('active');
+                }
             }
         });
+    });
+
+    // 页面跳转过渡动画
+    var transition = document.createElement('div');
+    transition.className = 'page-transition';
+    document.body.appendChild(transition);
+
+    document.querySelectorAll('a[href$=".html"]').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            var href = this.getAttribute('href');
+            transition.classList.add('active');
+            setTimeout(function() {
+                window.location.href = href;
+            }, 500);
+        });
+    });
+
+    // 页面加载完成时的过渡
+    window.addEventListener('pageshow', function() {
+        transition.classList.remove('active');
+    });
+
+    // 打字机效果（英雄区域标题）
+    var heroTitle = document.querySelector('.hero-title');
+    if (heroTitle) {
+        var spans = heroTitle.querySelectorAll('span');
+        spans.forEach(function(span, index) {
+            span.style.opacity = '0';
+            span.style.transform = 'translateY(20px)';
+            span.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            span.style.transitionDelay = (index * 0.15) + 's';
+            setTimeout(function() {
+                span.style.opacity = '1';
+                span.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    }
+
+    // 服务卡片悬停涟漪效果
+    document.querySelectorAll('.service-btn').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            var ripple = document.createElement('span');
+            ripple.style.cssText = 'position:absolute;border-radius:50%;background:rgba(255,255,255,0.3);' +
+                'width:100px;height:100px;transform:translate(-50%,-50%) scale(0);animation:btnRipple 0.6s ease;pointer-events:none;';
+            var rect = this.getBoundingClientRect();
+            ripple.style.left = (e.clientX - rect.left) + 'px';
+            ripple.style.top = (e.clientY - rect.top) + 'px';
+            this.style.position = 'relative';
+            this.style.overflow = 'hidden';
+            this.appendChild(ripple);
+            setTimeout(function() { ripple.remove(); }, 600);
+        });
+    });
+
+    // 按钮涟漪动画
+    var btnRippleStyle = document.createElement('style');
+    btnRippleStyle.textContent = '@keyframes btnRipple{to{transform:translate(-50%,-50%) scale(4);opacity:0}}';
+    document.head.appendChild(btnRippleStyle);
+
+    // 滚动进度指示器
+    var scrollProgress = document.createElement('div');
+    scrollProgress.style.cssText = 'position:fixed;top:0;left:0;height:3px;' +
+        'background:linear-gradient(90deg,var(--primary),var(--secondary));z-index:1001;transition:width 0.1s;';
+    document.body.appendChild(scrollProgress);
+    window.addEventListener('scroll', function() {
+        var scrollTop = window.scrollY;
+        var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        var progress = (scrollTop / docHeight) * 100;
+        scrollProgress.style.width = progress + '%';
     });
 });
 

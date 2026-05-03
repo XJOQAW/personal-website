@@ -552,6 +552,26 @@ img { max-width:100%; }
     .contact-grid { grid-template-columns:1fr; }
     .section { padding:80px 0; }
     .section-header h2 { font-size:32px; }
+    .hero-title { font-size:36px; }
+    .hero-desc { font-size:16px; }
+    .hero-btns { flex-direction:column; align-items:center; }
+    .hero-btns .btn { width:100%; max-width:280px; }
+    .process-item { flex-direction:column; align-items:flex-start; gap:16px; }
+    .portfolio-grid-2 { grid-template-columns:1fr; }
+    .modal-box { width:95%; padding:20px; }
+    .contact-form { padding:20px; }
+    .form-row { flex-direction:column; }
+    .footer-grid { grid-template-columns:1fr 1fr; gap:24px; }
+}
+@media(max-width:480px) {
+    .services-grid { grid-template-columns:1fr; }
+    .hero-stats { flex-direction:column; gap:16px; }
+    .hero-title { font-size:28px; }
+    .section-header h2 { font-size:24px; }
+    .pricing-tabs { flex-direction:column; gap:8px; }
+    .footer-grid { grid-template-columns:1fr; }
+    .hero-scroll { display:none; }
+    .container { padding:0 16px; }
 }
 @media(max-width:480px) {
     .services-grid { grid-template-columns:1fr; }
@@ -564,6 +584,42 @@ img { max-width:100%; }
 ::-webkit-scrollbar-track { background:var(--bg-alt); }
 ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
 ::-webkit-scrollbar-thumb:hover { background:var(--text-secondary); }
+
+/* ===== 页面过渡动画 ===== */
+.page-transition {
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    background:var(--bg); z-index:9999;
+    transform:scaleY(0); transform-origin:top;
+    transition:transform 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+.page-transition.active { transform:scaleY(1); transform-origin:bottom; }
+
+/* ===== 选中文本 ===== */
+::selection { background:var(--primary); color:#fff; }
+
+/* ===== 链接跳转动画 ===== */
+a[href^="http"] { transition:color 0.2s; }
+a[href^="http"]:hover { color:var(--primary); }
+
+/* ===== 图片悬停效果 ===== */
+.portfolio-card-img img, .tutorial-image img {
+    filter:grayscale(20%); transition:all 0.5s;
+}
+.portfolio-card:hover .portfolio-card-img img,
+.tutorial-card:hover .tutorial-image img {
+    filter:grayscale(0); transform:scale(1.08);
+}
+
+/* ===== 发光效果 ===== */
+.glow-effect {
+    position:relative;
+}
+.glow-effect::after {
+    content:''; position:absolute; top:0; left:0; width:100%; height:100%;
+    background:radial-gradient(circle,rgba(255,107,157,0.15),transparent 70%);
+    opacity:0; transition:opacity 0.3s; pointer-events:none;
+}
+.glow-effect:hover::after { opacity:1; }
 
 /* ===== 通知 ===== */
 .notification {
