@@ -1398,6 +1398,14 @@ body::before {
         display: block;
     }
 
+    .auth-section {
+        margin-left: auto;
+    }
+
+    .user-section {
+        margin-left: auto;
+    }
+
     .hamburger.active .bar:nth-child(2) {
         opacity: 0;
     }
@@ -1567,253 +1575,6 @@ body::before {
 
     .contact-content {
         grid-template-columns: 1fr;
-    }
-}
-
-    .nav-menu.active {
-        left: 0;
-    }
-
-    .hamburger {
-        display: block;
-    }
-
-    .hamburger.active .bar:nth-child(2) {
-        opacity: 0;
-    }
-
-    .hamburger.active .bar:nth-child(1) {
-        transform: translateY(8px) rotate(45deg);
-    }
-
-    .hamburger.active .bar:nth-child(3) {
-        transform: translateY(-8px) rotate(-45deg);
-    }
-
-    /* 英雄区域 */
-    .hero-section {
-        min-height: 100vh;
-        padding-top: 80px;
-        padding-bottom: 40px;
-    }
-
-    .hero-title-animated {
-        font-size: 2.8rem;
-        letter-spacing: 8px;
-        justify-content: center;
-    }
-
-    .hero-tagline {
-        font-size: 1.2rem;
-        letter-spacing: 3px;
-    }
-
-    .hero-subtitle {
-        font-size: 0.95rem;
-    }
-
-    .hero-buttons {
-        flex-direction: column;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .hero-buttons .btn {
-        width: 80%;
-        max-width: 250px;
-    }
-
-    /* 抽屉 */
-    .about-content {
-        grid-template-columns: 1fr;
-        text-align: center;
-    }
-
-    .about-stats {
-        justify-content: center;
-        gap: 20px;
-    }
-
-    .stat-number {
-        font-size: 2rem;
-    }
-
-    /* 功能按钮 */
-    .features-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-        padding: 0 5px;
-    }
-
-    .feature-card {
-        padding: 15px 8px;
-    }
-
-    .feature-card::before {
-        display: none;
-    }
-
-    .anime-character {
-        font-size: 1.8rem;
-        margin-bottom: 8px;
-    }
-
-    .feature-title {
-        font-size: 0.8rem;
-        margin-bottom: 6px;
-    }
-
-    .feature-description {
-        display: none;
-    }
-
-    .feature-btn {
-        padding: 6px 10px;
-        font-size: 0.7rem;
-    }
-
-    /* 服务流程 */
-    .services-timeline::before {
-        left: 15px;
-    }
-
-    .timeline-item,
-    .timeline-item:nth-child(odd) {
-        flex-direction: column;
-        align-items: flex-start;
-        padding-left: 45px;
-    }
-
-    .timeline-number {
-        position: absolute;
-        left: 0;
-        width: 30px;
-        height: 30px;
-        font-size: 0.8rem;
-    }
-
-    .timeline-content {
-        width: 100%;
-        padding: 12px;
-    }
-
-    .timeline-content h3 {
-        font-size: 0.9rem;
-    }
-
-    .timeline-content p {
-        font-size: 0.8rem;
-    }
-
-    /* 价格套餐 */
-    .pricing-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-    }
-
-    .pricing-card {
-        border-radius: 10px;
-    }
-
-    .pricing-card.featured {
-        transform: none;
-    }
-
-    .pricing-header {
-        padding: 12px 8px;
-    }
-
-    .pricing-title {
-        font-size: 0.85rem;
-    }
-
-    .pricing-price {
-        font-size: 1.3rem;
-    }
-
-    .pricing-description {
-        font-size: 0.7rem;
-    }
-
-    .pricing-features {
-        padding: 10px 12px;
-    }
-
-    .pricing-features li {
-        font-size: 0.75rem;
-        padding: 5px 0;
-    }
-
-    /* 客户评价 */
-    .testimonials-slider {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
-
-    .testimonial-card {
-        padding: 12px;
-    }
-
-    .testimonial-content p {
-        font-size: 0.8rem;
-    }
-
-    .testimonial-author {
-        gap: 8px;
-    }
-
-    .author-avatar {
-        width: 30px;
-        height: 30px;
-        font-size: 0.9rem;
-    }
-
-    .author-info h4 {
-        font-size: 0.8rem;
-    }
-
-    .author-info span {
-        font-size: 0.7rem;
-    }
-
-    /* 教程分享 */
-    .tutorials-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-    }
-
-    .tutorial-content {
-        padding: 12px;
-    }
-
-    .tutorial-content h3 {
-        font-size: 0.85rem;
-    }
-
-    .tutorial-content p {
-        font-size: 0.75rem;
-    }
-
-    /* 联系方式 */
-    .contact-content {
-        grid-template-columns: 1fr;
-    }
-
-    .contact-item {
-        padding: 15px;
-        margin-bottom: 15px;
-    }
-
-    .section-title {
-        font-size: 1.8rem;
-    }
-
-    .section {
-        padding: 50px 0;
-    }
-
-    .container {
-        padding: 0 15px;
     }
 }
 
@@ -3783,9 +3544,27 @@ body.modal-closing::after {
 .auth-section {
     display: flex;
     align-items: center;
+    margin-left: 10px;
+}
+
+.user-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: 10px;
 }
 
 .auth-btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
     padding: 6px 14px;
     border: none;
     border-radius: 20px;
