@@ -532,6 +532,77 @@ document.addEventListener('DOMContentLoaded', function() {
     var rippleStyle = document.createElement('style');
     rippleStyle.textContent = '@keyframes rippleAnim{to{width:200px;height:200px;opacity:0}}';
     document.head.appendChild(rippleStyle);
+
+    // 导航高亮当前区域
+    var navLinks = document.querySelectorAll('.nav-link');
+    var sections = document.querySelectorAll('section[id]');
+    window.addEventListener('scroll', function() {
+        var scrollPos = window.scrollY + 100;
+        sections.forEach(function(section) {
+            var top = section.offsetTop;
+            var height = section.offsetHeight;
+            var id = section.getAttribute('id');
+            if (scrollPos >= top && scrollPos < top + height) {
+                navLinks.forEach(function(link) {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === '#' + id) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    });
+
+    // 图片懒加载
+    var lazyImages = document.querySelectorAll('img[data-src]');
+    var imageObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                var img = entry.target;
+                img.src = img.dataset.src;
+                img.removeAttribute('data-src');
+                imageObserver.unobserve(img);
+            }
+        });
+    });
+    lazyImages.forEach(function(img) { imageObserver.observe(img); });
+
+    // 返回顶部按钮
+    var scrollTopBtn = document.createElement('button');
+    scrollTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+    scrollTopBtn.style.cssText = 'position:fixed;bottom:30px;right:30px;width:44px;height:44px;' +
+        'border-radius:50%;border:none;background:var(--text);color:var(--bg);font-size:18px;' +
+        'cursor:pointer;opacity:0;visibility:hidden;transition:all 0.3s;z-index:999;' +
+        'display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.15);';
+    document.body.appendChild(scrollTopBtn);
+
+    scrollTopBtn.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 500) {
+            scrollTopBtn.style.opacity = '1';
+            scrollTopBtn.style.visibility = 'visible';
+        } else {
+            scrollTopBtn.style.opacity = '0';
+            scrollTopBtn.style.visibility = 'hidden';
+        }
+    });
+
+    // 平滑滚动
+    document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            var targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            var target = document.querySelector(targetId);
+            if (target) {
+                var navHeight = document.querySelector('.nav') ? document.querySelector('.nav').offsetHeight : 0;
+                window.scrollTo({ top: target.offsetTop - navHeight, behavior: 'smooth' });
+            }
+        });
+    });
 });
 
 // 页面加载
