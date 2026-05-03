@@ -545,8 +545,8 @@ body::before {
 
 .nav-char {
     display: inline-block;
-    opacity: 0;
-    transform: translateY(-10px);
+    opacity: 1;
+    transform: translateY(0);
     animation: navCharAppear 0.4s ease forwards;
 }
 
@@ -3655,8 +3655,6 @@ body.modal-closing::after {
 }
 
 /* 登录模态框 */
-.login-modal-overlay {
-
 .login-modal-header {
     display: flex;
     align-items: center;
