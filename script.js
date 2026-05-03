@@ -396,6 +396,142 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, { threshold: 0.5 });
     statNumbers.forEach(function(num) { statObserver.observe(num); });
+
+    // 鼠标跟随粒子效果
+    var heroSection = document.querySelector('.hero');
+    if (heroSection) {
+        var particles = [];
+        var particleCount = 30;
+        var canvas = document.createElement('canvas');
+        canvas.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;';
+        heroSection.style.position = 'relative';
+        heroSection.insertBefore(canvas, heroSection.firstChild);
+
+        var ctx = canvas.getContext('2d');
+        var mouseX = 0, mouseY = 0;
+
+        function resizeCanvas() {
+            canvas.width = heroSection.offsetWidth;
+            canvas.height = heroSection.offsetHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        function Particle() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 3 + 1;
+            this.speedX = (Math.random() - 0.5) * 0.5;
+            this.speedY = (Math.random() - 0.5) * 0.5;
+            this.opacity = Math.random() * 0.5 + 0.1;
+        }
+
+        for (var i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        heroSection.addEventListener('mousemove', function(e) {
+            var rect = heroSection.getBoundingClientRect();
+            mouseX = e.clientX - rect.left;
+            mouseY = e.clientY - rect.top;
+        });
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (var i = 0; i < particles.length; i++) {
+                var p = particles[i];
+                var dx = mouseX - p.x;
+                var dy = mouseY - p.y;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 150) {
+                    p.x += dx * 0.02;
+                    p.y += dy * 0.02;
+                }
+                p.x += p.speedX;
+                p.y += p.speedY;
+                if (p.x < 0 || p.x > canvas.width) p.speedX *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.speedY *= -1;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255,255,255,' + p.opacity + ')';
+                ctx.fill();
+
+                for (var j = i + 1; j < particles.length; j++) {
+                    var p2 = particles[j];
+                    var ddx = p.x - p2.x;
+                    var ddy = p.y - p2.y;
+                    var ddist = Math.sqrt(ddx * ddx + ddy * ddy);
+                    if (ddist < 100) {
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.strokeStyle = 'rgba(255,255,255,' + (0.1 * (1 - ddist / 100)) + ')';
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+    }
+
+    // 卡片3D倾斜效果
+    document.querySelectorAll('.service-card, .review-card, .pricing-card').forEach(function(card) {
+        card.addEventListener('mousemove', function(e) {
+            var rect = this.getBoundingClientRect();
+            var x = e.clientX - rect.left;
+            var y = e.clientY - rect.top;
+            var centerX = rect.width / 2;
+            var centerY = rect.height / 2;
+            var rotateX = (y - centerY) / 15;
+            var rotateY = (centerX - x) / 15;
+            this.style.transform = 'perspective(1000px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) translateY(-8px)';
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateY(0)';
+        });
+    });
+
+    // 滚动显示动画
+    var revealElements = document.querySelectorAll('.section-header, .service-card, .process-item, .review-card, .pricing-card, .contact-item, .about-card');
+    revealElements.forEach(function(el) {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    });
+
+    var revealObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+
+    revealElements.forEach(function(el, index) {
+        el.style.transitionDelay = (index % 6) * 0.1 + 's';
+        revealObserver.observe(el);
+    });
+
+    // 水波纹点击效果
+    document.addEventListener('click', function(e) {
+        var ripple = document.createElement('div');
+        ripple.style.cssText = 'position:fixed;left:' + e.clientX + 'px;top:' + e.clientY + 'px;' +
+            'width:0;height:0;border-radius:50%;pointer-events:none;z-index:9999;' +
+            'background:radial-gradient(circle,rgba(255,107,157,0.3),transparent);' +
+            'transform:translate(-50%,-50%);animation:rippleAnim 0.6s ease-out forwards;';
+        document.body.appendChild(ripple);
+        setTimeout(function() { ripple.remove(); }, 600);
+    });
+
+    // 水波纹动画
+    var rippleStyle = document.createElement('style');
+    rippleStyle.textContent = '@keyframes rippleAnim{to{width:200px;height:200px;opacity:0}}';
+    document.head.appendChild(rippleStyle);
 });
 
 // 页面加载
