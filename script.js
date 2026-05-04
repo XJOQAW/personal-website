@@ -344,10 +344,21 @@ document.addEventListener('DOMContentLoaded', function() {
         auth.onAuthStateChanged(function(user) {
             var authSection = document.getElementById('authSection');
             var userSection = document.getElementById('userSection');
+            var navAvatar = document.getElementById('userAvatar');
             if (user) {
                 authSection.style.display = 'none';
                 userSection.style.display = 'flex';
                 document.getElementById('userName').textContent = user.displayName || user.email.split('@')[0];
+                // 加载保存的头像
+                var savedAvatarImg = localStorage.getItem('userAvatarImg');
+                var savedAvatar = localStorage.getItem('userAvatar');
+                if (savedAvatarImg && navAvatar) {
+                    navAvatar.innerHTML = '<img src="' + savedAvatarImg + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+                } else if (savedAvatar && navAvatar) {
+                    navAvatar.textContent = savedAvatar;
+                } else if (navAvatar) {
+                    navAvatar.textContent = (user.displayName || 'U').charAt(0).toUpperCase();
+                }
             } else {
                 authSection.style.display = 'block';
                 userSection.style.display = 'none';
@@ -389,16 +400,30 @@ document.addEventListener('DOMContentLoaded', function() {
     // 更新账号信息
     function updateAccountInfo() {
         var user = auth ? auth.currentUser : null;
+        var avatarEl = document.getElementById('accountAvatar');
+        var navAvatar = document.getElementById('userAvatar');
+        
         if (user) {
             document.getElementById('accountName').textContent = user.displayName || user.email.split('@')[0];
             document.getElementById('accountEmail').textContent = user.email.includes('@yifang.user') ? '自定义账号' : user.email;
             document.getElementById('profileName').value = user.displayName || '';
-            var avatarEl = document.getElementById('accountAvatar');
-            if (user.photoURL) {
-                avatarEl.innerHTML = '<img src="' + user.photoURL + '">';
-            } else {
-                avatarEl.textContent = (user.displayName || 'U').charAt(0).toUpperCase();
-            }
+        }
+        
+        // 优先从localStorage加载头像
+        var savedAvatarImg = localStorage.getItem('userAvatarImg');
+        var savedAvatar = localStorage.getItem('userAvatar');
+        
+        if (savedAvatarImg) {
+            avatarEl.innerHTML = '<img src="' + savedAvatarImg + '">';
+            if (navAvatar) navAvatar.innerHTML = '<img src="' + savedAvatarImg + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+        } else if (savedAvatar) {
+            avatarEl.textContent = savedAvatar;
+            if (navAvatar) navAvatar.textContent = savedAvatar;
+        } else if (user && user.photoURL) {
+            avatarEl.innerHTML = '<img src="' + user.photoURL + '">';
+        } else {
+            var initial = user ? (user.displayName || 'U').charAt(0).toUpperCase() : 'U';
+            avatarEl.textContent = initial;
         }
         // 加载点赞记录
         var likedItems = JSON.parse(localStorage.getItem('likedReviews') || '[]');
