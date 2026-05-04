@@ -371,6 +371,18 @@ document.addEventListener('DOMContentLoaded', function() {
     function closeAccount() { if (accountModal) accountModal.classList.remove('active'); }
 
     if (userInfoBtn) userInfoBtn.addEventListener('click', openAccount);
+
+    // 退出登录按钮
+    var logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+            if (auth) {
+                auth.signOut().then(function() {
+                    showNotification('已退出登录', 'success');
+                });
+            }
+        });
+    }
     if (accountClose) accountClose.addEventListener('click', closeAccount);
     if (accountModal) accountModal.addEventListener('click', function(e) { if (e.target === accountModal) closeAccount(); });
 

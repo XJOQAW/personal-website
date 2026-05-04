@@ -48,7 +48,16 @@
             </div>
             <div class="nav-actions">
                 <button class="nav-theme" id="themeBtn"><i class="fas fa-moon"></i></button>
-                <button class="nav-login" id="loginBtn">登录</button>
+                <div class="auth-section" id="authSection">
+                    <button class="nav-login" id="loginBtn">登录</button>
+                </div>
+                <div class="user-section" id="userSection" style="display:none;">
+                    <div class="user-info" id="userInfoBtn">
+                        <div class="user-avatar" id="userAvatar">👤</div>
+                        <span class="user-name" id="userName">用户</span>
+                    </div>
+                    <button class="nav-logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
             </div>
             <button class="nav-hamburger" id="hamburgerBtn">
                 <span></span><span></span><span></span>
