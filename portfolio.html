@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>作品集 - 一方通行</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=30">
+    <link rel="stylesheet" href="style.css?v=33">
 </head>
 <body>
     <!-- 导航栏 -->
@@ -39,13 +39,65 @@
     </div>
 
     <main style="padding-top:48px">
-        <section class="section">
+        <!-- 作品集英雄区域 -->
+        <section class="portfolio-hero">
+            <div class="portfolio-hero-bg"></div>
+            <div class="portfolio-hero-content">
+                <h1>作品集</h1>
+                <p>每一个作品都是一次视觉的旅程</p>
+                <a href="#works" class="btn btn-primary">查看作品 <i class="fas fa-arrow-down"></i></a>
+            </div>
+        </section>
+
+        <section class="section" id="works">
             <div class="container">
                 <div class="section-header">
-                    <span class="section-tag">作品集</span>
-                    <h2>精选作品展示</h2>
-                    <p>每一个作品都是一次视觉的旅程</p>
+                    <span class="section-tag">精选作品</span>
+                    <h2>我的摄影作品</h2>
                 </div>
+                <!-- 自动轮播展示 -->
+                <div class="portfolio-showcase">
+                    <div class="showcase-track" id="showcaseTrack">
+                        <div class="showcase-slide">
+                            <img src="images/4M8A0483(1).png" alt="二次元人像">
+                            <div class="showcase-info">
+                                <h3>二次元人像</h3>
+                                <p>捕捉角色神韵与情绪表达</p>
+                            </div>
+                        </div>
+                        <div class="showcase-slide">
+                            <div class="showcase-placeholder">🎨</div>
+                            <div class="showcase-info">
+                                <h3>创意合成</h3>
+                                <p>二次元与现实的创意融合</p>
+                            </div>
+                        </div>
+                        <div class="showcase-slide">
+                            <div class="showcase-placeholder">📷</div>
+                            <div class="showcase-info">
+                                <h3>场景拍摄</h3>
+                                <p>精心搭建的二次元场景</p>
+                            </div>
+                        </div>
+                        <div class="showcase-slide">
+                            <div class="showcase-placeholder">✨</div>
+                            <div class="showcase-info">
+                                <h3>后期精修</h3>
+                                <p>专业后期处理与调色</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="showcase-controls">
+                        <button class="showcase-prev" id="showcasePrev"><i class="fas fa-chevron-left"></i></button>
+                        <div class="showcase-dots" id="showcaseDots"></div>
+                        <button class="showcase-next" id="showcaseNext"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div class="showcase-progress">
+                        <div class="showcase-progress-bar" id="showcaseProgress"></div>
+                    </div>
+                </div>
+
+                <!-- 筛选和网格 -->
                 <div class="portfolio-filters">
                     <button class="filter-btn active" data-filter="all">全部</button>
                     <button class="filter-btn" data-filter="portrait">二次元人像</button>
@@ -115,6 +167,6 @@
         </div>
     </footer>
 
-    <script src="script.js?v=30"></script>
+    <script src="script.js?v=33"></script>
 </body>
 </html>

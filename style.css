@@ -283,6 +283,77 @@ img { max-width:100%; display:block; }
 }
 .portfolio-dot.active { background:#fff; transform:scale(1.3); }
 
+/* 作品集英雄区域 */
+.portfolio-hero {
+    position:relative; min-height:50vh; display:flex;
+    align-items:center; justify-content:center; text-align:center;
+    overflow:hidden;
+}
+.portfolio-hero-bg {
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    background:linear-gradient(135deg, #ff6b9d, #c44dff, #45b7d1);
+    background-size:300% 300%;
+    animation:heroFlow 15s ease infinite alternate;
+}
+.portfolio-hero-content {
+    position:relative; z-index:1; color:#fff; padding:0 24px;
+}
+.portfolio-hero-content h1 {
+    font-size:clamp(36px,6vw,56px); font-weight:700; margin-bottom:12px;
+    letter-spacing:4px;
+}
+.portfolio-hero-content p {
+    font-size:18px; opacity:0.8; margin-bottom:32px;
+}
+
+/* 自动轮播展示 */
+.portfolio-showcase {
+    position:relative; margin-bottom:48px; border-radius:16px;
+    overflow:hidden; background:var(--bg-alt);
+}
+.showcase-track {
+    display:flex; transition:transform 0.6s cubic-bezier(0.4,0,0.2,1);
+}
+.showcase-slide {
+    min-width:100%; position:relative; aspect-ratio:16/9;
+    display:flex; align-items:center; justify-content:center;
+}
+.showcase-slide img { width:100%; height:100%; object-fit:cover; }
+.showcase-placeholder { font-size:80px; opacity:0.4; }
+.showcase-info {
+    position:absolute; bottom:0; left:0; right:0;
+    padding:24px 32px;
+    background:linear-gradient(transparent,rgba(0,0,0,0.7));
+    color:#fff;
+}
+.showcase-info h3 { font-size:24px; margin-bottom:4px; }
+.showcase-info p { font-size:14px; opacity:0.8; }
+.showcase-controls {
+    position:absolute; bottom:20px; left:50%; transform:translateX(-50%);
+    display:flex; align-items:center; gap:12px; z-index:10;
+}
+.showcase-prev, .showcase-next {
+    width:40px; height:40px; border-radius:50%; border:none;
+    background:rgba(255,255,255,0.2); color:#fff; font-size:16px;
+    cursor:pointer; backdrop-filter:blur(10px); transition:all 0.2s;
+    display:flex; align-items:center; justify-content:center;
+}
+.showcase-prev:hover, .showcase-next:hover { background:rgba(255,255,255,0.4); }
+.showcase-dots { display:flex; gap:8px; }
+.showcase-dot {
+    width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.4);
+    border:none; cursor:pointer; transition:all 0.3s;
+}
+.showcase-dot.active { background:#fff; transform:scale(1.3); }
+.showcase-progress {
+    position:absolute; bottom:0; left:0; width:100%; height:3px;
+    background:rgba(255,255,255,0.2);
+}
+.showcase-progress-bar {
+    height:100%; background:linear-gradient(90deg,var(--primary),var(--secondary));
+    width:0%; transition:width 0.1s linear;
+}
+
 /* 作品集页面 */
 .portfolio-filters { display:flex; justify-content:center; gap:10px; margin-bottom:32px; flex-wrap:wrap; }
 .filter-btn {

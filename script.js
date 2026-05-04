@@ -796,4 +796,79 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(function() { window.location.href = href; }, 400);
         });
     });
+
+    // ===== 作品集自动轮播 =====
+    var showcaseTrack = document.getElementById('showcaseTrack');
+    var showcaseDots = document.getElementById('showcaseDots');
+    var showcaseProgress = document.getElementById('showcaseProgress');
+    if (showcaseTrack && showcaseDots) {
+        var slides = showcaseTrack.querySelectorAll('.showcase-slide');
+        var currentSlide = 0;
+        var autoPlayInterval = null;
+        var progressInterval = null;
+        var progress = 0;
+        var slideDuration = 4000; // 4秒切换一次
+
+        // 创建圆点
+        slides.forEach(function(_, i) {
+            var dot = document.createElement('button');
+            dot.className = 'showcase-dot' + (i === 0 ? ' active' : '');
+            dot.addEventListener('click', function() { goToSlide(i); });
+            showcaseDots.appendChild(dot);
+        });
+
+        function goToSlide(index) {
+            currentSlide = index;
+            showcaseTrack.style.transform = 'translateX(-' + (index * 100) + '%)';
+            showcaseDots.querySelectorAll('.showcase-dot').forEach(function(d, i) {
+                d.classList.toggle('active', i === index);
+            });
+            resetProgress();
+        }
+
+        function nextSlide() {
+            goToSlide((currentSlide + 1) % slides.length);
+        }
+
+        function prevSlide() {
+            goToSlide((currentSlide - 1 + slides.length) % slides.length);
+        }
+
+        function resetProgress() {
+            progress = 0;
+            if (showcaseProgress) showcaseProgress.style.width = '0%';
+        }
+
+        function startAutoPlay() {
+            stopAutoPlay();
+            progress = 0;
+            autoPlayInterval = setInterval(function() {
+                progress += 50;
+                if (showcaseProgress) showcaseProgress.style.width = (progress / slideDuration * 100) + '%';
+                if (progress >= slideDuration) {
+                    nextSlide();
+                    progress = 0;
+                }
+            }, 50);
+        }
+
+        function stopAutoPlay() {
+            if (autoPlayInterval) clearInterval(autoPlayInterval);
+        }
+
+        // 按钮事件
+        var prevBtn = document.getElementById('showcasePrev');
+        var nextBtn = document.getElementById('showcaseNext');
+        if (prevBtn) prevBtn.addEventListener('click', function() { prevSlide(); startAutoPlay(); });
+        if (nextBtn) nextBtn.addEventListener('click', function() { nextSlide(); startAutoPlay(); });
+
+        // 鼠标悬停暂停
+        showcaseTrack.parentElement.addEventListener('mouseenter', stopAutoPlay);
+        showcaseTrack.parentElement.addEventListener('mouseleave', startAutoPlay);
+
+        // 启动自动播放
+        startAutoPlay();
+    }
+});
+    });
 });
