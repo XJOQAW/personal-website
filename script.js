@@ -5,13 +5,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===== 开屏动画 =====
     var splash = document.getElementById('splash');
     if (splash) {
+        // 显示文字
         setTimeout(function() {
-            splash.style.opacity = '0';
-            splash.style.transform = 'scale(1.1)';
+            splash.classList.add('show-text');
+        }, 300);
+        // 快门打开
+        setTimeout(function() {
+            splash.classList.add('open');
+        }, 1200);
+        // 隐藏整个开屏
+        setTimeout(function() {
+            splash.classList.add('hidden');
             setTimeout(function() {
                 splash.style.display = 'none';
             }, 600);
-        }, 1500);
+        }, 2200);
     }
 
     // ===== 隐藏式导航栏 =====
