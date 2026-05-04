@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (heroCanvas) {
         var ctx = heroCanvas.getContext('2d');
         var particles = [];
-        var mouseX = 0, mouseY = 0;
+        var mouseX = heroCanvas.width / 2, mouseY = heroCanvas.height / 2;
 
         function resizeCanvas() {
             heroCanvas.width = heroCanvas.parentElement.offsetWidth;
@@ -96,12 +96,12 @@ document.addEventListener('DOMContentLoaded', function() {
         function Particle() {
             this.x = Math.random() * heroCanvas.width;
             this.y = Math.random() * heroCanvas.height;
-            this.size = Math.random() * 3 + 1;
-            this.speedX = (Math.random() - 0.5) * 0.5;
-            this.speedY = (Math.random() - 0.5) * 0.5;
-            this.opacity = Math.random() * 0.5 + 0.1;
+            this.size = Math.random() * 4 + 2;
+            this.speedX = (Math.random() - 0.5) * 1;
+            this.speedY = (Math.random() - 0.5) * 1;
+            this.opacity = Math.random() * 0.6 + 0.2;
         }
-        for (var i = 0; i < 30; i++) particles.push(new Particle());
+        for (var i = 0; i < 50; i++) particles.push(new Particle());
 
         heroCanvas.parentElement.addEventListener('mousemove', function(e) {
             var rect = heroCanvas.parentElement.getBoundingClientRect();
@@ -116,23 +116,35 @@ document.addEventListener('DOMContentLoaded', function() {
                 var dx = mouseX - p.x;
                 var dy = mouseY - p.y;
                 var dist = Math.sqrt(dx * dx + dy * dy);
-                if (dist < 150) { p.x += dx * 0.02; p.y += dy * 0.02; }
-                p.x += p.speedX; p.y += p.speedY;
+                if (dist < 200) {
+                    p.x += dx * 0.01;
+                    p.y += dy * 0.01;
+                    p.opacity = Math.min(0.8, p.opacity + 0.01);
+                } else {
+                    p.opacity = Math.max(0.2, p.opacity - 0.005);
+                }
+                p.x += p.speedX;
+                p.y += p.speedY;
                 if (p.x < 0 || p.x > heroCanvas.width) p.speedX *= -1;
                 if (p.y < 0 || p.y > heroCanvas.height) p.speedY *= -1;
+
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
                 ctx.fillStyle = 'rgba(255,255,255,' + p.opacity + ')';
                 ctx.fill();
+
                 for (var j = i + 1; j < particles.length; j++) {
                     var p2 = particles[j];
-                    var ddx = p.x - p2.x; var ddy = p.y - p2.y;
+                    var ddx = p.x - p2.x;
+                    var ddy = p.y - p2.y;
                     var dd = Math.sqrt(ddx * ddx + ddy * ddy);
-                    if (dd < 100) {
+                    if (dd < 120) {
                         ctx.beginPath();
-                        ctx.moveTo(p.x, p.y); ctx.lineTo(p2.x, p2.y);
-                        ctx.strokeStyle = 'rgba(255,255,255,' + (0.1 * (1 - dd / 100)) + ')';
-                        ctx.lineWidth = 0.5; ctx.stroke();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.strokeStyle = 'rgba(255,255,255,' + (0.15 * (1 - dd / 120)) + ')';
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
                     }
                 }
             }
@@ -505,14 +517,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ===== 页面跳转动画 =====
     var transition = document.createElement('div');
-    transition.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);z-index:9999;transform:scaleY(0);transform-origin:top;transition:transform 0.5s cubic-bezier(0.4,0,0.2,1);';
+    transition.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);z-index:9999;transform:scaleY(0);transform-origin:top;transition:transform 0.4s ease;';
     document.body.appendChild(transition);
     document.querySelectorAll('a[href$=".html"]').forEach(function(link) {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             var href = this.getAttribute('href');
             transition.style.transform = 'scaleY(1)';
-            setTimeout(function() { window.location.href = href; }, 500);
+            setTimeout(function() { window.location.href = href; }, 400);
         });
     });
+    // 页面加载时移除过渡
+    transition.style.transform = 'scaleY(0)';
 });
