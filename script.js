@@ -517,9 +517,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // ===== 页面跳转动画 =====
     var transition = document.createElement('div');
-    transition.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);z-index:9999;transform:scaleY(0);transform-origin:top;transition:transform 0.4s ease;';
+    transition.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);z-index:9999;transform:scaleY(0);transform-origin:top;transition:transform 0.4s ease;pointer-events:none;';
     document.body.appendChild(transition);
-    document.querySelectorAll('a[href$=".html"]').forEach(function(link) {
+
+    // 只对导航链接添加过渡动画，不对作品集按钮添加
+    document.querySelectorAll('.nav-link[href$=".html"], .mobile-menu a[href$=".html"]').forEach(function(link) {
         link.addEventListener('click', function(e) {
             e.preventDefault();
             var href = this.getAttribute('href');
@@ -527,6 +529,4 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(function() { window.location.href = href; }, 400);
         });
     });
-    // 页面加载时移除过渡
-    transition.style.transform = 'scaleY(0)';
 });
