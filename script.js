@@ -5,26 +5,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===== 开屏动画 =====
     var splash = document.getElementById('splash');
     if (splash) {
-        // 显示文字
-        setTimeout(function() {
-            splash.classList.add('show-text');
-        }, 300);
-        // 快门打开
-        setTimeout(function() {
-            splash.classList.add('open');
-        }, 1200);
-        // 隐藏整个开屏
+        setTimeout(function() { splash.classList.add('show-text'); }, 200);
+        setTimeout(function() { splash.classList.add('open'); }, 1500);
         setTimeout(function() {
             splash.classList.add('hidden');
-            setTimeout(function() {
-                splash.style.display = 'none';
-            }, 600);
-        }, 2200);
+            setTimeout(function() { splash.style.display = 'none'; }, 500);
+        }, 2800);
     }
 
     // ===== 隐藏式导航栏 =====
     var nav = document.getElementById('nav');
     var lastScroll = 0;
+    var navHoverZone = document.createElement('div');
+    navHoverZone.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:20px;z-index:999;';
+    document.body.appendChild(navHoverZone);
+
     window.addEventListener('scroll', function() {
         var currentScroll = window.pageYOffset;
         if (currentScroll > 100) {
@@ -38,6 +33,16 @@ document.addEventListener('DOMContentLoaded', function() {
             nav.classList.add('at-top');
         }
         lastScroll = currentScroll;
+    });
+
+    // 鼠标移到顶部自动显示导航栏
+    navHoverZone.addEventListener('mouseenter', function() {
+        nav.classList.add('visible');
+    });
+    nav.addEventListener('mouseleave', function() {
+        if (window.pageYOffset > 100) {
+            nav.classList.remove('visible');
+        }
     });
 
     // ===== 汉堡菜单 =====
@@ -226,13 +231,13 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener('click', function() {
             var card = this.closest('.pricing-card');
             var name = card.querySelector('h3').textContent;
-            var price = card.querySelector('.pricing-price').textContent;
             var contactSection = document.getElementById('contact');
             contactSection.scrollIntoView({ behavior: 'smooth' });
 
             // 判断是白棚正片还是场照
             var isStudio = card.closest('#studioPricing') !== null;
             var serviceType = isStudio ? 'cosplay白棚拍摄' : '漫展场照拍摄';
+            var packagePrefix = isStudio ? '白棚正片' : '场照';
 
             // 自动选择服务类型
             var serviceSelect = document.querySelector('select[name="服务类型"]');
@@ -245,11 +250,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            // 自动选择套餐
+            // 自动选择套餐（精确匹配：白棚正片-基础套餐 或 场照-基础套餐）
             var packageSelect = document.querySelector('select[name="套餐选择"]');
             if (packageSelect) {
+                var targetText = packagePrefix + '-' + name;
                 for (var i = 0; i < packageSelect.options.length; i++) {
-                    if (packageSelect.options[i].textContent.indexOf(name) !== -1) {
+                    if (packageSelect.options[i].value.indexOf(targetText) !== -1) {
                         packageSelect.selectedIndex = i;
                         break;
                     }

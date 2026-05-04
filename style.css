@@ -479,49 +479,89 @@ img { max-width:100%; display:block; }
 .modal-img-info h3 { font-size:20px; margin-bottom:6px; }
 .modal-img-info p { color:var(--text-secondary); font-size:14px; }
 
-/* ===== 开屏动画 - 相机快门 ===== */
+/* ===== 开屏动画 - 相机光圈 ===== */
 .splash {
     position:fixed; top:0; left:0; width:100%; height:100%;
     background:#000; z-index:10000;
     display:flex; align-items:center; justify-content:center;
-    transition:opacity 0.6s ease 0.3s;
+    overflow:hidden;
 }
-.splash.hidden { opacity:0; pointer-events:none; }
+.splash.hidden { opacity:0; pointer-events:none; transition:opacity 0.5s ease; }
 .splash-shutter {
-    position:absolute; top:0; left:0; width:100%; height:100%;
+    position:absolute; top:50%; left:50%;
+    width:150vmax; height:150vmax;
+    transform:translate(-50%, -50%);
 }
 .shutter-blade {
-    position:absolute; top:50%; left:50%;
-    width:200%; height:200%;
+    position:absolute; top:0; left:0; width:100%; height:100%;
     background:#000;
-    transform-origin:0 0;
-    transform:rotate(calc(var(--i) * 45deg)) translate(0, 0);
-    transition:transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin:center center;
+    transition:transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-.shutter-blade:nth-child(1) { clip-path:polygon(0 0, 50% 0, 50% 50%, 0 50%); }
-.shutter-blade:nth-child(2) { clip-path:polygon(50% 0, 100% 0, 100% 50%, 50% 50%); }
-.shutter-blade:nth-child(3) { clip-path:polygon(50% 50%, 100% 50%, 100% 100%, 50% 100%); }
-.shutter-blade:nth-child(4) { clip-path:polygon(0 50%, 50% 50%, 50% 100%, 0 100%); }
-.shutter-blade:nth-child(5) { clip-path:polygon(25% 0, 75% 0, 75% 25%, 25% 25%); opacity:0; }
-.shutter-blade:nth-child(6) { clip-path:polygon(75% 25%, 100% 25%, 100% 75%, 75% 75%); opacity:0; }
-.shutter-blade:nth-child(7) { clip-path:polygon(25% 75%, 75% 75%, 75% 100%, 25% 100%); opacity:0; }
-.shutter-blade:nth-child(8) { clip-path:polygon(0 25%, 25% 25%, 25% 75%, 0 75%); opacity:0; }
-.splash.open .shutter-blade {
-    transform:rotate(calc(var(--i) * 45deg)) translate(-120%, -120%);
+.shutter-blade:nth-child(1) { clip-path:polygon(50% 50%, 0% 0%, 25% 0%); }
+.shutter-blade:nth-child(2) { clip-path:polygon(50% 50%, 25% 0%, 50% 0%); }
+.shutter-blade:nth-child(3) { clip-path:polygon(50% 50%, 50% 0%, 75% 0%); }
+.shutter-blade:nth-child(4) { clip-path:polygon(50% 50%, 75% 0%, 100% 0%); }
+.shutter-blade:nth-child(5) { clip-path:polygon(50% 50%, 100% 0%, 100% 25%); }
+.shutter-blade:nth-child(6) { clip-path:polygon(50% 50%, 100% 25%, 100% 50%); }
+.shutter-blade:nth-child(7) { clip-path:polygon(50% 50%, 100% 50%, 100% 75%); }
+.shutter-blade:nth-child(8) { clip-path:polygon(50% 50%, 100% 75%, 100% 100%); }
+.shutter-blade:nth-child(9) { clip-path:polygon(50% 50%, 100% 100%, 75% 100%); }
+.shutter-blade:nth-child(10) { clip-path:polygon(50% 50%, 75% 100%, 50% 100%); }
+.shutter-blade:nth-child(11) { clip-path:polygon(50% 50%, 50% 100%, 25% 100%); }
+.shutter-blade:nth-child(12) { clip-path:polygon(50% 50%, 25% 100%, 0% 100%); }
+.shutter-blade:nth-child(13) { clip-path:polygon(50% 50%, 0% 100%, 0% 75%); }
+.shutter-blade:nth-child(14) { clip-path:polygon(50% 50%, 0% 75%, 0% 50%); }
+.shutter-blade:nth-child(15) { clip-path:polygon(50% 50%, 0% 50%, 0% 25%); }
+.shutter-blade:nth-child(16) { clip-path:polygon(50% 50%, 0% 25%, 0% 0%); }
+.splash.open .shutter-blade:nth-child(1) { transform:translate(-30%, -30%) scale(2); }
+.splash.open .shutter-blade:nth-child(2) { transform:translate(0%, -35%) scale(2); }
+.splash.open .shutter-blade:nth-child(3) { transform:translate(20%, -35%) scale(2); }
+.splash.open .shutter-blade:nth-child(4) { transform:translate(35%, -30%) scale(2); }
+.splash.open .shutter-blade:nth-child(5) { transform:translate(35%, -15%) scale(2); }
+.splash.open .shutter-blade:nth-child(6) { transform:translate(38%, 0%) scale(2); }
+.splash.open .shutter-blade:nth-child(7) { transform:translate(35%, 15%) scale(2); }
+.splash.open .shutter-blade:nth-child(8) { transform:translate(30%, 30%) scale(2); }
+.splash.open .shutter-blade:nth-child(9) { transform:translate(15%, 35%) scale(2); }
+.splash.open .shutter-blade:nth-child(10) { transform:translate(0%, 38%) scale(2); }
+.splash.open .shutter-blade:nth-child(11) { transform:translate(-15%, 35%) scale(2); }
+.splash.open .shutter-blade:nth-child(12) { transform:translate(-30%, 30%) scale(2); }
+.splash.open .shutter-blade:nth-child(13) { transform:translate(-35%, 15%) scale(2); }
+.splash.open .shutter-blade:nth-child(14) { transform:translate(-38%, 0%) scale(2); }
+.splash.open .shutter-blade:nth-child(15) { transform:translate(-35%, -15%) scale(2); }
+.splash.open .shutter-blade:nth-child(16) { transform:translate(-30%, -30%) scale(2); }
+.splash-ring {
+    position:absolute; top:50%; left:50%;
+    width:120px; height:120px;
+    transform:translate(-50%, -50%);
+    border:2px solid rgba(255,255,255,0.3);
+    border-radius:50%;
+    animation:ringPulse 1.5s ease-in-out infinite;
+}
+.splash-ring::after {
+    content:''; position:absolute; top:50%; left:50%;
+    width:80px; height:80px;
+    transform:translate(-50%, -50%);
+    border:1.5px solid rgba(255,255,255,0.2);
+    border-radius:50%;
+}
+@keyframes ringPulse {
+    0%,100% { transform:translate(-50%,-50%) scale(1); opacity:0.5; }
+    50% { transform:translate(-50%,-50%) scale(1.1); opacity:0.8; }
 }
 .splash-text {
     position:relative; z-index:1; text-align:center;
-    opacity:0; transform:scale(0.8);
-    transition:all 0.5s ease 0.3s;
+    opacity:0; transform:translateY(10px);
+    transition:all 0.6s ease;
 }
-.splash.show-text .splash-text { opacity:1; transform:scale(1); }
+.splash.show-text .splash-text { opacity:1; transform:translateY(0); }
 .splash-text h1 {
-    font-size:48px; font-weight:700; color:#fff;
-    letter-spacing:8px; margin-bottom:8px;
+    font-size:clamp(32px,6vw,48px); font-weight:700; color:#fff;
+    letter-spacing:6px; margin-bottom:8px;
 }
 .splash-text p {
-    font-size:16px; color:rgba(255,255,255,0.6);
-    letter-spacing:4px;
+    font-size:14px; color:rgba(255,255,255,0.5);
+    letter-spacing:3px;
 }
 
 /* ===== 通知 ===== */
