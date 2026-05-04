@@ -313,7 +313,105 @@
         </div>
     </footer>
 
-    <!-- 登录模态框 -->
+    <!-- 账号模态框 -->
+    <div class="modal" id="accountModal">
+        <div class="modal-box account-modal">
+            <button class="modal-close" id="accountClose">&times;</button>
+            
+            <!-- 账号头部 -->
+            <div class="account-header">
+                <div class="account-avatar-wrap">
+                    <div class="account-avatar" id="accountAvatar">U</div>
+                    <button class="avatar-edit-btn" id="avatarEditBtn"><i class="fas fa-camera"></i></button>
+                </div>
+                <h3 id="accountName">用户</h3>
+                <p id="accountEmail">未登录</p>
+            </div>
+
+            <!-- 账号标签页 -->
+            <div class="account-tabs">
+                <button class="account-tab active" data-tab="profile"><i class="fas fa-user"></i> 资料</button>
+                <button class="account-tab" data-tab="likes"><i class="fas fa-heart"></i> 点赞</button>
+                <button class="account-tab" data-tab="orders"><i class="fas fa-list"></i> 记录</button>
+                <button class="account-tab" data-tab="settings"><i class="fas fa-cog"></i> 设置</button>
+            </div>
+
+            <!-- 个人资料 -->
+            <div class="account-panel active" id="panel-profile">
+                <form id="profileForm" class="account-form">
+                    <div class="form-group">
+                        <label>昵称</label>
+                        <input type="text" id="profileName" placeholder="您的昵称">
+                    </div>
+                    <div class="form-group">
+                        <label>简介</label>
+                        <textarea id="profileBio" placeholder="介绍一下自己..." rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>头像预设</label>
+                        <div class="avatar-presets">
+                            <div class="avatar-option" data-avatar="👩">👩</div>
+                            <div class="avatar-option" data-avatar="👨">👨</div>
+                            <div class="avatar-option" data-avatar="🧑">🧑</div>
+                            <div class="avatar-option" data-avatar="🎀">🎀</div>
+                            <div class="avatar-option" data-avatar="🌸">🌸</div>
+                            <div class="avatar-option" data-avatar="⭐">⭐</div>
+                            <div class="avatar-option" data-avatar="🎭">🎭</div>
+                            <div class="avatar-option" data-avatar="📸">📸</div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">保存修改</button>
+                </form>
+                <div class="account-security">
+                    <h4>账号安全</h4>
+                    <button class="btn btn-outline btn-full" id="changePasswordBtn">修改密码</button>
+                </div>
+            </div>
+
+            <!-- 我的点赞 -->
+            <div class="account-panel" id="panel-likes">
+                <div class="account-list" id="likesList">
+                    <p class="account-empty">暂无点赞记录</p>
+                </div>
+            </div>
+
+            <!-- 咨询记录 -->
+            <div class="account-panel" id="panel-orders">
+                <div class="account-list" id="ordersList">
+                    <p class="account-empty">暂无咨询记录</p>
+                </div>
+            </div>
+
+            <!-- 设置 -->
+            <div class="account-panel" id="panel-settings">
+                <div class="settings-item">
+                    <span>深色模式</span>
+                    <button class="settings-toggle" id="settingsDarkMode"><i class="fas fa-moon"></i></button>
+                </div>
+                <div class="settings-item">
+                    <span>退出登录</span>
+                    <button class="btn btn-outline" id="settingsLogout" style="padding:6px 16px;font-size:13px;">退出</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 头像上传隐藏input -->
+    <input type="file" id="avatarUpload" accept="image/*" style="display:none">
+
+    <!-- 修改密码模态框 -->
+    <div class="modal" id="passwordModal">
+        <div class="modal-box">
+            <button class="modal-close" id="passwordClose">&times;</button>
+            <h2>修改密码</h2>
+            <form id="passwordForm" class="login-form">
+                <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="oldPassword" placeholder="当前密码" required></div>
+                <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="newPassword" placeholder="新密码（至少6位）" required minlength="6"></div>
+                <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="confirmNewPassword" placeholder="确认新密码" required minlength="6"></div>
+                <button type="submit" class="btn btn-primary btn-full">确认修改</button>
+            </form>
+        </div>
+    </div>
     <div class="modal" id="loginModal">
         <div class="modal-box">
             <button class="modal-close" id="loginClose">&times;</button>

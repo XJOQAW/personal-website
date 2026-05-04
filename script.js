@@ -353,9 +353,196 @@ document.addEventListener('DOMContentLoaded', function() {
                 userSection.style.display = 'none';
             }
         });
+
+        // 注册后自动登录状态已由Firebase处理
     }
 
-    // ===== 评价模态框 =====
+    // ===== 账号模态框 =====
+    var accountModal = document.getElementById('accountModal');
+    var accountClose = document.getElementById('accountClose');
+    var userInfoBtn = document.getElementById('userInfoBtn');
+
+    function openAccount() {
+        if (accountModal) {
+            accountModal.classList.add('active');
+            updateAccountInfo();
+        }
+    }
+    function closeAccount() { if (accountModal) accountModal.classList.remove('active'); }
+
+    if (userInfoBtn) userInfoBtn.addEventListener('click', openAccount);
+    if (accountClose) accountClose.addEventListener('click', closeAccount);
+    if (accountModal) accountModal.addEventListener('click', function(e) { if (e.target === accountModal) closeAccount(); });
+
+    // 更新账号信息
+    function updateAccountInfo() {
+        var user = auth ? auth.currentUser : null;
+        if (user) {
+            document.getElementById('accountName').textContent = user.displayName || user.email.split('@')[0];
+            document.getElementById('accountEmail').textContent = user.email.includes('@yifang.user') ? '自定义账号' : user.email;
+            document.getElementById('profileName').value = user.displayName || '';
+            var avatarEl = document.getElementById('accountAvatar');
+            if (user.photoURL) {
+                avatarEl.innerHTML = '<img src="' + user.photoURL + '">';
+            } else {
+                avatarEl.textContent = (user.displayName || 'U').charAt(0).toUpperCase();
+            }
+        }
+        // 加载点赞记录
+        var likedItems = JSON.parse(localStorage.getItem('likedReviews') || '[]');
+        var likesList = document.getElementById('likesList');
+        if (likedItems.length > 0) {
+            likesList.innerHTML = likedItems.map(function(id) {
+                return '<div class="account-list-item"><i class="fas fa-heart" style="color:var(--primary)"></i> 评价 #' + id + '</div>';
+            }).join('');
+        } else {
+            likesList.innerHTML = '<p class="account-empty">暂无点赞记录</p>';
+        }
+        // 加载咨询记录
+        var orders = JSON.parse(localStorage.getItem('consultations') || '[]');
+        var ordersList = document.getElementById('ordersList');
+        if (orders.length > 0) {
+            ordersList.innerHTML = orders.map(function(order) {
+                return '<div class="account-list-item"><strong>' + order.service + '</strong> - ' + order.package + '<br><small>' + order.time + '</small></div>';
+            }).join('');
+        } else {
+            ordersList.innerHTML = '<p class="account-empty">暂无咨询记录</p>';
+        }
+    }
+
+    // 账号标签页切换
+    document.querySelectorAll('.account-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+            document.querySelectorAll('.account-tab').forEach(function(t) { t.classList.remove('active'); });
+            this.classList.add('active');
+            var target = this.getAttribute('data-tab');
+            document.querySelectorAll('.account-panel').forEach(function(p) { p.classList.remove('active'); });
+            document.getElementById('panel-' + target).classList.add('active');
+        });
+    });
+
+    // 头像预设选择
+    document.querySelectorAll('.avatar-option').forEach(function(option) {
+        option.addEventListener('click', function() {
+            document.querySelectorAll('.avatar-option').forEach(function(o) { o.classList.remove('selected'); });
+            this.classList.add('selected');
+            var avatar = this.getAttribute('data-avatar');
+            var avatarEl = document.getElementById('accountAvatar');
+            avatarEl.textContent = avatar;
+            // 保存到localStorage
+            localStorage.setItem('userAvatar', avatar);
+            // 更新导航栏头像
+            var navAvatar = document.getElementById('userAvatar');
+            if (navAvatar) navAvatar.textContent = avatar;
+        });
+    });
+
+    // 头像上传
+    var avatarUpload = document.getElementById('avatarUpload');
+    var avatarEditBtn = document.getElementById('avatarEditBtn');
+    if (avatarEditBtn) {
+        avatarEditBtn.addEventListener('click', function() { avatarUpload.click(); });
+    }
+    if (avatarUpload) {
+        avatarUpload.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var avatarEl = document.getElementById('accountAvatar');
+                    avatarEl.innerHTML = '<img src="' + e.target.result + '">';
+                    localStorage.setItem('userAvatarImg', e.target.result);
+                    var navAvatar = document.getElementById('userAvatar');
+                    if (navAvatar) navAvatar.innerHTML = '<img src="' + e.target.result + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    }
+
+    // 保存个人资料
+    var profileForm = document.getElementById('profileForm');
+    if (profileForm) {
+        profileForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var name = document.getElementById('profileName').value;
+            var bio = document.getElementById('profileBio').value;
+            if (auth && auth.currentUser) {
+                auth.currentUser.updateProfile({ displayName: name }).then(function() {
+                    document.getElementById('userName').textContent = name;
+                    document.getElementById('accountName').textContent = name;
+                    showNotification('资料保存成功！', 'success');
+                });
+            }
+            localStorage.setItem('userBio', bio);
+        });
+    }
+
+    // 修改密码
+    var changePasswordBtn = document.getElementById('changePasswordBtn');
+    var passwordModal = document.getElementById('passwordModal');
+    var passwordClose = document.getElementById('passwordClose');
+    if (changePasswordBtn) {
+        changePasswordBtn.addEventListener('click', function() { passwordModal.classList.add('active'); });
+    }
+    if (passwordClose) {
+        passwordClose.addEventListener('click', function() { passwordModal.classList.remove('active'); });
+    }
+    if (passwordModal) {
+        passwordModal.addEventListener('click', function(e) { if (e.target === passwordModal) passwordModal.classList.remove('active'); });
+    }
+    var passwordForm = document.getElementById('passwordForm');
+    if (passwordForm) {
+        passwordForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            var newPwd = document.getElementById('newPassword').value;
+            var confirmPwd = document.getElementById('confirmNewPassword').value;
+            if (newPwd !== confirmPwd) { showNotification('两次密码不一致', 'error'); return; }
+            if (auth && auth.currentUser) {
+                auth.currentUser.updatePassword(newPwd).then(function() {
+                    showNotification('密码修改成功！', 'success');
+                    passwordModal.classList.remove('active');
+                }).catch(function(err) { showNotification('修改失败：' + err.message, 'error'); });
+            }
+        });
+    }
+
+    // 设置页深色模式切换
+    var settingsDarkMode = document.getElementById('settingsDarkMode');
+    if (settingsDarkMode) {
+        settingsDarkMode.addEventListener('click', function() {
+            var html = document.documentElement;
+            var current = html.getAttribute('data-theme');
+            var next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            this.innerHTML = next === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            var themeBtn = document.getElementById('themeBtn');
+            if (themeBtn) themeBtn.innerHTML = next === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+    }
+
+    // 设置页退出登录
+    var settingsLogout = document.getElementById('settingsLogout');
+    if (settingsLogout) {
+        settingsLogout.addEventListener('click', function() {
+            if (auth) {
+                auth.signOut().then(function() {
+                    closeAccount();
+                    showNotification('已退出登录', 'success');
+                });
+            }
+        });
+    }
+
+    // 加载保存的头像
+    var savedAvatar = localStorage.getItem('userAvatar');
+    var savedAvatarImg = localStorage.getItem('userAvatarImg');
+    var navAvatar = document.getElementById('userAvatar');
+    if (savedAvatarImg && navAvatar) {
+        navAvatar.innerHTML = '<img src="' + savedAvatarImg + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+    } else if (savedAvatar && navAvatar) {
+        navAvatar.textContent = savedAvatar;
+    }
     var reviewsModal = document.getElementById('reviewsModal');
     var reviewsMoreBtn = document.getElementById('reviewsMoreBtn');
     var reviewsClose = document.getElementById('reviewsClose');
@@ -414,6 +601,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(function(data) {
                     if (data.success) {
                         showNotification('提交成功！我会在24小时内回复您。', 'success');
+                        // 保存咨询记录
+                        var orders = JSON.parse(localStorage.getItem('consultations') || '[]');
+                        var serviceSelect = contactForm.querySelector('select[name="服务类型"]');
+                        var packageSelect = contactForm.querySelector('select[name="套餐选择"]');
+                        orders.unshift({
+                            service: serviceSelect ? serviceSelect.value : '未选择',
+                            package: packageSelect ? packageSelect.value : '未选择',
+                            time: new Date().toLocaleString('zh-CN')
+                        });
+                        localStorage.setItem('consultations', JSON.stringify(orders));
                         contactForm.reset();
                     } else {
                         showNotification('提交失败，请重试', 'error');
