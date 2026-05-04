@@ -218,13 +218,32 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener('click', function() {
             var card = this.closest('.pricing-card');
             var name = card.querySelector('h3').textContent;
+            var price = card.querySelector('.pricing-price').textContent;
             var contactSection = document.getElementById('contact');
             contactSection.scrollIntoView({ behavior: 'smooth' });
-            var select = document.querySelector('select[name="套餐选择"]');
-            if (select) {
-                for (var i = 0; i < select.options.length; i++) {
-                    if (select.options[i].textContent.indexOf(name) !== -1) {
-                        select.selectedIndex = i; break;
+
+            // 判断是白棚正片还是场照
+            var isStudio = card.closest('#studioPricing') !== null;
+            var serviceType = isStudio ? 'cosplay白棚拍摄' : '漫展场照拍摄';
+
+            // 自动选择服务类型
+            var serviceSelect = document.querySelector('select[name="服务类型"]');
+            if (serviceSelect) {
+                for (var i = 0; i < serviceSelect.options.length; i++) {
+                    if (serviceSelect.options[i].value === serviceType) {
+                        serviceSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            // 自动选择套餐
+            var packageSelect = document.querySelector('select[name="套餐选择"]');
+            if (packageSelect) {
+                for (var i = 0; i < packageSelect.options.length; i++) {
+                    if (packageSelect.options[i].textContent.indexOf(name) !== -1) {
+                        packageSelect.selectedIndex = i;
+                        break;
                     }
                 }
             }
