@@ -252,7 +252,7 @@ img { max-width:100%; display:block; }
 .process-content p { color:var(--text-secondary); font-size:14px; }
 
 /* ===== 作品集轮播 ===== */
-.portfolio-carousel { position:relative; overflow:hidden; border-radius:16px; margin-bottom:50px; }
+.portfolio-carousel { position:relative; overflow:hidden; border-radius:16px; }
 .portfolio-track { display:flex; transition:transform 0.5s cubic-bezier(0.4,0,0.2,1); }
 .portfolio-slide {
     min-width:100%; position:relative; aspect-ratio:16/9;
@@ -266,7 +266,7 @@ img { max-width:100%; display:block; }
 .portfolio-info h3 { font-size:22px; margin-bottom:4px; }
 .portfolio-info p { font-size:14px; opacity:0.8; }
 .portfolio-controls {
-    position:absolute; bottom:-40px; left:50%; transform:translateX(-50%);
+    position:absolute; bottom:50px; left:50%; transform:translateX(-50%);
     display:flex; align-items:center; gap:12px; z-index:10;
 }
 .portfolio-prev, .portfolio-next {
