@@ -27,7 +27,6 @@
                 <a href="portfolio.html" class="nav-link">作品</a>
                 <a href="reference.html" class="nav-link">动作参考</a>
                 <a href="#pricing" class="nav-link">价格</a>
-                <a href="#orders" class="nav-link">我的订单</a>
                 <a href="#contact" class="nav-link">联系</a>
             </div>
             <div class="nav-actions">
@@ -309,78 +308,6 @@
     </footer>
 
     <!-- 账号模态框 -->
-    <!-- 我的订单模态框 -->
-    <div class="modal" id="ordersModal">
-        <div class="modal-box modal-large">
-            <button class="modal-close" onclick="document.getElementById('ordersModal').classList.remove('active')">&times;</button>
-            <h2>我的订单</h2>
-            <div class="orders-list">
-                <div class="order-card">
-                    <div class="order-header">
-                        <span class="order-id">订单 #001</span>
-                        <span class="order-status paid">已付款</span>
-                    </div>
-                    <div class="order-info">
-                        <p><strong>服务类型：</strong>cosplay白棚拍摄</p>
-                        <p><strong>套餐：</strong>白棚正片-标准套餐 ¥350</p>
-                        <p><strong>下单时间：</strong>2026-05-07 15:30</p>
-                    </div>
-                    <div class="order-actions">
-                        <button class="order-btn refund-btn" onclick="showRefundForm()"><i class="fas fa-undo"></i> 退款</button>
-                        <button class="order-btn contact-btn" onclick="document.getElementById('ordersModal').classList.remove('active');document.getElementById('contact').scrollIntoView({behavior:'smooth'})"><i class="fas fa-comment"></i> 联系摄影</button>
-                        <button class="order-btn urge-btn" id="urgeBtn" onclick="handleUrge()"><i class="fas fa-clock"></i> 催返图</button>
-                    </div>
-                    <!-- 退款表单 -->
-                    <div class="order-refund" id="refundForm" style="display:none;">
-                        <h4 style="margin-bottom:10px;">退款申请</h4>
-                        <textarea id="refundReason" placeholder="请填写退款原因..." rows="3" class="review-text"></textarea>
-                        <div style="display:flex;gap:8px;margin-top:8px;">
-                            <button class="btn btn-primary" onclick="submitRefund()">提交退款</button>
-                            <button class="btn btn-outline" onclick="document.getElementById('refundForm').style.display='none'">取消</button>
-                        </div>
-                    </div>
-                    <!-- 评价区域 -->
-                    <div class="order-review" id="orderReview">
-                        <div class="star-rows">
-                            <div class="star-row">
-                                <span class="star-label">服务态度</span>
-                                <div class="stars" data-rating="0">
-                                    <i class="far fa-star" data-i="1"></i>
-                                    <i class="far fa-star" data-i="2"></i>
-                                    <i class="far fa-star" data-i="3"></i>
-                                    <i class="far fa-star" data-i="4"></i>
-                                    <i class="far fa-star" data-i="5"></i>
-                                </div>
-                            </div>
-                            <div class="star-row">
-                                <span class="star-label">返图质量</span>
-                                <div class="stars" data-rating="0">
-                                    <i class="far fa-star" data-i="1"></i>
-                                    <i class="far fa-star" data-i="2"></i>
-                                    <i class="far fa-star" data-i="3"></i>
-                                    <i class="far fa-star" data-i="4"></i>
-                                    <i class="far fa-star" data-i="5"></i>
-                                </div>
-                            </div>
-                            <div class="star-row">
-                                <span class="star-label">整体满意度</span>
-                                <div class="stars" data-rating="0">
-                                    <i class="far fa-star" data-i="1"></i>
-                                    <i class="far fa-star" data-i="2"></i>
-                                    <i class="far fa-star" data-i="3"></i>
-                                    <i class="far fa-star" data-i="4"></i>
-                                    <i class="far fa-star" data-i="5"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <textarea class="review-text" id="orderReviewText" placeholder="写下您的评价..." rows="3"></textarea>
-                        <button class="btn btn-primary" onclick="submitReview()">提交评价</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- 支付模态框 -->
     <div class="modal" id="paymentModal">
         <div class="modal-box" style="max-width:600px">
