@@ -252,7 +252,7 @@ img { max-width:100%; display:block; }
 .process-content p { color:var(--text-secondary); font-size:14px; }
 
 /* ===== 作品集轮播 ===== */
-.portfolio-carousel { position:relative; overflow:hidden; border-radius:16px; }
+.portfolio-carousel { position:relative; overflow:hidden; border-radius:16px; margin-bottom:50px; }
 .portfolio-track { display:flex; transition:transform 0.5s cubic-bezier(0.4,0,0.2,1); }
 .portfolio-slide {
     min-width:100%; position:relative; aspect-ratio:16/9;
@@ -266,15 +266,18 @@ img { max-width:100%; display:block; }
 .portfolio-info h3 { font-size:22px; margin-bottom:4px; }
 .portfolio-info p { font-size:14px; opacity:0.8; }
 .portfolio-controls {
-    position:absolute; bottom:20px; left:50%; transform:translateX(-50%);
+    position:absolute; bottom:-40px; left:50%; transform:translateX(-50%);
     display:flex; align-items:center; gap:12px; z-index:10;
 }
 .portfolio-prev, .portfolio-next {
-    width:36px; height:36px; border-radius:50%; border:none;
-    background:rgba(255,255,255,0.2); color:#fff; font-size:14px;
+    width:44px; height:44px; border-radius:50%; border:none;
+    background:rgba(255,255,255,0.15); color:#fff; font-size:18px;
     backdrop-filter:blur(10px); transition:all 0.2s;
     display:flex; align-items:center; justify-content:center;
+    position:absolute; top:50%; transform:translateY(-50%); z-index:10;
 }
+.portfolio-prev { left:12px; }
+.portfolio-next { right:12px; }
 .portfolio-prev:hover, .portfolio-next:hover { background:rgba(255,255,255,0.3); }
 .portfolio-dots { display:flex; gap:6px; }
 .portfolio-dot {
@@ -282,6 +285,7 @@ img { max-width:100%; display:block; }
     border:none; cursor:pointer; transition:all 0.2s;
 }
 .portfolio-dot.active { background:#fff; transform:scale(1.3); }
+.portfolio-slide-link { display:block; width:100%; height:100%; }
 
 /* 作品集英雄区域 */
 .portfolio-hero {
