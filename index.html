@@ -308,6 +308,17 @@
     </footer>
 
     <!-- 账号模态框 -->
+    <!-- 我的订单模态框 -->
+    <div class="modal" id="ordersModal">
+        <div class="modal-box modal-large">
+            <button class="modal-close" onclick="document.getElementById('ordersModal').classList.remove('active')">&times;</button>
+            <h2>我的订单</h2>
+            <div class="orders-list" id="ordersContainer">
+                <p class="account-empty">暂无订单，提交咨询后这里会显示您的订单</p>
+            </div>
+        </div>
+    </div>
+
     <!-- 支付模态框 -->
     <div class="modal" id="paymentModal">
         <div class="modal-box" style="max-width:600px">

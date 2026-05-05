@@ -317,6 +317,16 @@ function initApp() {
     if (loginClose) loginClose.addEventListener('click', closeLogin);
     if (loginModal) loginModal.addEventListener('click', function(e) { if (e.target === loginModal) closeLogin(); });
 
+    // ===== 我的订单 =====
+    var ordersNavLink = document.querySelector('.nav-link[href="#orders"]');
+    var ordersModal = document.getElementById('ordersModal');
+    if (ordersNavLink && ordersModal) {
+        ordersNavLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            ordersModal.classList.add('active');
+        });
+    }
+
     // 登录/注册标签
     document.querySelectorAll('.login-tab').forEach(function(tab) {
         tab.addEventListener('click', function() {
