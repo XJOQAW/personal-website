@@ -817,7 +817,53 @@ img { max-width:100%; display:block; }
     .hero-scroll { display:none; }
 }
 
-/* ===== 返回按钮 ===== */
+/* ===== 我的订单 ===== */
+.order-card {
+    background:var(--bg-alt); border-radius:14px;
+    padding:20px; margin-bottom:16px;
+}
+.order-header {
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:14px;
+}
+.order-id { font-weight:600; font-size:15px; }
+.order-status { padding:4px 12px; border-radius:20px; font-size:12px; }
+.order-status.paid { background:#e8f5e9; color:#2e7d32; }
+[data-theme="dark"] .order-status.paid { background:#1b3d1b; }
+.order-info p { font-size:14px; color:var(--text-secondary); margin-bottom:6px; }
+.order-actions {
+    display:flex; gap:8px; margin-top:16px; flex-wrap:wrap;
+}
+.order-btn {
+    padding:8px 14px; border:none; border-radius:8px;
+    font-size:13px; cursor:pointer; transition:all 0.2s;
+    display:flex; align-items:center; gap:4px;
+}
+.refund-btn { background:#ffebee; color:#c62828; }
+[data-theme="dark"] .refund-btn { background:#3d1b1b; }
+.contact-btn { background:#e3f2fd; color:#1565c0; }
+[data-theme="dark"] .contact-btn { background:#1b2a3d; }
+.urge-btn { background:#fff3e0; color:#e65100; }
+[data-theme="dark"] .urge-btn { background:#3d2e1b; }
+.review-btn { background:#f3e5f5; color:#7b1fa2; }
+[data-theme="dark"] .review-btn { background:#2e1b3d; }
+.order-btn:disabled { opacity:0.4; cursor:not-allowed; }
+.order-review {
+    margin-top:16px; padding-top:16px; border-top:1px solid var(--border);
+}
+.star-rows { display:flex; flex-direction:column; gap:12px; margin-bottom:12px; }
+.star-row { display:flex; align-items:center; gap:12px; }
+.star-label { font-size:13px; width:70px; color:var(--text-secondary); flex-shrink:0; }
+.stars { display:flex; gap:4px; }
+.stars i { font-size:18px; cursor:pointer; color:#ffb300; transition:all 0.15s; }
+.stars i:hover { transform:scale(1.2); }
+.review-text {
+    width:100%; padding:10px 14px; border:1.5px solid var(--border);
+    border-radius:10px; font-family:var(--font); font-size:14px;
+    background:var(--bg); color:var(--text); resize:vertical;
+    margin-bottom:10px;
+}
+.review-text:focus { outline:none; border-color:var(--primary); }
 .back-btn {
     display:inline-flex; align-items:center; gap:6px;
     padding:8px 16px; margin:12px 0 0 16px;

@@ -317,6 +317,16 @@ function initApp() {
     if (loginClose) loginClose.addEventListener('click', closeLogin);
     if (loginModal) loginModal.addEventListener('click', function(e) { if (e.target === loginModal) closeLogin(); });
 
+    // ===== 我的订单 =====
+    var ordersNavLink = document.querySelector('.nav-link[href="#orders"]');
+    var ordersModal = document.getElementById('ordersModal');
+    if (ordersNavLink && ordersModal) {
+        ordersNavLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            ordersModal.classList.add('active');
+        });
+    }
+
     // 登录/注册标签
     document.querySelectorAll('.login-tab').forEach(function(tab) {
         tab.addEventListener('click', function() {
@@ -967,6 +977,123 @@ function initApp() {
         startAutoPlay();
     }
 }
+
+// 显示退款表单
+function showRefundForm() {
+    document.getElementById('refundForm').style.display = 'block';
+}
+window.showRefundForm = showRefundForm;
+
+// 提交退款
+function submitRefund() {
+    var reason = document.getElementById('refundReason').value;
+    if (!reason.trim()) { showNotification('请填写退款原因', 'error'); return; }
+    var formData = new FormData();
+    formData.append('access_key', '2386150e-5aa8-4115-b47f-552e4c0167bd');
+    formData.append('subject', '一方通行 - 退款申请');
+    formData.append('from_name', '一方通行网站');
+    formData.append('退款原因', reason);
+    formData.append('订单编号', '001');
+    fetch('https://api.web3forms.com/submit', { method: 'POST', body: formData })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            if (data.success) {
+                showNotification('退款申请已提交，请等待处理', 'success');
+                document.getElementById('refundForm').style.display = 'none';
+                document.getElementById('refundReason').value = '';
+            } else { showNotification('提交失败', 'error'); }
+        });
+}
+window.submitRefund = submitRefund;
+
+// 星级评价
+document.querySelectorAll('.stars').forEach(function(stars) {
+    stars.querySelectorAll('i').forEach(function(star) {
+        star.addEventListener('click', function() {
+            var i = parseInt(this.getAttribute('data-i'));
+            stars.setAttribute('data-rating', i);
+            stars.querySelectorAll('i').forEach(function(s, index) {
+                s.className = index < i ? 'fas fa-star' : 'far fa-star';
+            });
+            // 检查评分并更新提示
+            var allRatings = [];
+            document.querySelectorAll('.stars').forEach(function(s) {
+                var r = parseInt(s.getAttribute('data-rating'));
+                if (r > 0) allRatings.push(r);
+            });
+            if (allRatings.length < 3) return; // 未全部评分
+            var hasLow = allRatings.some(function(r) { return r < 3; });
+            var total = allRatings.reduce(function(a,b){return a+b}, 0);
+            var all5 = allRatings.every(function(r) { return r === 5; });
+            var textarea = document.getElementById('orderReviewText');
+            if (!textarea) return;
+            if (hasLow) {
+                textarea.placeholder = '求求你告诉我哪里没做好吧，下次一定改进！555.......';
+            } else if (total >= 10 && !all5) {
+                textarea.placeholder = '欢迎老师下次再会！悄悄告诉您，推荐给朋友或再次约单有专属优惠和返点喔！';
+            } else if (all5) {
+                textarea.placeholder = '非常感谢老师的认可！写下您的评价吧~';
+            } else {
+                textarea.placeholder = '写下您的评价...';
+            }
+        });
+    });
+});
+
+// 提交评价
+function submitReview() {
+    var ratings = [];
+    document.querySelectorAll('.stars').forEach(function(stars) {
+        ratings.push(parseInt(stars.getAttribute('data-rating')));
+    });
+    var text = document.getElementById('orderReviewText').value;
+    if (ratings.includes(0)) { showNotification('请完成所有评分', 'error'); return; }
+    if (!text.trim()) { showNotification('请填写评价内容', 'error'); return; }
+    var reviewsList = document.getElementById('reviewsList');
+    if (!reviewsList) return;
+    var newItem = document.createElement('div');
+    newItem.className = 'review-item';
+    newItem.setAttribute('data-likes', '0');
+    newItem.setAttribute('data-time', new Date().toISOString().split('T')[0]);
+    var avg = Math.round(ratings.reduce(function(a,b){return a+b},0) / ratings.length);
+    newItem.innerHTML = '<div class="review-item-content"><p>"' + text + '"</p></div>' +
+        '<div class="review-item-footer"><div class="review-item-author"><span>👤</span><div><strong>用户</strong><span>订单 #001</span></div></div>' +
+        '<div class="review-item-meta"><span>' + new Date().toISOString().split('T')[0] + '</span>' +
+        '<button class="like-btn" data-id="' + Date.now() + '"><i class="fas fa-heart"></i> <span>0</span></button></div></div>';
+    reviewsList.insertBefore(newItem, reviewsList.firstChild);
+    showNotification('评价提交成功！', 'success');
+    document.getElementById('orderReview').style.display = 'none';
+    document.getElementById('orderReviewText').value = '';
+}
+window.submitReview = submitReview;
+
+// 催返图功能
+function handleUrge() {
+    var orderDate = new Date('2026-05-07');
+    var today = new Date();
+    var diffDays = Math.floor((today - orderDate) / (1000 * 60 * 60 * 24));
+    
+    if (diffDays < 7) {
+        showNotification((7 - diffDays) + '天后可催返图', 'error');
+        return;
+    }
+    
+    if (localStorage.getItem('urgeSent')) {
+        showNotification('已经催过返图啦~摄影正在火速加班！', 'success');
+        return;
+    }
+    
+    var formData = new FormData();
+    formData.append('access_key', '2386150e-5aa8-4115-b47f-552e4c0167bd');
+    formData.append('subject', '一方通行 - 催返图通知');
+    formData.append('from_name', '一方通行网站');
+    formData.append('催返提示', '客户催返图，请尽快处理订单 #001');
+    fetch('https://api.web3forms.com/submit', { method: 'POST', body: formData });
+    
+    localStorage.setItem('urgeSent', 'true');
+    showNotification('已催返图！摄影正在火速加班~', 'success');
+}
+window.handleUrge = handleUrge;
 
 // 自动执行
 if (document.readyState === 'loading') {
