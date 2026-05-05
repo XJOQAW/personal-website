@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>作品集 - 一方通行</title>
+    <title>动作参考 - 一方通行</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css?v=38">
 </head>
@@ -14,8 +14,8 @@
             <div class="nav-links">
                 <a href="index.html" class="nav-link">首页</a>
                 <a href="index.html#services" class="nav-link">服务</a>
-                <a href="portfolio.html" class="nav-link active">作品</a>
-                <a href="reference.html" class="nav-link">动作参考</a>
+                <a href="portfolio.html" class="nav-link">作品</a>
+                <a href="reference.html" class="nav-link active">动作参考</a>
                 <a href="index.html#pricing" class="nav-link">价格</a>
                 <a href="index.html#contact" class="nav-link">联系</a>
             </div>
@@ -39,84 +39,25 @@
         <a href="index.html">首页</a>
         <a href="index.html#services">服务</a>
         <a href="portfolio.html">作品</a>
+        <a href="reference.html">动作参考</a>
         <a href="index.html#pricing">价格</a>
         <a href="index.html#contact">联系</a>
     </div>
 
-    <main style="padding-top:48px">
-        <section class="portfolio-hero">
-            <div class="portfolio-hero-bg"></div>
-            <div class="portfolio-hero-content">
-                <h1>作品集</h1>
-                <p>每一个作品都是一次视觉的旅程</p>
-                <a href="#works" class="btn btn-primary">查看作品 <i class="fas fa-arrow-down"></i></a>
-            </div>
-        </section>
-        <section class="section" id="works">
+    <main style="padding-top:80px">
+        <section class="section">
             <div class="container">
                 <div class="section-header">
-                    <span class="section-tag">精选作品</span>
-                    <h2>我的摄影作品</h2>
+                    <span class="section-tag">动作参考</span>
+                    <h2>搜索角色动作参考</h2>
+                    <p>输入角色名称，查找参考图片</p>
                 </div>
-                <!-- 自动轮播展示 -->
-                <div class="portfolio-carousel">
-                    <div class="portfolio-track" id="portfolioTrack">
-                        <div class="portfolio-slide"><img src="images/4M8A0483(1).png" style="width:100%;height:100%;object-fit:cover;object-position:center 15%;"><div class="portfolio-info"><h3>二次元人像</h3><p>捕捉角色神韵与情绪表达</p></div></div>
-                        <div class="portfolio-slide"><div class="portfolio-img">🎨</div><div class="portfolio-info"><h3>创意合成</h3><p>二次元与现实的创意融合</p></div></div>
-                        <div class="portfolio-slide"><div class="portfolio-img">📷</div><div class="portfolio-info"><h3>场景拍摄</h3><p>精心搭建的二次元场景</p></div></div>
-                        <div class="portfolio-slide"><img src="images/4M8A0623.png" style="width:100%;height:100%;object-fit:cover;object-position:center 15%;"><div class="portfolio-info"><h3>场照拍摄</h3><p>漫展场照拍摄</p></div></div>
-                    </div>
-                    <div class="portfolio-controls">
-                        <button class="portfolio-prev" id="portfolioPrev"><i class="fas fa-arrow-left"></i></button>
-                        <div class="portfolio-dots" id="portfolioDots"></div>
-                        <button class="portfolio-next" id="portfolioNext"><i class="fas fa-arrow-right"></i></button>
-                    </div>
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="referenceSearch" class="search-input" placeholder="搜索您需要参考的角色">
                 </div>
-                <!-- 筛选和网格 -->
-                <div class="portfolio-filters">
-                    <button class="filter-btn active" data-filter="all">全部</button>
-                    <button class="filter-btn" data-filter="portrait">人像</button>
-                    <button class="filter-btn" data-filter="creative">创意</button>
-                    <button class="filter-btn" data-filter="landscape">场景</button>
-                    <button class="filter-btn" data-filter="event">场照</button>
-                </div>
-                <div class="portfolio-grid-2">
-                    <div class="portfolio-card" data-category="portrait">
-                        <div class="portfolio-card-img">
-                            <img src="images/4M8A0483(1).png" alt="二次元人像">
-                        </div>
-                        <div class="portfolio-card-info">
-                            <h3>二次元人像</h3>
-                            <p>捕捉角色神韵与情绪表达</p>
-                        </div>
-                    </div>
-                    <div class="portfolio-card" data-category="creative">
-                        <div class="portfolio-card-img placeholder">
-                            <span>🎨</span>
-                        </div>
-                        <div class="portfolio-card-info">
-                            <h3>创意合成</h3>
-                            <p>二次元与现实的创意融合</p>
-                        </div>
-                    </div>
-                    <div class="portfolio-card" data-category="landscape">
-                        <div class="portfolio-card-img placeholder">
-                            <span>📷</span>
-                        </div>
-                        <div class="portfolio-card-info">
-                            <h3>场景拍摄</h3>
-                            <p>精心搭建的二次元场景</p>
-                        </div>
-                    </div>
-                    <div class="portfolio-card" data-category="event">
-                        <div class="portfolio-card-img">
-                            <img src="images/4M8A0623.png" alt="场照">
-                        </div>
-                        <div class="portfolio-card-info">
-                            <h3>场照作品</h3>
-                            <p>漫展场照拍摄</p>
-                        </div>
-                    </div>
+                <div class="search-results" id="searchResults">
+                    <p class="account-empty">请输入角色名称开始搜索</p>
                 </div>
             </div>
         </section>
@@ -149,21 +90,12 @@
             <form class="login-form" id="registerForm" style="display:none">
                 <div class="input-group"><i class="fas fa-user"></i><input type="text" id="registerName" placeholder="用户名" required></div>
                 <div class="input-group"><i class="fas fa-at"></i><input type="text" id="registerAccount" placeholder="自定义账号" required></div>
-                <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="registerPassword" placeholder="密码（至少6位）" required></div>
+                <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="registerPassword" placeholder="密码" required></div>
                 <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="registerConfirm" placeholder="确认密码" required></div>
                 <button type="submit" class="btn btn-primary btn-full">注册</button>
             </form>
             <div class="login-divider"><span>或者</span></div>
             <button class="btn btn-google" id="googleLoginBtn"><i class="fab fa-google"></i> Google登录</button>
-        </div>
-    </div>
-
-    <!-- 作品集模态框 -->
-    <div class="modal" id="portfolioModal">
-        <div class="modal-box" style="max-width:800px">
-            <button class="modal-close" id="portfolioClose">&times;</button>
-            <div class="modal-img-box"><img id="modalImg" src="" alt=""></div>
-            <div class="modal-img-info"><h3 id="modalTitle"></h3><p id="modalDesc"></p></div>
         </div>
     </div>
 
@@ -187,23 +119,18 @@
             </div>
             <div class="account-panel active" id="panel-profile">
                 <form id="profileForm" class="account-form">
-                    <div class="form-group"><label>昵称</label><input type="text" id="profileName" placeholder="您的昵称"></div>
+                    <div class="form-group"><label>昵称</label><input type="text" id="profileName"></div>
                     <div class="form-group"><label>简介</label><textarea id="profileBio" rows="3"></textarea></div>
                     <div class="form-group"><label>头像预设</label>
                         <div class="avatar-presets">
-                            <div class="avatar-option" data-avatar="👩">👩</div>
-                            <div class="avatar-option" data-avatar="👨">👨</div>
-                            <div class="avatar-option" data-avatar="🧑">🧑</div>
-                            <div class="avatar-option" data-avatar="🎀">🎀</div>
-                            <div class="avatar-option" data-avatar="🌸">🌸</div>
-                            <div class="avatar-option" data-avatar="⭐">⭐</div>
-                            <div class="avatar-option" data-avatar="🎭">🎭</div>
-                            <div class="avatar-option" data-avatar="📸">📸</div>
+                            <div class="avatar-option" data-avatar="👩">👩</div><div class="avatar-option" data-avatar="👨">👨</div>
+                            <div class="avatar-option" data-avatar="🧑">🧑</div><div class="avatar-option" data-avatar="🎀">🎀</div>
+                            <div class="avatar-option" data-avatar="🌸">🌸</div><div class="avatar-option" data-avatar="⭐">⭐</div>
+                            <div class="avatar-option" data-avatar="🎭">🎭</div><div class="avatar-option" data-avatar="📸">📸</div>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-full">保存修改</button>
                 </form>
-                <div class="account-security"><h4>账号安全</h4><button class="btn btn-outline btn-full" id="changePasswordBtn">修改密码</button></div>
             </div>
             <div class="account-panel" id="panel-likes"><div class="account-list" id="likesList"><p class="account-empty">暂无点赞</p></div></div>
             <div class="account-panel" id="panel-orders"><div class="account-list" id="ordersList"><p class="account-empty">暂无记录</p></div></div>
@@ -217,6 +144,6 @@
 
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
-    <script src="script.js?v=37"></script>
+    <script src="script.js?v=38"></script>
 </body>
 </html>
