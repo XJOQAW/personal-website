@@ -5,14 +5,18 @@ function initApp() {
     // ===== 开屏动画 =====
     var splash = document.getElementById('splash');
     if (splash) {
-        // 0.3秒后显示文字
-        setTimeout(function() { splash.classList.add('show-text'); }, 300);
-        // 2.8秒后开始隐藏（CSS 3.5s备份）
-        setTimeout(function() {
-            splash.style.opacity = '0';
-            splash.style.pointerEvents = 'none';
-            splash.style.visibility = 'hidden';
-        }, 2800);
+        // 检查是否已经看过开屏动画
+        if (localStorage.getItem('splashShown')) {
+            splash.style.display = 'none';
+        } else {
+            setTimeout(function() { splash.classList.add('show-text'); }, 300);
+            setTimeout(function() {
+                splash.style.opacity = '0';
+                splash.style.pointerEvents = 'none';
+                splash.style.visibility = 'hidden';
+                localStorage.setItem('splashShown', 'true');
+            }, 2800);
+        }
     }
 
     // ===== 导航栏滚动隐藏/显示 =====
