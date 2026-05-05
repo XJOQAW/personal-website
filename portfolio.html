@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>作品集 - 一方通行</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css?v=33">
+    <link rel="stylesheet" href="style.css?v=37">
 </head>
 <body>
-    <!-- 导航栏 -->
     <nav class="nav visible" id="nav">
         <div class="nav-inner">
             <a href="index.html" class="nav-logo">一方通行</a>
@@ -21,15 +20,20 @@
             </div>
             <div class="nav-actions">
                 <button class="nav-theme" id="themeBtn"><i class="fas fa-moon"></i></button>
-                <button class="nav-login" id="loginBtn">登录</button>
+                <div class="auth-section" id="authSection">
+                    <button class="nav-login" id="loginBtn" onclick="document.getElementById('loginModal').classList.add('active')">登录</button>
+                </div>
+                <div class="user-section" id="userSection" style="display:none;">
+                    <div class="user-info" id="userInfoBtn" onclick="document.getElementById('accountModal').classList.add('active')">
+                        <div class="user-avatar" id="userAvatar">👤</div>
+                        <span class="user-name" id="userName">用户</span>
+                    </div>
+                    <button class="nav-logout" id="logoutBtn" onclick="firebase.auth().signOut()"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
             </div>
-            <button class="nav-hamburger" id="hamburgerBtn">
-                <span></span><span></span><span></span>
-            </button>
+            <button class="nav-hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
         </div>
     </nav>
-
-    <!-- 移动端菜单 -->
     <div class="mobile-menu" id="mobileMenu">
         <a href="index.html">首页</a>
         <a href="index.html#services">服务</a>
@@ -39,7 +43,6 @@
     </div>
 
     <main style="padding-top:48px">
-        <!-- 作品集英雄区域 -->
         <section class="portfolio-hero">
             <div class="portfolio-hero-bg"></div>
             <div class="portfolio-hero-content">
@@ -48,61 +51,16 @@
                 <a href="#works" class="btn btn-primary">查看作品 <i class="fas fa-arrow-down"></i></a>
             </div>
         </section>
-
         <section class="section" id="works">
             <div class="container">
                 <div class="section-header">
                     <span class="section-tag">精选作品</span>
                     <h2>我的摄影作品</h2>
                 </div>
-                <!-- 自动轮播展示 -->
-                <div class="portfolio-showcase">
-                    <div class="showcase-track" id="showcaseTrack">
-                        <div class="showcase-slide">
-                            <img src="images/4M8A0483(1).png" alt="二次元人像">
-                            <div class="showcase-info">
-                                <h3>二次元人像</h3>
-                                <p>捕捉角色神韵与情绪表达</p>
-                            </div>
-                        </div>
-                        <div class="showcase-slide">
-                            <div class="showcase-placeholder">🎨</div>
-                            <div class="showcase-info">
-                                <h3>创意合成</h3>
-                                <p>二次元与现实的创意融合</p>
-                            </div>
-                        </div>
-                        <div class="showcase-slide">
-                            <div class="showcase-placeholder">📷</div>
-                            <div class="showcase-info">
-                                <h3>场景拍摄</h3>
-                                <p>精心搭建的二次元场景</p>
-                            </div>
-                        </div>
-                        <div class="showcase-slide">
-                            <div class="showcase-placeholder">✨</div>
-                            <div class="showcase-info">
-                                <h3>后期精修</h3>
-                                <p>专业后期处理与调色</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="showcase-controls">
-                        <button class="showcase-prev" id="showcasePrev"><i class="fas fa-chevron-left"></i></button>
-                        <div class="showcase-dots" id="showcaseDots"></div>
-                        <button class="showcase-next" id="showcaseNext"><i class="fas fa-chevron-right"></i></button>
-                    </div>
-                    <div class="showcase-progress">
-                        <div class="showcase-progress-bar" id="showcaseProgress"></div>
-                    </div>
-                </div>
-
-                <!-- 筛选和网格 -->
                 <div class="portfolio-filters">
                     <button class="filter-btn active" data-filter="all">全部</button>
-                    <button class="filter-btn" data-filter="portrait">二次元人像</button>
-                    <button class="filter-btn" data-filter="landscape">场景拍摄</button>
-                    <button class="filter-btn" data-filter="creative">创意合成</button>
+                    <button class="filter-btn" data-filter="portrait">人像</button>
+                    <button class="filter-btn" data-filter="event">场照</button>
                 </div>
                 <div class="portfolio-grid-2">
                     <div class="portfolio-card" data-category="portrait">
@@ -114,31 +72,13 @@
                             <p>捕捉角色神韵与情绪表达</p>
                         </div>
                     </div>
-                    <div class="portfolio-card" data-category="creative">
-                        <div class="portfolio-card-img placeholder">
-                            <span>🎨</span>
+                    <div class="portfolio-card" data-category="event">
+                        <div class="portfolio-card-img">
+                            <img src="images/4M8A0623.png" alt="场照">
                         </div>
                         <div class="portfolio-card-info">
-                            <h3>创意合成</h3>
-                            <p>二次元与现实的创意融合</p>
-                        </div>
-                    </div>
-                    <div class="portfolio-card" data-category="landscape">
-                        <div class="portfolio-card-img placeholder">
-                            <span>📷</span>
-                        </div>
-                        <div class="portfolio-card-info">
-                            <h3>场景拍摄</h3>
-                            <p>精心搭建的二次元场景</p>
-                        </div>
-                    </div>
-                    <div class="portfolio-card" data-category="portrait">
-                        <div class="portfolio-card-img placeholder">
-                            <span>✨</span>
-                        </div>
-                        <div class="portfolio-card-info">
-                            <h3>后期精修</h3>
-                            <p>专业后期处理与调色</p>
+                            <h3>场照作品</h3>
+                            <p>漫展场照拍摄</p>
                         </div>
                     </div>
                 </div>
@@ -146,27 +86,101 @@
         </section>
     </main>
 
-    <!-- 页脚 -->
     <footer class="footer">
         <div class="container">
             <div class="footer-grid">
-                <div class="footer-brand">
-                    <h3>一方通行</h3>
-                    <p>用严谨丈量创作，用镜头捕捉美好</p>
-                </div>
-                <div class="footer-links">
-                    <h4>快速链接</h4>
-                    <a href="index.html">首页</a>
-                    <a href="portfolio.html">作品</a>
-                    <a href="index.html#contact">联系</a>
-                </div>
+                <div class="footer-brand"><h3>一方通行</h3><p>用严谨丈量创作</p></div>
+                <div class="footer-links"><h4>快速链接</h4><a href="index.html">首页</a><a href="portfolio.html">作品</a><a href="index.html#contact">联系</a></div>
             </div>
-            <div class="footer-bottom">
-                <p>© 2026 一方通行. 保留所有权利.</p>
-            </div>
+            <div class="footer-bottom"><p>© 2026 一方通行</p></div>
         </div>
     </footer>
 
-    <script src="script.js?v=33"></script>
+    <!-- 登录模态框 -->
+    <div class="modal" id="loginModal">
+        <div class="modal-box">
+            <button class="modal-close" id="loginClose" onclick="document.getElementById('loginModal').classList.remove('active')">&times;</button>
+            <h2 id="loginTitle">登录</h2>
+            <div class="login-tabs">
+                <button class="login-tab active" data-tab="login">登录</button>
+                <button class="login-tab" data-tab="register">注册</button>
+            </div>
+            <form class="login-form" id="loginForm">
+                <div class="input-group"><i class="fas fa-user"></i><input type="text" id="loginAccount" placeholder="账号" required></div>
+                <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="密码" required></div>
+                <button type="submit" class="btn btn-primary btn-full">登录</button>
+            </form>
+            <form class="login-form" id="registerForm" style="display:none">
+                <div class="input-group"><i class="fas fa-user"></i><input type="text" id="registerName" placeholder="用户名" required></div>
+                <div class="input-group"><i class="fas fa-at"></i><input type="text" id="registerAccount" placeholder="自定义账号" required></div>
+                <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="registerPassword" placeholder="密码（至少6位）" required></div>
+                <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="registerConfirm" placeholder="确认密码" required></div>
+                <button type="submit" class="btn btn-primary btn-full">注册</button>
+            </form>
+            <div class="login-divider"><span>或者</span></div>
+            <button class="btn btn-google" id="googleLoginBtn"><i class="fab fa-google"></i> Google登录</button>
+        </div>
+    </div>
+
+    <!-- 作品集模态框 -->
+    <div class="modal" id="portfolioModal">
+        <div class="modal-box" style="max-width:800px">
+            <button class="modal-close" id="portfolioClose">&times;</button>
+            <div class="modal-img-box"><img id="modalImg" src="" alt=""></div>
+            <div class="modal-img-info"><h3 id="modalTitle"></h3><p id="modalDesc"></p></div>
+        </div>
+    </div>
+
+    <!-- 账号模态框 -->
+    <div class="modal" id="accountModal">
+        <div class="modal-box account-modal">
+            <button class="modal-close" onclick="document.getElementById('accountModal').classList.remove('active')">&times;</button>
+            <div class="account-header">
+                <div class="account-avatar-wrap">
+                    <div class="account-avatar" id="accountAvatar">U</div>
+                    <button class="avatar-edit-btn" id="avatarEditBtn"><i class="fas fa-camera"></i></button>
+                </div>
+                <h3 id="accountName">用户</h3>
+                <p id="accountEmail">未登录</p>
+            </div>
+            <div class="account-tabs">
+                <button class="account-tab active" data-tab="profile"><i class="fas fa-user"></i> 资料</button>
+                <button class="account-tab" data-tab="likes"><i class="fas fa-heart"></i> 点赞</button>
+                <button class="account-tab" data-tab="orders"><i class="fas fa-list"></i> 记录</button>
+                <button class="account-tab" data-tab="settings"><i class="fas fa-cog"></i> 设置</button>
+            </div>
+            <div class="account-panel active" id="panel-profile">
+                <form id="profileForm" class="account-form">
+                    <div class="form-group"><label>昵称</label><input type="text" id="profileName" placeholder="您的昵称"></div>
+                    <div class="form-group"><label>简介</label><textarea id="profileBio" rows="3"></textarea></div>
+                    <div class="form-group"><label>头像预设</label>
+                        <div class="avatar-presets">
+                            <div class="avatar-option" data-avatar="👩">👩</div>
+                            <div class="avatar-option" data-avatar="👨">👨</div>
+                            <div class="avatar-option" data-avatar="🧑">🧑</div>
+                            <div class="avatar-option" data-avatar="🎀">🎀</div>
+                            <div class="avatar-option" data-avatar="🌸">🌸</div>
+                            <div class="avatar-option" data-avatar="⭐">⭐</div>
+                            <div class="avatar-option" data-avatar="🎭">🎭</div>
+                            <div class="avatar-option" data-avatar="📸">📸</div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">保存修改</button>
+                </form>
+                <div class="account-security"><h4>账号安全</h4><button class="btn btn-outline btn-full" id="changePasswordBtn">修改密码</button></div>
+            </div>
+            <div class="account-panel" id="panel-likes"><div class="account-list" id="likesList"><p class="account-empty">暂无点赞</p></div></div>
+            <div class="account-panel" id="panel-orders"><div class="account-list" id="ordersList"><p class="account-empty">暂无记录</p></div></div>
+            <div class="account-panel" id="panel-settings">
+                <div class="settings-item"><span>深色模式</span><button class="settings-toggle" id="settingsDarkMode"><i class="fas fa-moon"></i></button></div>
+                <div class="settings-item"><span>退出登录</span><button class="btn btn-outline" id="settingsLogout" style="padding:6px 16px;font-size:13px;">退出</button></div>
+            </div>
+        </div>
+    </div>
+    <input type="file" id="avatarUpload" accept="image/*" style="display:none">
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+    <script src="script.js?v=37"></script>
 </body>
 </html>

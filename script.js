@@ -348,24 +348,14 @@ function initApp() {
         auth.onAuthStateChanged(function(user) {
             var authSection = document.getElementById('authSection');
             var userSection = document.getElementById('userSection');
-            var navAvatar = document.getElementById('userAvatar');
             if (user) {
-                authSection.style.display = 'none';
-                userSection.style.display = 'flex';
-                document.getElementById('userName').textContent = user.displayName || user.email.split('@')[0];
-                // 加载保存的头像
-                var savedAvatarImg = localStorage.getItem('userAvatarImg');
-                var savedAvatar = localStorage.getItem('userAvatar');
-                if (savedAvatarImg && navAvatar) {
-                    navAvatar.innerHTML = '<img src="' + savedAvatarImg + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
-                } else if (savedAvatar && navAvatar) {
-                    navAvatar.textContent = savedAvatar;
-                } else if (navAvatar) {
-                    navAvatar.textContent = (user.displayName || 'U').charAt(0).toUpperCase();
-                }
+                if (authSection) authSection.style.display = 'none';
+                if (userSection) userSection.style.display = 'flex';
+                var userName = document.getElementById('userName');
+                if (userName) userName.textContent = user.displayName || user.email.split('@')[0];
             } else {
-                authSection.style.display = 'block';
-                userSection.style.display = 'none';
+                if (authSection) authSection.style.display = 'block';
+                if (userSection) userSection.style.display = 'none';
             }
         });
 
@@ -750,11 +740,12 @@ function initApp() {
     document.querySelectorAll('.portfolio-card').forEach(function(card) {
         card.addEventListener('click', function() {
             var img = this.querySelector('img');
-            var title = this.querySelector('h3').textContent;
-            var desc = this.querySelector('p').textContent;
+            var title = this.querySelector('h3');
+            var desc = this.querySelector('p');
             var modal = document.getElementById('portfolioModal');
-            document.getElementById('modalTitle').textContent = title;
-            document.getElementById('modalDesc').textContent = desc;
+            if (!modal || !title || !desc) return;
+            document.getElementById('modalTitle').textContent = title.textContent;
+            document.getElementById('modalDesc').textContent = desc.textContent;
             if (img) document.getElementById('modalImg').src = img.src;
             modal.classList.add('active');
         });

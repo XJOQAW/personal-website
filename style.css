@@ -369,13 +369,21 @@ img { max-width:100%; display:block; }
     cursor:pointer;
 }
 .portfolio-card:hover { transform:translateY(-6px); box-shadow:0 8px 24px rgba(0,0,0,0.1); }
-.portfolio-card-img { height:220px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:var(--bg-alt); }
-.portfolio-card-img img { width:100%; height:100%; object-fit:cover; transition:transform 0.5s; }
+.portfolio-card-img { height:320px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:var(--bg-alt); }
+.portfolio-card-img img { width:100%; height:100%; object-fit:cover; object-position:center 15%; transition:transform 0.5s; }
 .portfolio-card:hover .portfolio-card-img img { transform:scale(1.06); }
 .portfolio-card-img.placeholder { font-size:48px; opacity:0.4; }
 .portfolio-card-info { padding:16px; }
 .portfolio-card-info h3 { font-size:16px; margin-bottom:2px; }
 .portfolio-card-info p { font-size:13px; color:var(--text-secondary); }
+.work-delete-btn {
+    position:absolute; top:8px; right:8px; width:28px; height:28px;
+    border-radius:50%; border:none; background:rgba(0,0,0,0.5); color:#fff;
+    font-size:12px; cursor:pointer; opacity:0; transition:opacity 0.2s;
+    display:flex; align-items:center; justify-content:center; z-index:1;
+}
+.portfolio-card:hover .work-delete-btn { opacity:1; }
+.work-delete-btn:hover { background:#ff3b30; }
 
 /* ===== 价格套餐 ===== */
 .pricing-tabs { display:flex; justify-content:center; gap:10px; margin-bottom:32px; }
