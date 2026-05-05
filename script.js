@@ -215,6 +215,19 @@ function initApp() {
         document.getElementById('portfolioNext').addEventListener('click', function() {
             goToSlide((currentIndex + 1) % slides.length);
         });
+
+        // 自动轮播
+        var autoPlay = setInterval(function() {
+            goToSlide((currentIndex + 1) % slides.length);
+        }, 4000);
+
+        // 鼠标悬停暂停
+        track.parentElement.addEventListener('mouseenter', function() { clearInterval(autoPlay); });
+        track.parentElement.addEventListener('mouseleave', function() {
+            autoPlay = setInterval(function() {
+                goToSlide((currentIndex + 1) % slides.length);
+            }, 4000);
+        });
     }
 
     // ===== 价格套餐标签页 =====
