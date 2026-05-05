@@ -1,5 +1,5 @@
-// 主脚本 - 页面加载后执行
-document.addEventListener('DOMContentLoaded', function() {
+// 主脚本
+function initApp() {
     console.log('页面加载完成');
 
     // ===== 开屏动画 =====
@@ -15,37 +15,37 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 2800);
     }
 
-    // ===== 隐藏式导航栏 =====
+    // ===== 导航栏滚动隐藏/显示 =====
     var nav = document.getElementById('nav');
     var lastScroll = 0;
     var navHoverZone = document.createElement('div');
-    navHoverZone.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:20px;z-index:999;';
+    navHoverZone.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:15px;z-index:998;';
     document.body.appendChild(navHoverZone);
+
+    // 初始显示导航栏
+    nav.classList.add('visible');
 
     window.addEventListener('scroll', function() {
         var currentScroll = window.pageYOffset;
-        if (currentScroll > 100) {
+        if (currentScroll < 100) {
+            // 在顶部，显示透明导航栏
             nav.classList.add('visible');
-            if (currentScroll > lastScroll) {
-                nav.classList.remove('visible');
-            }
-            nav.classList.remove('at-top');
-        } else {
-            nav.classList.remove('visible');
             nav.classList.add('at-top');
+        } else {
+            nav.classList.remove('at-top');
+            if (currentScroll > lastScroll) {
+                // 向下滚动，隐藏
+                nav.classList.remove('visible');
+            } else {
+                // 向上滚动，显示
+                nav.classList.add('visible');
+            }
         }
         lastScroll = currentScroll;
     });
 
-    // 鼠标移到顶部自动显示导航栏
-    navHoverZone.addEventListener('mouseenter', function() {
-        nav.classList.add('visible');
-    });
-    nav.addEventListener('mouseleave', function() {
-        if (window.pageYOffset > 100) {
-            nav.classList.remove('visible');
-        }
-    });
+    // 鼠标移到顶部显示导航栏
+    navHoverZone.addEventListener('mouseenter', function() { nav.classList.add('visible'); });
 
     // ===== 汉堡菜单 =====
     var hamburger = document.getElementById('hamburgerBtn');
@@ -232,16 +232,18 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.pricing-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
             var card = this.closest('.pricing-card');
-            var name = card.querySelector('h3').textContent;
+            var name = card.querySelector('h3').textContent.trim();
             var contactSection = document.getElementById('contact');
+            if (!contactSection) return;
             contactSection.scrollIntoView({ behavior: 'smooth' });
 
             // 判断是白棚正片还是场照
-            var isStudio = card.closest('#studioPricing') !== null;
+            var parentGrid = card.closest('.pricing-grid');
+            var isStudio = parentGrid && parentGrid.id === 'studioPricing';
             var serviceType = isStudio ? 'cosplay白棚拍摄' : '漫展场照拍摄';
             var packagePrefix = isStudio ? '白棚正片' : '场照';
 
-            // 自动选择服务类型
+            // 服务类型
             var serviceSelect = document.querySelector('select[name="服务类型"]');
             if (serviceSelect) {
                 for (var i = 0; i < serviceSelect.options.length; i++) {
@@ -252,12 +254,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
 
-            // 自动选择套餐（精确匹配：白棚正片-基础套餐 或 场照-基础套餐）
+            // 套餐
             var packageSelect = document.querySelector('select[name="套餐选择"]');
             if (packageSelect) {
-                var targetText = packagePrefix + '-' + name;
+                var expected = packagePrefix + '-' + name;
                 for (var i = 0; i < packageSelect.options.length; i++) {
-                    if (packageSelect.options[i].value.indexOf(targetText) !== -1) {
+                    if (packageSelect.options[i].value.indexOf(expected) !== -1) {
                         packageSelect.selectedIndex = i;
                         break;
                     }
@@ -629,35 +631,108 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // ===== 联系表单 =====
+    // ===== 联系表单 + 支付流程 =====
     var contactForm = document.getElementById('contactForm');
+    var paymentModal = document.getElementById('paymentModal');
+    var pendingFormData = null;
+    var screenshotUploaded = false;
+
+    var packageInfo = {
+        '白棚正片-基础套餐 ¥150': { name: '基础套餐', price: '¥150', qr: 'images/pay-150.jpg' },
+        '白棚正片-标准套餐 ¥350': { name: '标准套餐', price: '¥350', qr: 'images/pay-350.jpg' },
+        '白棚正片-高级套餐 ¥550': { name: '高级套餐', price: '¥550', qr: 'images/pay-550.jpg' },
+        '场照-基础套餐 ¥21': { name: '基础套餐', price: '¥21', qr: 'images/pay-21.jpg' },
+        '场照-标准套餐 ¥80': { name: '标准套餐', price: '¥80', qr: 'images/pay-80.jpg' },
+        '场照-高级套餐 ¥190': { name: '高级套餐', price: '¥190', qr: 'images/pay-190.jpg' }
+    };
+
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            var formData = new FormData(contactForm);
-            fetch('https://api.web3forms.com/submit', { method: 'POST', body: formData })
-                .then(function(r) { return r.json(); })
-                .then(function(data) {
-                    if (data.success) {
-                        showNotification('提交成功！我会在24小时内回复您。', 'success');
-                        // 保存咨询记录
-                        var orders = JSON.parse(localStorage.getItem('consultations') || '[]');
-                        var serviceSelect = contactForm.querySelector('select[name="服务类型"]');
-                        var packageSelect = contactForm.querySelector('select[name="套餐选择"]');
-                        orders.unshift({
-                            service: serviceSelect ? serviceSelect.value : '未选择',
-                            package: packageSelect ? packageSelect.value : '未选择',
-                            time: new Date().toLocaleString('zh-CN')
-                        });
-                        localStorage.setItem('consultations', JSON.stringify(orders));
-                        contactForm.reset();
-                    } else {
-                        showNotification('提交失败，请重试', 'error');
-                    }
-                })
-                .catch(function() { showNotification('提交失败，请重试', 'error'); });
+            pendingFormData = new FormData(contactForm);
+            var pkg = contactForm.querySelector('select[name="套餐选择"]').value;
+            if (!pkg) { showNotification('请先选择套餐', 'error'); return; }
+
+            var info = packageInfo[pkg];
+            if (!info) { showNotification('请先选择套餐', 'error'); return; }
+
+            document.getElementById('paymentPackageName').textContent = info.name;
+            document.getElementById('paymentPrice').textContent = info.price;
+            document.getElementById('paymentQRCode').src = info.qr;
+            
+            // 重置上传
+            screenshotUploaded = false;
+            document.getElementById('uploadArea').style.display = 'block';
+            document.getElementById('uploadPreview').style.display = 'none';
+            document.getElementById('confirmPayment').disabled = true;
+            document.getElementById('transactionId').value = '';
+
+            paymentModal.classList.add('active');
         });
     }
+
+    // 文件上传
+    var uploadArea = document.getElementById('uploadArea');
+    var paymentScreenshot = document.getElementById('paymentScreenshot');
+    if (uploadArea && paymentScreenshot) {
+        uploadArea.addEventListener('click', function() { paymentScreenshot.click(); });
+        paymentScreenshot.addEventListener('change', function() {
+            if (this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImage').src = e.target.result;
+                    document.getElementById('uploadArea').style.display = 'none';
+                    document.getElementById('uploadPreview').style.display = 'block';
+                    screenshotUploaded = true;
+                    document.getElementById('confirmPayment').disabled = false;
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    }
+    var removeBtn = document.getElementById('removeScreenshot');
+    if (removeBtn) {
+        removeBtn.addEventListener('click', function() {
+            paymentScreenshot.value = '';
+            document.getElementById('uploadArea').style.display = 'block';
+            document.getElementById('uploadPreview').style.display = 'none';
+            screenshotUploaded = false;
+            document.getElementById('confirmPayment').disabled = true;
+        });
+    }
+
+    // 确认付款
+    var confirmBtn = document.getElementById('confirmPayment');
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', function() {
+            if (!screenshotUploaded) return;
+            var tid = document.getElementById('transactionId').value;
+            if (!tid) { showNotification('请填写交易单号', 'error'); return; }
+            if (!confirm('确认已支付 ' + document.getElementById('paymentPrice').textContent + ' ？')) return;
+
+            pendingFormData.append('screenshot', document.getElementById('paymentScreenshot').files[0]);
+            pendingFormData.append('交易单号', tid);
+
+            fetch('https://api.web3forms.com/submit', { method: 'POST', body: pendingFormData })
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    paymentModal.classList.remove('active');
+                    if (data.success) {
+                        showNotification('提交成功！我会在24小时内回复您。', 'success');
+                        var orders = JSON.parse(localStorage.getItem('consultations') || '[]');
+                        orders.unshift({ service: contactForm.querySelector('select[name="服务类型"]').value, package: contactForm.querySelector('select[name="套餐选择"]').value, time: new Date().toLocaleString('zh-CN') });
+                        localStorage.setItem('consultations', JSON.stringify(orders));
+                        contactForm.reset();
+                    } else { showNotification('提交失败', 'error'); }
+                })
+                .catch(function() { showNotification('网络错误', 'error'); });
+        });
+    }
+
+    // 关闭支付模态框
+    var closePayment = document.getElementById('closePaymentModal');
+    if (closePayment) closePayment.addEventListener('click', function() { paymentModal.classList.remove('active'); });
+    if (paymentModal) paymentModal.addEventListener('click', function(e) { if (e.target === paymentModal) paymentModal.classList.remove('active'); });
 
     // ===== 作品集筛选 =====
     document.querySelectorAll('.filter-btn').forEach(function(btn) {
@@ -871,6 +946,11 @@ document.addEventListener('DOMContentLoaded', function() {
         // 启动自动播放
         startAutoPlay();
     }
-});
-    });
-});
+}
+
+// 自动执行
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initApp);
+} else {
+    initApp();
+}
