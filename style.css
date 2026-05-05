@@ -817,6 +817,27 @@ img { max-width:100%; display:block; }
     .hero-scroll { display:none; }
 }
 
+/* ===== 支付模态框 ===== */
+.payment-content {
+    display:flex; gap:20px; margin-top:16px; flex-wrap:wrap;
+    align-items:flex-start;
+}
+.payment-left, .payment-right { flex:1; min-width:220px; }
+.payment-left { text-align:center; display:flex; flex-direction:column; align-items:center; }
+.payment-left p { margin-bottom:4px; text-align:center; }
+.payment-left strong { font-size:16px; display:block; }
+.payment-left img { max-width:180px; border-radius:8px; margin-top:8px; display:block; }
+.upload-area {
+    border:2px dashed var(--border); border-radius:12px;
+    padding:40px 20px; text-align:center; cursor:pointer;
+    transition:all 0.2s; background:var(--bg-alt);
+    min-height:140px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:10px;
+}
+.upload-area:hover { border-color:var(--primary); background:rgba(255,107,157,0.05); }
+.upload-area i { font-size:32px; color:var(--primary); }
+.upload-area p { font-size:14px; color:var(--text-secondary); margin:0; }
+
 /* ===== 滚动条 ===== */
 ::-webkit-scrollbar { width:6px; }
 ::-webkit-scrollbar-track { background:var(--bg-alt); }

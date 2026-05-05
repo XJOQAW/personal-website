@@ -18,6 +18,7 @@ function initApp() {
     // ===== 导航栏滚动隐藏/显示 =====
     var nav = document.getElementById('nav');
     var lastScroll = 0;
+    var navTimer = null;
     var navHoverZone = document.createElement('div');
     navHoverZone.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:15px;z-index:998;';
     document.body.appendChild(navHoverZone);
@@ -25,27 +26,38 @@ function initApp() {
     // 初始显示导航栏
     nav.classList.add('visible');
 
+    // 自动收回定时器
+    function startAutoHide() {
+        clearTimeout(navTimer);
+        navTimer = setTimeout(function() {
+            if (window.pageYOffset > 150) {
+                nav.classList.remove('visible');
+            }
+        }, 3000);
+    }
+
     window.addEventListener('scroll', function() {
         var currentScroll = window.pageYOffset;
+        clearTimeout(navTimer);
         if (currentScroll < 100) {
-            // 在顶部，显示透明导航栏
             nav.classList.add('visible');
             nav.classList.add('at-top');
         } else {
             nav.classList.remove('at-top');
             if (currentScroll > lastScroll) {
-                // 向下滚动，隐藏
                 nav.classList.remove('visible');
             } else {
-                // 向上滚动，显示
                 nav.classList.add('visible');
             }
         }
         lastScroll = currentScroll;
+        startAutoHide();
     });
 
-    // 鼠标移到顶部显示导航栏
-    navHoverZone.addEventListener('mouseenter', function() { nav.classList.add('visible'); });
+    // 鼠标移到顶部或导航栏，显示并重置定时器
+    navHoverZone.addEventListener('mouseenter', function() { nav.classList.add('visible'); clearTimeout(navTimer); });
+    nav.addEventListener('mouseenter', function() { nav.classList.add('visible'); clearTimeout(navTimer); });
+    nav.addEventListener('mouseleave', startAutoHide);
 
     // ===== 汉堡菜单 =====
     var hamburger = document.getElementById('hamburgerBtn');
