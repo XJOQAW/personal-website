@@ -40,7 +40,7 @@
                         <div class="user-avatar" id="userAvatar">👤</div>
                         <span class="user-name" id="userName">用户</span>
                     </div>
-                    <button class="nav-logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i></button>
+                    <button class="nav-logout" id="logoutBtn" onclick="firebase.auth().signOut();document.getElementById('authSection').style.display='flex';document.getElementById('userSection').style.display='none'"><i class="fas fa-sign-out-alt"></i></button>
                 </div>
             </div>
             <button class="nav-hamburger" id="hamburgerBtn">
@@ -445,18 +445,18 @@
     </div>
     <div class="modal" id="loginModal">
         <div class="modal-box">
-            <button class="modal-close" id="loginClose">&times;</button>
+            <button class="modal-close" id="loginClose" onclick="var m=document.getElementById('loginModal');m.style.opacity='0';m.style.visibility='hidden';m.style.pointerEvents='none'">&times;</button>
             <h2 id="loginTitle">登录</h2>
             <div class="login-tabs">
                 <button class="login-tab active" data-tab="login">登录</button>
                 <button class="login-tab" data-tab="register">注册</button>
             </div>
-            <form class="login-form" id="loginForm">
+            <form class="login-form" id="loginForm" onsubmit="doLogin(event)">
                 <div class="input-group"><i class="fas fa-user"></i><input type="text" id="loginAccount" placeholder="账号" required></div>
                 <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="密码" required></div>
                 <button type="submit" class="btn btn-primary btn-full">登录</button>
             </form>
-            <form class="login-form" id="registerForm" style="display:none">
+            <form class="login-form" id="registerForm" style="display:none" onsubmit="doRegister(event)">
                 <div class="input-group"><i class="fas fa-user"></i><input type="text" id="registerName" placeholder="用户名" required></div>
                 <div class="input-group"><i class="fas fa-at"></i><input type="text" id="registerAccount" placeholder="自定义账号" required></div>
                 <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="registerPassword" placeholder="密码（至少6位）" required minlength="6"></div>

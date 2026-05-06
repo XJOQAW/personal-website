@@ -1103,6 +1103,42 @@ function handleUrge() {
 }
 window.handleUrge = handleUrge;
 
+// 备用登录函数
+function doLogin(e) {
+    e.preventDefault();
+    if (typeof firebase === 'undefined') { showNotification('登录系统加载中，请稍后重试', 'error'); return; }
+    var acc = document.getElementById('loginAccount').value;
+    var pwd = document.getElementById('loginPassword').value;
+    firebase.auth().signInWithEmailAndPassword(acc + '@yifang.user', pwd)
+        .then(function() {
+            document.getElementById('loginModal').style.opacity = '0';
+            document.getElementById('loginModal').style.visibility = 'hidden';
+            document.getElementById('loginModal').style.pointerEvents = 'none';
+            showNotification('登录成功！', 'success');
+        })
+        .catch(function(err) { showNotification('登录失败：' + err.message, 'error'); });
+}
+window.doLogin = doLogin;
+function doRegister(e) {
+    e.preventDefault();
+    if (typeof firebase === 'undefined') { showNotification('注册系统加载中', 'error'); return; }
+    var name = document.getElementById('registerName').value;
+    var acc = document.getElementById('registerAccount').value;
+    var pwd = document.getElementById('registerPassword').value;
+    var cfm = document.getElementById('registerConfirm').value;
+    if (pwd !== cfm) { showNotification('两次密码不一致', 'error'); return; }
+    firebase.auth().createUserWithEmailAndPassword(acc + '@yifang.user', pwd)
+        .then(function(result) { return result.user.updateProfile({ displayName: name }); })
+        .then(function() {
+            document.getElementById('loginModal').style.opacity = '0';
+            document.getElementById('loginModal').style.visibility = 'hidden';
+            document.getElementById('loginModal').style.pointerEvents = 'none';
+            showNotification('注册成功！', 'success');
+        })
+        .catch(function(err) { showNotification('注册失败：' + err.message, 'error'); });
+}
+window.doRegister = doRegister;
+
 // 自动执行
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initApp);
