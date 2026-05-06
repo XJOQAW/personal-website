@@ -1049,30 +1049,66 @@ document.querySelectorAll('.stars').forEach(function(stars) {
     });
 });
 
-// 提交评价
+// 提交评价（评论页面）
 function submitReview() {
+    // 获取评分
     var ratings = [];
-    document.querySelectorAll('.stars').forEach(function(stars) {
+    document.querySelectorAll('.review-stars-input').forEach(function(stars) {
         ratings.push(parseInt(stars.getAttribute('data-rating')));
     });
-    var text = document.getElementById('orderReviewText').value;
-    if (ratings.includes(0)) { showNotification('请完成所有评分', 'error'); return; }
+    var text = document.querySelector('#reviewForm textarea').value;
+    var nickname = document.querySelector('#reviewForm input').value;
+    var identity = document.querySelector('#reviewForm select').value;
+    
+    if (!nickname || !identity) { showNotification('请填写昵称和身份', 'error'); return; }
     if (!text.trim()) { showNotification('请填写评价内容', 'error'); return; }
+    
+    var avg = ratings.length > 0 ? Math.round(ratings.reduce(function(a,b){return a+b},0) / ratings.length) : 5;
+    var starsStr = '★'.repeat(avg) + '☆'.repeat(5-avg);
+    
+    // 添加到评价列表
     var reviewsList = document.getElementById('reviewsList');
-    if (!reviewsList) return;
+    var today = new Date().toISOString().split('T')[0];
+    var avatars = { 'cosplay爱好者': '👩', '个人约拍客户': '🧑', '商业合作': '👨', '互勉创作': '🤝' };
+    var avatar = avatars[identity] || '👤';
+    
     var newItem = document.createElement('div');
     newItem.className = 'review-item';
     newItem.setAttribute('data-likes', '0');
-    newItem.setAttribute('data-time', new Date().toISOString().split('T')[0]);
-    var avg = Math.round(ratings.reduce(function(a,b){return a+b},0) / ratings.length);
+    newItem.setAttribute('data-time', today);
     newItem.innerHTML = '<div class="review-item-content"><p>"' + text + '"</p></div>' +
-        '<div class="review-item-footer"><div class="review-item-author"><span>👤</span><div><strong>用户</strong><span>订单 #001</span></div></div>' +
-        '<div class="review-item-meta"><span>' + new Date().toISOString().split('T')[0] + '</span>' +
-        '<button class="like-btn" data-id="' + Date.now() + '"><i class="fas fa-heart"></i> <span>0</span></button></div></div>';
-    reviewsList.insertBefore(newItem, reviewsList.firstChild);
-    showNotification('评价提交成功！', 'success');
-    document.getElementById('orderReview').style.display = 'none';
-    document.getElementById('orderReviewText').value = '';
+        '<div class="review-item-footer"><div class="review-item-author"><span>' + avatar + '</span><div><strong>' + nickname + '</strong><span>' + identity + '</span></div></div>' +
+        '<div class="review-item-meta"><span>' + today + '</span><button class="like-btn" data-id="' + Date.now() + '"><i class="fas fa-heart"></i> <span>0</span></button></div></div>';
+    if (reviewsList) reviewsList.insertBefore(newItem, reviewsList.firstChild);
+    
+    // 同时添加到主页评价卡片
+    var mainGrid = document.getElementById('reviewsMainGrid');
+    if (mainGrid) {
+        var emptyMsg = mainGrid.querySelector('.account-empty');
+        if (emptyMsg) emptyMsg.remove();
+        var card = document.createElement('div');
+        card.className = 'review-card';
+        card.innerHTML = '<div class="review-stars">' + starsStr + '</div>' +
+            '<p class="review-text">"' + text + '"</p>' +
+            '<div class="review-author"><span class="review-avatar">' + avatar + '</span><div><strong>' + nickname + '</strong><span>' + identity + '</span></div></div>';
+        mainGrid.insertBefore(card, mainGrid.firstChild);
+    }
+    
+    showNotification('评价发布成功！', 'success');
+    document.getElementById('reviewForm').reset();
+    // 重置星星
+    document.querySelectorAll('.review-stars-input').forEach(function(s) { s.setAttribute('data-rating', '0'); s.querySelectorAll('i').forEach(function(i) { i.className = 'far fa-star'; }); });
+    document.getElementById('reviewsModal').classList.remove('active');
+}
+window.submitReview = submitReview;
+
+// 评价表单提交
+var reviewForm = document.getElementById('reviewForm');
+if (reviewForm) {
+    reviewForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        submitReview();
+    });
 }
 window.submitReview = submitReview;
 

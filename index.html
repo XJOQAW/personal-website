@@ -240,12 +240,10 @@
                     <h2>真实反馈，信赖之选</h2>
                     <p>听听客户们怎么说</p>
                 </div>
-                <div class="reviews-grid">
-                    <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"摄影师非常专业，从前期沟通到后期修图都很细心。拍出来的效果比我想象的还要好！"</p><div class="review-author"><span class="review-avatar">👩</span><div><strong>小樱</strong><span>cosplay爱好者</span></div></div></div>
-                    <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"合作过很多摄影师，这位是最有耐心的。拍摄前提供了详细的策划方案，最终效果非常满意。"</p><div class="review-author"><span class="review-avatar">👨</span><div><strong>动漫博主小明</strong><span>百万粉丝博主</span></div></div></div>
-                    <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"后期处理能力很强，能把普通的照片变成艺术品。而且交付的成品还可以自己调整，非常贴心。"</p><div class="review-author"><span class="review-avatar">👩</span><div><strong>二次元爱好者</strong><span>个人约拍客户</span></div></div></div>
+                <div class="reviews-grid" id="reviewsMainGrid">
+                    <p class="account-empty">暂无评价，欢迎分享您的创作体验</p>
                 </div>
-                <button class="btn btn-outline reviews-more" id="reviewsMoreBtn">查看更多评价</button>
+                <button class="btn btn-outline reviews-more" id="reviewsMoreBtn">发表评价</button>
             </div>
         </section>
 
@@ -478,14 +476,16 @@
                 <button class="sort-btn" data-sort="hottest">最热</button>
             </div>
             <div class="reviews-list" id="reviewsList">
-                <div class="review-item" data-likes="12" data-time="2026-04-28"><div class="review-item-content"><p>"摄影师非常专业，从前期沟通到后期修图都很细心。拍出来的效果比我想象的还要好！"</p></div><div class="review-item-footer"><div class="review-item-author"><span>👩</span><div><strong>小樱</strong><span>cosplay爱好者</span></div></div><div class="review-item-meta"><span>2026-04-28</span><button class="like-btn" data-id="1"><i class="fas fa-heart"></i> <span>12</span></button></div></div></div>
-                <div class="review-item" data-likes="8" data-time="2026-04-25"><div class="review-item-content"><p>"合作过很多摄影师，这位是最有耐心的。拍摄前提供了详细的策划方案，最终效果非常满意。"</p></div><div class="review-item-footer"><div class="review-item-author"><span>👨</span><div><strong>动漫博主小明</strong><span>百万粉丝博主</span></div></div><div class="review-item-meta"><span>2026-04-25</span><button class="like-btn" data-id="2"><i class="fas fa-heart"></i> <span>8</span></button></div></div></div>
-                <div class="review-item" data-likes="15" data-time="2026-04-20"><div class="review-item-content"><p>"后期处理能力很强，能把普通的照片变成艺术品。而且交付的成品还可以自己调整，非常贴心。"</p></div><div class="review-item-footer"><div class="review-item-author"><span>👩</span><div><strong>二次元爱好者</strong><span>个人约拍客户</span></div></div><div class="review-item-meta"><span>2026-04-20</span><button class="like-btn" data-id="3"><i class="fas fa-heart"></i> <span>15</span></button></div></div></div>
             </div>
             <div class="review-form-section">
                 <h3>发表评价</h3>
+                <div class="star-rows" style="margin-bottom:12px;">
+                    <div class="star-row"><span class="star-label">服务态度</span><div class="stars review-stars-input" data-rating="0"><i class="far fa-star" data-i="1"></i><i class="far fa-star" data-i="2"></i><i class="far fa-star" data-i="3"></i><i class="far fa-star" data-i="4"></i><i class="far fa-star" data-i="5"></i></div></div>
+                    <div class="star-row"><span class="star-label">返图质量</span><div class="stars review-stars-input" data-rating="0"><i class="far fa-star" data-i="1"></i><i class="far fa-star" data-i="2"></i><i class="far fa-star" data-i="3"></i><i class="far fa-star" data-i="4"></i><i class="far fa-star" data-i="5"></i></div></div>
+                    <div class="star-row"><span class="star-label">整体满意度</span><div class="stars review-stars-input" data-rating="0"><i class="far fa-star" data-i="1"></i><i class="far fa-star" data-i="2"></i><i class="far fa-star" data-i="3"></i><i class="far fa-star" data-i="4"></i><i class="far fa-star" data-i="5"></i></div></div>
+                </div>
                 <form id="reviewForm" class="review-form">
-                    <div class="form-row"><input type="text" name="nickname" placeholder="昵称" required><select name="identity" required><option value="">选择身份</option><option value="cosplay爱好者">cosplay爱好者</option><option value="个人约拍客户">个人约拍客户</option><option value="商业合作">商业合作</option></select></div>
+                    <div class="form-row"><input type="text" name="nickname" placeholder="昵称" required><select name="identity" required><option value="">选择身份</option><option value="cosplay爱好者">cosplay爱好者</option><option value="个人约拍客户">个人约拍客户</option><option value="商业合作">商业合作</option><option value="互勉创作">互勉创作</option></select></div>
                     <textarea name="content" placeholder="分享您的拍摄体验..." rows="3" required></textarea>
                     <button type="submit" class="btn btn-primary">发布评价</button>
                 </form>
