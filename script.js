@@ -1107,10 +1107,12 @@ window.handleUrge = handleUrge;
 // 备用登录函数
 function doLogin(e) {
     e.preventDefault();
-    if (typeof firebase === 'undefined') {
-        showNotification('系统加载中，请稍后重试', 'error');
-        return;
-    }
+    if (typeof firebase === 'undefined') { showNotification('系统加载中，请稍后重试', 'error'); return; }
+    try {
+        if (!firebase.apps.length) {
+            firebase.initializeApp({apiKey:"AIzaSyA1pqvmi6UR4LkX0vqz6C6GdgMKUY4ox8w",authDomain:"yifang-website.firebaseapp.com",projectId:"yifang-website",storageBucket:"yifang-website.firebasestorage.app",messagingSenderId:"127736935080",appId:"1:127736935080:web:dae94ee9e4145bf51a889d"});
+        }
+    } catch(e) {}
     var acc = document.getElementById('loginAccount').value.trim();
     var pwd = document.getElementById('loginPassword').value;
     if (!acc || !pwd) { showNotification('请输入账号和密码', 'error'); return; }
@@ -1125,7 +1127,7 @@ function doLogin(e) {
             if (err.code === 'auth/user-not-found') msg = '账号不存在，请先注册';
             else if (err.code === 'auth/wrong-password') msg = '密码错误';
             else if (err.code === 'auth/invalid-email') msg = '账号格式错误';
-            else if (err.code === 'auth/too-many-requests') msg = '尝试次数过多，请稍后再试';
+            else if (err.code === 'auth/too-many-requests') msg = '尝试次数过多';
             else msg = err.message;
             showNotification(msg, 'error');
         });
@@ -1134,20 +1136,29 @@ window.doLogin = doLogin;
 function doRegister(e) {
     e.preventDefault();
     if (typeof firebase === 'undefined') { showNotification('注册系统加载中', 'error'); return; }
+    try {
+        if (!firebase.apps.length) {
+            firebase.initializeApp({apiKey:"AIzaSyA1pqvmi6UR4LkX0vqz6C6GdgMKUY4ox8w",authDomain:"yifang-website.firebaseapp.com",projectId:"yifang-website",storageBucket:"yifang-website.firebasestorage.app",messagingSenderId:"127736935080",appId:"1:127736935080:web:dae94ee9e4145bf51a889d"});
+        }
+    } catch(e) {}
     var name = document.getElementById('registerName').value;
-    var acc = document.getElementById('registerAccount').value;
+    var acc = document.getElementById('registerAccount').value.trim();
     var pwd = document.getElementById('registerPassword').value;
     var cfm = document.getElementById('registerConfirm').value;
     if (pwd !== cfm) { showNotification('两次密码不一致', 'error'); return; }
     firebase.auth().createUserWithEmailAndPassword(acc + '@yifang.user', pwd)
         .then(function(result) { return result.user.updateProfile({ displayName: name }); })
         .then(function() {
-            document.getElementById('loginModal').style.opacity = '0';
-            document.getElementById('loginModal').style.visibility = 'hidden';
-            document.getElementById('loginModal').style.pointerEvents = 'none';
+            var m = document.getElementById('loginModal');
+            m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
             showNotification('注册成功！', 'success');
         })
-        .catch(function(err) { showNotification('注册失败：' + err.message, 'error'); });
+        .catch(function(err) {
+            var msg = '注册失败';
+            if (err.code === 'auth/email-already-in-use') msg = '该账号已被注册';
+            else msg = err.message;
+            showNotification(msg, 'error');
+        });
 }
 window.doRegister = doRegister;
 
