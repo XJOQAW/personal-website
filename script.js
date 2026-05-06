@@ -19,6 +19,14 @@ function initApp() {
         }
     }
 
+    // 处理返回页面（bfcache），防止白屏
+    window.addEventListener('pageshow', function(e) {
+        if (e.persisted) {
+            var s = document.getElementById('splash');
+            if (s) s.style.display = 'none';
+        }
+    });
+
     // ===== 导航栏滚动隐藏/显示 =====
     var nav = document.getElementById('nav');
     var lastScroll = 0;
