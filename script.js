@@ -395,13 +395,14 @@ function initApp() {
         auth.onAuthStateChanged(function(user) {
             var authSection = document.getElementById('authSection');
             var userSection = document.getElementById('userSection');
+            var isMobile = window.innerWidth <= 768;
             if (user) {
                 if (authSection) authSection.style.display = 'none';
                 if (userSection) userSection.style.display = 'flex';
                 var userName = document.getElementById('userName');
                 if (userName) userName.textContent = user.displayName || user.email.split('@')[0];
             } else {
-                if (authSection) authSection.style.display = 'block';
+                if (authSection) authSection.style.display = isMobile ? 'none' : 'flex';
                 if (userSection) userSection.style.display = 'none';
             }
         });
@@ -1106,17 +1107,28 @@ window.handleUrge = handleUrge;
 // 备用登录函数
 function doLogin(e) {
     e.preventDefault();
-    if (typeof firebase === 'undefined') { showNotification('登录系统加载中，请稍后重试', 'error'); return; }
-    var acc = document.getElementById('loginAccount').value;
+    if (typeof firebase === 'undefined') {
+        showNotification('系统加载中，请稍后重试', 'error');
+        return;
+    }
+    var acc = document.getElementById('loginAccount').value.trim();
     var pwd = document.getElementById('loginPassword').value;
+    if (!acc || !pwd) { showNotification('请输入账号和密码', 'error'); return; }
     firebase.auth().signInWithEmailAndPassword(acc + '@yifang.user', pwd)
         .then(function() {
-            document.getElementById('loginModal').style.opacity = '0';
-            document.getElementById('loginModal').style.visibility = 'hidden';
-            document.getElementById('loginModal').style.pointerEvents = 'none';
+            var m = document.getElementById('loginModal');
+            m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
             showNotification('登录成功！', 'success');
         })
-        .catch(function(err) { showNotification('登录失败：' + err.message, 'error'); });
+        .catch(function(err) {
+            var msg = '登录失败';
+            if (err.code === 'auth/user-not-found') msg = '账号不存在，请先注册';
+            else if (err.code === 'auth/wrong-password') msg = '密码错误';
+            else if (err.code === 'auth/invalid-email') msg = '账号格式错误';
+            else if (err.code === 'auth/too-many-requests') msg = '尝试次数过多，请稍后再试';
+            else msg = err.message;
+            showNotification(msg, 'error');
+        });
 }
 window.doLogin = doLogin;
 function doRegister(e) {
