@@ -797,10 +797,8 @@ img { max-width:100%; display:block; }
 @media(max-width:768px) {
     .nav-links { display:none; }
     .nav-hamburger { display:flex; }
-    .nav-actions { display:flex; }
+    .nav-actions { display:flex; align-items:center; gap:8px; }
     .nav-inner { padding:0 12px; }
-    .auth-section .nav-login { display:none; }
-    .user-section { display:flex!important; position:static; }
     .services-grid { grid-template-columns:repeat(4,1fr); gap:8px; }
     .service-card { padding:12px 6px; }
     .service-icon { font-size:24px; margin-bottom:8px; }
