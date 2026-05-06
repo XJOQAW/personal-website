@@ -1025,29 +1025,30 @@ document.querySelectorAll('.stars').forEach(function(stars) {
                 s.className = index < i ? 'fas fa-star' : 'far fa-star';
             });
             // 检查评分并更新提示
-            var allRatings = [];
-            document.querySelectorAll('.stars').forEach(function(s) {
-                var r = parseInt(s.getAttribute('data-rating'));
-                if (r > 0) allRatings.push(r);
-            });
-            if (allRatings.length < 3) return; // 未全部评分
-            var hasLow = allRatings.some(function(r) { return r < 3; });
-            var total = allRatings.reduce(function(a,b){return a+b}, 0);
-            var all5 = allRatings.every(function(r) { return r === 5; });
-            var textarea = document.getElementById('orderReviewText');
-            if (!textarea) return;
-            if (hasLow) {
-                textarea.placeholder = '求求你告诉我哪里没做好吧，下次一定改进！555.......';
-            } else if (total >= 10 && !all5) {
-                textarea.placeholder = '欢迎老师下次再会！悄悄告诉您，推荐给朋友或再次约单有专属优惠和返点喔！';
-            } else if (all5) {
-                textarea.placeholder = '非常感谢老师的认可！写下您的评价吧~';
-            } else {
-                textarea.placeholder = '写下您的评价...';
-            }
+            updateReviewPlaceholder();
         });
     });
 });
+
+function updateReviewPlaceholder() {
+    var allRatings = [];
+    document.querySelectorAll('.stars[data-rating]').forEach(function(s) {
+        var r = parseInt(s.getAttribute('data-rating'));
+        if (r > 0) allRatings.push(r);
+    });
+    if (allRatings.length < 3 && allRatings.length > 0) return;
+    var hasLow = allRatings.some(function(r) { return r < 3; });
+    var total = allRatings.reduce(function(a,b){return a+b}, 0);
+    var all5 = allRatings.every(function(r) { return r === 5; });
+    var textarea = document.querySelector('#reviewForm textarea') || document.getElementById('orderReviewText');
+    if (!textarea) return;
+    var msg = '分享您的拍摄体验...';
+    if (allRatings.length === 0) msg = '分享您的拍摄体验...';
+    else if (hasLow) msg = '求求你告诉我哪里没做好吧，下次一定改进！555.......';
+    else if (total >= 10 && !all5) msg = '欢迎老师下次再会！悄悄告诉您，推荐给朋友或再次约单有专属优惠和返点喔！';
+    else if (all5) msg = '非常感谢老师的认可！写下您的评价吧~';
+    textarea.placeholder = msg;
+}
 
 // 提交评价（评论页面）
 function submitReview() {
