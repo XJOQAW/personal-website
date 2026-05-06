@@ -798,6 +798,8 @@ img { max-width:100%; display:block; }
     .nav-links { display:none; }
     .nav-hamburger { display:flex; }
     .nav-actions { display:flex; align-items:center; gap:8px; }
+    .auth-section { display:none; }
+    .user-section.show-mobile { display:flex!important; }
     .nav-inner { padding:0 12px; }
     .services-grid { grid-template-columns:repeat(4,1fr); gap:8px; }
     .service-card { padding:12px 6px; }
