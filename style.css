@@ -798,6 +798,7 @@ img { max-width:100%; display:block; }
     .nav-links { display:none; }
     .nav-hamburger { display:flex; }
     .nav-actions { display:flex; align-items:center; gap:8px; }
+    .auth-section { display:none!important; }
     .nav-inner { padding:0 12px; }
     .container { padding:0 16px; }
     .section { padding:60px 0; }
@@ -806,8 +807,8 @@ img { max-width:100%; display:block; }
     .section-header h2 { font-size:clamp(22px,5vw,36px); }
     .hero-stats { gap:24px; justify-content:center; flex-wrap:wrap; }
     .hero-stat-num { font-size:24px; }
-    .hero-btns { justify-content:center; flex-wrap:wrap; }
-    .hero-btns .btn { padding:10px 20px; font-size:14px; }
+    .hero-btns { display:flex; flex-direction:row; justify-content:center; flex-wrap:wrap; gap:12px; }
+    .hero-btns .btn { padding:10px 20px; font-size:14px; width:auto; }
     .hero-desc { max-width:90%; margin-left:auto; margin-right:auto; }
     .hero-scroll { bottom:20px; }
     .services-grid { grid-template-columns:repeat(4,1fr); gap:10px; }
@@ -835,7 +836,6 @@ img { max-width:100%; display:block; }
     .about-grid { grid-template-columns:1fr 1fr; gap:20px; }
     .footer-grid { grid-template-columns:repeat(3,1fr); gap:16px; }
     .form-row { flex-direction:row; }
-    .hero-btns .btn { padding:10px 20px; font-size:14px; }
     .portfolio-grid-2 { grid-template-columns:repeat(2,1fr); gap:12px; }
     .process-timeline { max-width:100%; }
     .timeline-content { width:45%; padding:14px; }
@@ -859,8 +859,8 @@ img { max-width:100%; display:block; }
     .hero-stats { flex-direction:column; gap:8px; }
     .hero-scroll { display:none; }
     .portfolio-grid-2 { grid-template-columns:1fr; }
-    .hero-btns { flex-direction:column; }
-    .hero-btns .btn { max-width:240px; width:100%; }
+    .hero-btns { display:flex; flex-direction:row; justify-content:center; flex-wrap:wrap; gap:12px; }
+    .hero-btns .btn { padding:8px 16px; font-size:13px; width:auto; }
     .container { padding:0 10px; }
     .section { padding:40px 0; }
 }
