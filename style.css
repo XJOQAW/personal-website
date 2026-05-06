@@ -793,57 +793,21 @@ img { max-width:100%; display:block; }
 .notification-error { background:#ff3b30; color:#fff; }
 @keyframes slideIn { from{transform:translateX(100%);opacity:0} to{transform:translateX(0);opacity:1} }
 
-/* ===== 响应式 - 与PC端布局一致 ===== */
+/* ===== 移动端适配 ===== */
 @media(max-width:768px) {
     .nav-links { display:none; }
     .nav-hamburger { display:flex; }
-    .nav-actions { display:flex; align-items:center; gap:8px; }
     .auth-section { display:none!important; }
     .nav-inner { padding:0 12px; }
     .container { padding:0 16px; }
-    .section { padding:60px 0; }
-    .hero-content { text-align:center; }
-    .hero-title { font-size:clamp(24px,6vw,48px); }
-    .section-header h2 { font-size:clamp(22px,5vw,36px); }
-    .hero-stats { gap:24px; justify-content:center; flex-wrap:wrap; }
-    .hero-stat-num { font-size:24px; }
-    .hero-btns { display:flex; flex-direction:row; justify-content:center; flex-wrap:wrap; gap:12px; }
-    .hero-btns .btn { padding:10px 20px; font-size:14px; width:auto; }
-    .hero-desc { max-width:90%; margin-left:auto; margin-right:auto; }
-    .hero-scroll { bottom:20px; }
-    .services-grid { grid-template-columns:repeat(4,1fr); gap:10px; }
-    .service-card { padding:16px 8px; }
-    .service-icon { font-size:24px; margin-bottom:8px; }
-    .service-card h3 { font-size:12px; margin-bottom:4px; }
-    .service-card p { display:none; }
-    .service-btn { padding:5px 10px; font-size:10px; }
-    .pricing-grid { grid-template-columns:repeat(3,1fr); gap:12px; }
-    .pricing-top { padding:20px 12px; }
-    .pricing-price { font-size:28px; }
-    .pricing-title { font-size:16px; }
-    .pricing-featured { transform:scale(1.01); }
-    .pricing-featured:hover { transform:scale(1.01) translateY(-4px); }
-    .pricing-list { padding:16px; }
-    .pricing-list li { font-size:12px; padding:5px 0; }
-    .pricing-btn { margin:0 16px 16px; width:calc(100% - 32px); }
-    .reviews-grid { grid-template-columns:repeat(3,1fr); gap:12px; }
-    .review-card { padding:16px; }
-    .review-stars { font-size:14px; }
-    .review-text { font-size:12px; }
-    .contact-grid { grid-template-columns:1fr 1fr; gap:20px; }
-    .contact-item { padding:12px; }
-    .contact-icon { width:34px; height:34px; font-size:13px; }
-    .about-grid { grid-template-columns:1fr 1fr; gap:20px; }
-    .footer-grid { grid-template-columns:repeat(3,1fr); gap:16px; }
-    .form-row { flex-direction:row; }
-    .portfolio-grid-2 { grid-template-columns:repeat(2,1fr); gap:12px; }
-    .process-timeline { max-width:100%; }
-    .timeline-content { width:45%; padding:14px; }
-    .timeline-content h3 { font-size:14px; }
-    .timeline-content p { font-size:12px; }
-    .btn { padding:10px 20px; font-size:14px; }
-    .hero-scroll { bottom:20px; }
-    .portfolio-hero-content h1 { font-size:28px; }
+    .hero-title { font-size:clamp(26px,6vw,48px); }
+}
+@media(max-width:480px) {
+    .container { padding:0 12px; }
+    .hero-title { font-size:clamp(22px,6vw,40px); }
+    .hero-stats { gap:16px; }
+    .hero-scroll { display:none; }
+    .btn { font-size:13px; padding:10px 18px; }
 }
 @media(max-width:480px) {
     .services-grid { grid-template-columns:repeat(4,1fr); gap:6px; }
