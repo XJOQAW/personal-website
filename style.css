@@ -972,6 +972,82 @@ img { max-width:100%; display:block; }
 .upload-area i { font-size:32px; color:var(--primary); }
 .upload-area p { font-size:14px; color:var(--text-secondary); margin:0; }
 
+/* ===== 动作参考导航 ===== */
+.ref-nav { max-width:700px; margin:24px auto 0; display:flex; flex-direction:column; gap:16px; }
+.ref-nav-row { display:flex; align-items:flex-start; gap:12px; }
+.ref-nav-label { font-size:14px; font-weight:600; color:var(--primary); padding:6px 14px; background:rgba(255,107,157,0.08); border-radius:8px; white-space:nowrap; flex-shrink:0; }
+.ref-nav-tags { display:flex; flex-wrap:wrap; gap:8px; }
+.ref-tag { padding:6px 14px; border:1px solid var(--border); background:var(--bg); color:var(--text-secondary); border-radius:20px; font-size:13px; cursor:pointer; transition:all 0.2s; font-family:var(--font); }
+.ref-tag:hover, .ref-tag.active { border-color:var(--primary); color:var(--primary); background:rgba(255,107,157,0.05); }
+.ref-coming { font-size:13px; color:var(--text-secondary); font-style:italic; padding:6px 0; }
+.ref-nav-cats { display:flex; flex-wrap:wrap; gap:8px; }
+.ref-cat {
+    padding:8px 16px; border:2px solid var(--border);
+    background:var(--bg); color:var(--text);
+    border-radius:12px; font-size:14px; font-weight:500;
+    cursor:pointer; transition:all 0.2s; font-family:var(--font);
+}
+.ref-cat:hover, .ref-cat.active {
+    border-color:var(--primary); color:var(--primary);
+    background:rgba(255,107,157,0.05);
+}
+.ref-anime-panel {
+    max-width:700px; margin:16px auto 0;
+    display:flex; flex-direction:column; gap:12px;
+}
+.ref-anime-grid {
+    display:flex; flex-wrap:wrap; gap:8px;
+    display:none;
+}
+.ref-anime-grid.active { display:flex; }
+
+/* 排序标签 */
+.char-sort-tabs { display:flex; gap:8px; margin-bottom:14px; }
+.char-sort-tab {
+    padding:5px 14px; border:1px solid var(--border);
+    background:transparent; color:var(--text-secondary);
+    border-radius:20px; font-size:12px; cursor:pointer;
+    transition:all 0.2s; font-family:var(--font);
+}
+.char-sort-tab.active, .char-sort-tab:hover {
+    border-color:var(--primary); color:var(--primary);
+    background:rgba(255,107,157,0.05);
+}
+
+/* 角色卡片 */
+.chars-section { max-width:900px; margin:40px auto 0; }
+.char-group { margin-bottom:32px; }
+.char-group-title { font-size:18px; font-weight:700; margin-bottom:8px; }
+.char-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:16px; }
+.char-card { background:var(--card); border-radius:14px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.04); transition:all 0.3s; cursor:pointer; }
+.char-card:hover { transform:translateY(-4px); box-shadow:0 8px 20px rgba(0,0,0,0.1); }
+.char-img { aspect-ratio:3/4; background:linear-gradient(135deg,var(--primary),var(--secondary)); display:flex; align-items:center; justify-content:center; position:relative; }
+.char-rank { font-size:20px; font-weight:900; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,0.3); }
+.char-rank.alpha { font-size:28px; }
+.char-img img { width:100%; height:100%; object-fit:cover; object-position:top center; }
+.char-name { padding:10px; text-align:center; font-size:13px; font-weight:600; color:var(--text); }
+
+/* 搜索下拉建议 */
+.search-box { position:relative; }
+.search-suggestions {
+    position:absolute; top:100%; left:0; right:0;
+    background:var(--card); border:1px solid var(--border);
+    border-radius:10px; max-height:200px; overflow-y:auto;
+    display:none; z-index:100; box-shadow:0 4px 12px rgba(0,0,0,0.1);
+}
+.search-suggestions.active { display:block; }
+.search-suggest-item {
+    padding:10px 16px; cursor:pointer; font-size:14px;
+    color:var(--text); border-bottom:1px solid var(--border);
+    transition:background 0.1s;
+}
+.search-suggest-item:last-child { border-bottom:none; }
+.search-suggest-item:hover { background:rgba(255,107,157,0.05); }
+.char-name {
+    padding:10px; text-align:center; font-size:13px;
+    font-weight:600; color:var(--text);
+}
+
 /* ===== 滚动条 ===== */
 ::-webkit-scrollbar { width:6px; }
 ::-webkit-scrollbar-track { background:var(--bg-alt); }

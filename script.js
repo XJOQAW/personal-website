@@ -1259,6 +1259,96 @@ function checkLocalAuth() {
 }
 window.doRegister = doRegister;
 
+// 番剧二级菜单切换
+document.querySelectorAll('.ref-cat').forEach(function(cat) {
+    cat.addEventListener('click', function() {
+        document.querySelectorAll('.ref-cat').forEach(function(c) { c.classList.remove('active'); });
+        this.classList.add('active');
+        var targetCat = this.getAttribute('data-cat');
+        document.getElementById('animePanel').style.display = 'block';
+        document.querySelectorAll('.ref-anime-grid').forEach(function(grid) {
+            grid.classList.toggle('active', grid.getAttribute('data-cat') === targetCat);
+        });
+    });
+});
+
+// 参考标签点击
+document.querySelectorAll('.ref-tag').forEach(function(tag) {
+    tag.addEventListener('click', function() {
+        document.querySelectorAll('.ref-tag').forEach(function(t) { t.classList.remove('active'); });
+        this.classList.add('active');
+        var gameName = this.textContent.trim();
+        document.getElementById('referenceSearch').value = gameName;
+        document.getElementById('searchResults').style.display = 'none';
+        showGameChars(gameName);
+    });
+});
+
+// 显示对应游戏/番剧角色
+function showGameChars(gameName) {
+    document.querySelectorAll('.char-group').forEach(function(group) {
+        var groupGame = group.getAttribute('data-game');
+        if (groupGame && gameName.indexOf(groupGame) !== -1) {
+            group.style.display = 'block';
+            group.scrollIntoView({ behavior: 'smooth' });
+        } else if (!groupGame) {
+            group.style.display = 'block';
+        } else {
+            group.style.display = 'none';
+        }
+    });
+}
+
+// 搜索建议
+var searchInput = document.getElementById('referenceSearch');
+var suggestBox = document.getElementById('searchSuggestions');
+var allCharNames = [];
+document.querySelectorAll('.char-name').forEach(function(el) { allCharNames.push(el.textContent); });
+
+if (searchInput && suggestBox) {
+    searchInput.addEventListener('input', function() {
+        var val = this.value.trim().toLowerCase();
+        suggestBox.innerHTML = '';
+        if (!val) { suggestBox.classList.remove('active'); return; }
+        var matches = allCharNames.filter(function(n) { return n.toLowerCase().includes(val); });
+        if (matches.length === 0) { suggestBox.classList.remove('active'); return; }
+        matches.slice(0, 8).forEach(function(n) {
+            var item = document.createElement('div');
+            item.className = 'search-suggest-item';
+            item.textContent = n;
+            item.addEventListener('click', function() {
+                searchInput.value = n;
+                suggestBox.classList.remove('active');
+                // 找到该角色所在的char-group并显示
+                document.querySelectorAll('.char-card').forEach(function(card) {
+                    var name = card.querySelector('.char-name').textContent;
+                    if (name === n) {
+                        document.querySelectorAll('.char-group').forEach(function(g) { g.style.display = 'none'; });
+                        var group = card.closest('.char-group');
+                        if (group) { group.style.display = 'block'; group.scrollIntoView({ behavior: 'smooth' }); }
+                    }
+                });
+            });
+            suggestBox.appendChild(item);
+        });
+        suggestBox.classList.add('active');
+    });
+    // 回车搜索
+    searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            var val = this.value.trim();
+            if (val) showGameChars(val);
+            suggestBox.classList.remove('active');
+        }
+    });
+    // 点击外部关闭建议
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !suggestBox.contains(e.target)) {
+            suggestBox.classList.remove('active');
+        }
+    });
+}
+
 // 自动执行
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initApp);
