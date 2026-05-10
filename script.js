@@ -1153,7 +1153,10 @@ function doLogin(e) {
     var acc = document.getElementById('loginAccount').value.trim();
     var pwd = document.getElementById('loginPassword').value;
     if (!acc || !pwd) { showNotification('请输入账号和密码', 'error'); return; }
-    firebase.auth().signInWithEmailAndPassword(acc + '@yifang.user', pwd)
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+        .then(function() {
+            return firebase.auth().signInWithEmailAndPassword(acc + '@yifang.user', pwd);
+        })
         .then(function() {
             var m = document.getElementById('loginModal');
             m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
@@ -1165,6 +1168,7 @@ function doLogin(e) {
             else if (err.code === 'auth/wrong-password') msg = '密码错误';
             else if (err.code === 'auth/invalid-email') msg = '账号格式错误';
             else if (err.code === 'auth/too-many-requests') msg = '尝试次数过多';
+            else if (err.code === 'auth/network-request-failed') msg = '网络连接失败，请检查网络后重试';
             else msg = err.message;
             showNotification(msg, 'error');
         });
