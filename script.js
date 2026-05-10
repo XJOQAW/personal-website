@@ -3,6 +3,8 @@ function initApp() {
     console.log('页面加载完成');
 
     // ===== 开屏动画 =====
+    // 检查本地登录
+    checkLocalAuth();
     var splash = document.getElementById('splash');
     if (splash) {
         // 检查是否已经看过开屏动画
@@ -1141,65 +1143,119 @@ function handleUrge() {
 }
 window.handleUrge = handleUrge;
 
-// 备用登录函数
+// 备用登录函数（支持离线/Firebase双通道）
 function doLogin(e) {
     e.preventDefault();
-    if (typeof firebase === 'undefined') { showNotification('系统加载中，请稍后重试', 'error'); return; }
-    try {
-        if (!firebase.apps.length) {
-            firebase.initializeApp({apiKey:"AIzaSyA1pqvmi6UR4LkX0vqz6C6GdgMKUY4ox8w",authDomain:"yifang-website.firebaseapp.com",projectId:"yifang-website",storageBucket:"yifang-website.firebasestorage.app",messagingSenderId:"127736935080",appId:"1:127736935080:web:dae94ee9e4145bf51a889d"});
-        }
-    } catch(e) {}
     var acc = document.getElementById('loginAccount').value.trim();
     var pwd = document.getElementById('loginPassword').value;
     if (!acc || !pwd) { showNotification('请输入账号和密码', 'error'); return; }
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-        .then(function() {
-            return firebase.auth().signInWithEmailAndPassword(acc + '@yifang.user', pwd);
-        })
-        .then(function() {
-            var m = document.getElementById('loginModal');
-            m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
-            showNotification('登录成功！', 'success');
-        })
-        .catch(function(err) {
-            var msg = '登录失败';
-            if (err.code === 'auth/user-not-found') msg = '账号不存在，请先注册';
-            else if (err.code === 'auth/wrong-password') msg = '密码错误';
-            else if (err.code === 'auth/invalid-email') msg = '账号格式错误';
-            else if (err.code === 'auth/too-many-requests') msg = '尝试次数过多';
-            else if (err.code === 'auth/network-request-failed') msg = '网络连接失败，请检查网络后重试';
-            else msg = err.message;
-            showNotification(msg, 'error');
-        });
+
+    // 先尝试Firebase
+    if (typeof firebase !== 'undefined' && firebase.apps.length) {
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+            .then(function() {
+                return firebase.auth().signInWithEmailAndPassword(acc + '@yifang.user', pwd);
+            })
+            .then(function() {
+                var m = document.getElementById('loginModal');
+                m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
+                showNotification('登录成功！', 'success');
+            })
+            .catch(function(err) {
+                if (err.code === 'auth/network-request-failed') {
+                    // Firebase不可用，使用本地账号
+                    loginLocal(acc, pwd);
+                } else {
+                    var msg = err.code === 'auth/user-not-found' ? '账号不存在' : err.code === 'auth/wrong-password' ? '密码错误' : err.message;
+                    showNotification(msg, 'error');
+                }
+            });
+    } else {
+        // Firebase未加载，直接用本地
+        loginLocal(acc, pwd);
+    }
+}
+
+// 本地账号登录
+function loginLocal(acc, pwd) {
+    var users = JSON.parse(localStorage.getItem('localUsers') || '{}');
+    if (!users[acc]) { showNotification('账号不存在，请先注册', 'error'); return; }
+    if (users[acc].password !== pwd) { showNotification('密码错误', 'error'); return; }
+    localStorage.setItem('currentUser', acc);
+    localStorage.setItem('currentUserName', users[acc].name);
+    var m = document.getElementById('loginModal');
+    m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
+    updateLocalAuthUI();
+    showNotification('登录成功！（本地模式）', 'success');
 }
 window.doLogin = doLogin;
+
+// 本地账号注册
 function doRegister(e) {
     e.preventDefault();
-    if (typeof firebase === 'undefined') { showNotification('注册系统加载中', 'error'); return; }
-    try {
-        if (!firebase.apps.length) {
-            firebase.initializeApp({apiKey:"AIzaSyA1pqvmi6UR4LkX0vqz6C6GdgMKUY4ox8w",authDomain:"yifang-website.firebaseapp.com",projectId:"yifang-website",storageBucket:"yifang-website.firebasestorage.app",messagingSenderId:"127736935080",appId:"1:127736935080:web:dae94ee9e4145bf51a889d"});
-        }
-    } catch(e) {}
-    var name = document.getElementById('registerName').value;
+    var name = document.getElementById('registerName').value.trim();
     var acc = document.getElementById('registerAccount').value.trim();
     var pwd = document.getElementById('registerPassword').value;
     var cfm = document.getElementById('registerConfirm').value;
+    if (!name || !acc) { showNotification('请填写用户名和账号', 'error'); return; }
     if (pwd !== cfm) { showNotification('两次密码不一致', 'error'); return; }
-    firebase.auth().createUserWithEmailAndPassword(acc + '@yifang.user', pwd)
-        .then(function(result) { return result.user.updateProfile({ displayName: name }); })
-        .then(function() {
-            var m = document.getElementById('loginModal');
-            m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
-            showNotification('注册成功！', 'success');
-        })
-        .catch(function(err) {
-            var msg = '注册失败';
-            if (err.code === 'auth/email-already-in-use') msg = '该账号已被注册';
-            else msg = err.message;
-            showNotification(msg, 'error');
-        });
+    if (pwd.length < 6) { showNotification('密码至少6位', 'error'); return; }
+
+    // 检查本地是否已存在
+    var users = JSON.parse(localStorage.getItem('localUsers') || '{}');
+    if (users[acc]) { showNotification('该账号已被注册', 'error'); return; }
+
+    // 先尝试Firebase注册
+    if (typeof firebase !== 'undefined' && firebase.apps.length) {
+        firebase.auth().createUserWithEmailAndPassword(acc + '@yifang.user', pwd)
+            .then(function(result) { return result.user.updateProfile({ displayName: name }); })
+            .then(function() {
+                var m = document.getElementById('loginModal');
+                m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
+                showNotification('注册成功！', 'success');
+            })
+            .catch(function(err) {
+                if (err.code === 'auth/network-request-failed') {
+                    // Firebase不可用，注册到本地
+                    registerLocal(name, acc, pwd);
+                } else {
+                    showNotification(err.code === 'auth/email-already-in-use' ? '该账号已被注册' : err.message, 'error');
+                }
+            });
+    } else {
+        registerLocal(name, acc, pwd);
+    }
+}
+
+function registerLocal(name, acc, pwd) {
+    var users = JSON.parse(localStorage.getItem('localUsers') || '{}');
+    users[acc] = { name: name, password: pwd };
+    localStorage.setItem('localUsers', JSON.stringify(users));
+    localStorage.setItem('currentUser', acc);
+    localStorage.setItem('currentUserName', name);
+    var m = document.getElementById('loginModal');
+    m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
+    updateLocalAuthUI();
+    showNotification('注册成功！（本地模式）', 'success');
+}
+window.doRegister = doRegister;
+
+// 本地登录UI更新
+function updateLocalAuthUI() {
+    var authSection = document.getElementById('authSection');
+    var userSection = document.getElementById('userSection');
+    var userName = document.getElementById('userName');
+    if (authSection) authSection.style.display = 'none';
+    if (userSection) userSection.style.display = 'flex';
+    if (userName) userName.textContent = localStorage.getItem('currentUserName') || '用户';
+}
+
+// 检查本地登录状态
+function checkLocalAuth() {
+    var currentUser = localStorage.getItem('currentUser');
+    if (currentUser) {
+        updateLocalAuthUI();
+    }
 }
 window.doRegister = doRegister;
 
