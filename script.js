@@ -31,6 +31,9 @@ function apiDelete(path) {
 function apiPatch(path, body) {
     fetch(WORKER_URL + path, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).catch(function(){});
 }
+function apiGet(path, callback) {
+    fetch(WORKER_URL + path).then(function(r) { return r.json(); }).then(function(data) { callback(data); }).catch(function(){});
+}
 
 function renderMainReviews(reviews) {
     var mainGrid = document.getElementById('reviewsMainGrid');
@@ -72,9 +75,26 @@ function renderReviewsList(reviews, sortType) {
 }
 
 function renderAllReviews(sortType) {
-    var reviews = getReviews();
-    renderMainReviews(reviews);
-    renderReviewsList(reviews, sortType || 'latest');
+    // 先从云端加载
+    apiGet('/api/reviews', function(remoteReviews) {
+        if (remoteReviews && remoteReviews.length > 0) {
+            // 云端有数据 → 使用云端数据并缓存到本地
+            saveReviews(remoteReviews);
+            renderMainReviews(remoteReviews);
+            renderReviewsList(remoteReviews, sortType || 'latest');
+            // 同步加载回复
+            loadAllReplies();
+            return;
+        }
+        // 云端无数据 → 使用本地
+        var reviews = getReviews();
+        renderMainReviews(reviews);
+        renderReviewsList(reviews, sortType || 'latest');
+    });
+}
+
+function loadAllReplies() {
+    // 简单策略：本地已有回复则用本地，否则等用户点回复时再加载
 }
 
 function attachLikeHandlers() {
@@ -192,19 +212,33 @@ function attachReplyHandlers() {
 }
 
 function renderReplySection(reviewId, container) {
-    var replies = getRepliesForReview(reviewId);
-    var currentId = getCurrentUserId();
-    container.innerHTML = '<div class="reply-list">' +
-        replies.map(function(rp) {
-            var delBtn = (currentId && rp.authorId === currentId) ? '<button class="reply-delete-btn" data-reply-id="' + rp.id + '" data-review-id="' + reviewId + '"><i class="fas fa-times"></i></button>' : '';
-            return '<div class="reply-item" style="position:relative;"><span class="reply-avatar">' + rp.avatar + '</span><div class="reply-body"><strong>' + esc(rp.nickname) + '</strong><span class="reply-time">' + rp.time + '</span><p>' + esc(rp.text) + '</p></div>' + delBtn + '</div>';
-        }).join('') +
-        '</div>' +
-        '<form class="reply-form" data-review-id="' + reviewId + '" onsubmit="return submitReply(event, ' + reviewId + ')">' +
-        '<textarea placeholder="写下你的回复..." rows="2" required></textarea>' +
-        '<button type="submit" class="reply-submit-btn"><i class="fas fa-paper-plane"></i> 回复</button>' +
-        '</form>';
-    attachReplyDeleteButtons(container);
+    // 从云端加载回复
+    apiGet('/api/reviews/' + reviewId + '/replies', function(remoteReplies) {
+        var replies;
+        if (remoteReplies && remoteReplies.length > 0) {
+            // 云端有数据 → 同步到本地
+            var all = getReplies();
+            all = all.filter(function(r) { return r.reviewId != reviewId; });
+            remoteReplies.forEach(function(r) { all.push(r); });
+            saveReplies(all);
+            replies = remoteReplies;
+        } else {
+            // 用本地数据
+            replies = getRepliesForReview(reviewId);
+        }
+        var currentId = getCurrentUserId();
+        container.innerHTML = '<div class="reply-list">' +
+            replies.map(function(rp) {
+                var delBtn = (currentId && rp.authorId === currentId) ? '<button class="reply-delete-btn" data-reply-id="' + rp.id + '" data-review-id="' + reviewId + '"><i class="fas fa-times"></i></button>' : '';
+                return '<div class="reply-item" style="position:relative;"><span class="reply-avatar">' + rp.avatar + '</span><div class="reply-body"><strong>' + esc(rp.nickname) + '</strong><span class="reply-time">' + rp.time + '</span><p>' + esc(rp.text) + '</p></div>' + delBtn + '</div>';
+            }).join('') +
+            '</div>' +
+            '<form class="reply-form" data-review-id="' + reviewId + '" onsubmit="return submitReply(event, ' + reviewId + ')">' +
+            '<textarea placeholder="写下你的回复..." rows="2" required></textarea>' +
+            '<button type="submit" class="reply-submit-btn"><i class="fas fa-paper-plane"></i> 回复</button>' +
+            '</form>';
+        attachReplyDeleteButtons(container);
+    });
 }
 
 function attachReplyDeleteButtons(container) {
