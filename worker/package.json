@@ -1,0 +1,10 @@
+{
+  "name": "yifang-comments",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "db:create": "wrangler d1 create yifang-db",
+    "db:init": "wrangler d1 execute yifang-db --file=schema.sql"
+  }
+}

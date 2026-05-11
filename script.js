@@ -1,18 +1,97 @@
 // 主脚本
-// ===== 评价持久化系统（全局） =====
+// ===== 评论系统（全局） =====
 var REVIEWS_KEY = 'siteReviews';
 var LIKED_KEY = 'likedReviews';
+var WORKER_URL = 'https://YOUR_WORKER.workers.dev'; // 替换为你的 Worker 地址
 
-function getReviews() {
-    try { return JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]'); } catch(e) { return []; }
-}
-function saveReviews(reviews) {
-    localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
-}
 function esc(s) {
     var d = document.createElement('div'); d.textContent = s; return d.innerHTML;
 }
 
+// 获取当前用户ID
+function getCurrentUserId() {
+    var localUser = localStorage.getItem('currentUser');
+    if (localUser) return localUser;
+    if (typeof firebase !== 'undefined' && firebase.apps.length && firebase.auth().currentUser) {
+        return firebase.auth().currentUser.email || firebase.auth().currentUser.uid;
+    }
+    return null;
+}
+
+// ===== Worker API 调用 =====
+function apiFetch(path, options) {
+    return fetch(WORKER_URL + path, options).then(function(r) { return r.json(); }).catch(function(e) {
+        console.error('API错误:', e);
+        return null;
+    });
+}
+
+async function apiGetReviews() {
+    var data = await apiFetch('/api/reviews');
+    if (!data) {
+        try { return JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]'); } catch(e) { return []; }
+    }
+    data.forEach(function(r) {
+        if (typeof r.ratings === 'string') r.ratings = JSON.parse(r.ratings);
+        if (r.replyCount === undefined) r.replyCount = 0;
+    });
+    return data;
+}
+
+async function apiCreateReview(reviewData) {
+    var result = await apiFetch('/api/reviews', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reviewData)
+    });
+    if (!result) {
+        var reviews = JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]');
+        reviewData.replyCount = 0;
+        reviews.push(reviewData);
+        localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
+        return reviewData;
+    }
+    return result;
+}
+
+async function apiDeleteReview(id, authorId) {
+    var result = await apiFetch('/api/reviews/' + id + '?authorId=' + encodeURIComponent(authorId), { method: 'DELETE' });
+    if (!result) {
+        var reviews = JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]');
+        reviews = reviews.filter(function(r) { return r.id != id; });
+        localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
+    }
+}
+
+async function apiLikeReview(id, delta) {
+    await apiFetch('/api/reviews/' + id + '/like', {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ delta: delta })
+    }).catch(function() {
+        var reviews = JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]');
+        for (var i = 0; i < reviews.length; i++) {
+            if (reviews[i].id == id) { reviews[i].likes += delta; break; }
+        }
+        localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
+    });
+}
+
+async function apiGetReplies(reviewId) {
+    var data = await apiFetch('/api/reviews/' + reviewId + '/replies');
+    return data || [];
+}
+
+async function apiCreateReply(reviewId, replyData) {
+    return await apiFetch('/api/reviews/' + reviewId + '/replies', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(replyData)
+    });
+}
+
+async function apiDeleteReply(replyId, authorId) {
+    return await apiFetch('/api/replies/' + replyId + '?authorId=' + encodeURIComponent(authorId), { method: 'DELETE' });
+}
+
+// ===== 渲染 =====
 function renderMainReviews(reviews) {
     var mainGrid = document.getElementById('reviewsMainGrid');
     if (!mainGrid) return;
@@ -23,9 +102,10 @@ function renderMainReviews(reviews) {
         mainGrid.innerHTML = reviews.map(function(r) {
             var starsStr = '★'.repeat(r.avg) + '☆'.repeat(5 - r.avg);
             var delBtn = (currentId && r.authorId && r.authorId === currentId) ? '<button class="review-delete-btn" data-review-id="' + r.id + '" title="删除评价"><i class="fas fa-trash-alt"></i></button>' : '';
-            return '<div class="review-card" style="position:relative;"><div class="review-stars">' + starsStr + '</div><p class="review-text">"' + esc(r.text) + '"</p><div class="review-author"><span class="review-avatar">' + r.avatar + '</span><div><strong>' + esc(r.nickname) + '</strong><span>' + esc(r.identity) + '</span></div></div><span class="review-time-display">' + r.time + '</span>' + delBtn + '</div>';
+            return '<div class="review-card" style="position:relative;" data-review-id="' + r.id + '"><div class="review-stars">' + starsStr + '</div><p class="review-text">"' + esc(r.text) + '"</p><div class="review-author"><span class="review-avatar">' + r.avatar + '</span><div><strong>' + esc(r.nickname) + '</strong><span>' + esc(r.identity) + '</span></div></div><span class="review-time-display">' + r.time + '</span><button class="reply-toggle-btn" data-review-id="' + r.id + '"><i class="fas fa-reply"></i> 回复 (' + (r.replyCount || 0) + ')</button>' + delBtn + '<div class="reply-section" id="replySection-' + r.id + '" style="display:none;"></div></div>';
         }).reverse().join('');
         attachDeleteHandlers();
+        attachReplyToggleHandlers();
     }
 }
 
@@ -40,18 +120,20 @@ function renderReviewsList(reviews, sortType) {
     list.innerHTML = sorted.map(function(r) {
         var starsStr = '★'.repeat(r.avg) + '☆'.repeat(5 - r.avg);
         var delBtn = (currentId && r.authorId && r.authorId === currentId) ? '<button class="review-delete-btn" data-review-id="' + r.id + '" title="删除评价"><i class="fas fa-trash-alt"></i></button>' : '';
-        return '<div class="review-item" data-likes="' + r.likes + '" data-time="' + r.time + '" data-id="' + r.id + '" style="position:relative;">' + delBtn + '<div class="review-item-content"><div class="review-stars">' + starsStr + '</div><p>"' + esc(r.text) + '"</p></div><div class="review-item-footer"><div class="review-item-author"><span>' + r.avatar + '</span><div><strong>' + esc(r.nickname) + '</strong><span>' + esc(r.identity) + '</span></div></div><div class="review-item-meta"><span>' + r.time + '</span><button class="like-btn" data-id="' + r.id + '"><i class="fas fa-heart"></i> <span>' + r.likes + '</span></button></div></div></div>';
+        return '<div class="review-item" data-likes="' + r.likes + '" data-time="' + r.time + '" data-id="' + r.id + '" style="position:relative;" data-review-id="' + r.id + '">' + delBtn + '<div class="review-item-content"><div class="review-stars">' + starsStr + '</div><p>"' + esc(r.text) + '"</p></div><div class="review-item-footer"><div class="review-item-author"><span>' + r.avatar + '</span><div><strong>' + esc(r.nickname) + '</strong><span>' + esc(r.identity) + '</span></div></div><div class="review-item-meta"><span>' + r.time + '</span><button class="like-btn" data-id="' + r.id + '"><i class="fas fa-heart"></i> <span>' + r.likes + '</span></button><button class="reply-toggle-btn" data-review-id="' + r.id + '"><i class="fas fa-reply"></i> (' + (r.replyCount || 0) + ')</button></div></div><div class="reply-section" id="replySection-' + r.id + '" style="display:none;"></div></div>';
     }).join('');
     attachLikeHandlers();
     attachDeleteHandlers();
+    attachReplyToggleHandlers();
 }
 
-function renderAllReviews(sortType) {
-    var reviews = getReviews();
+async function renderAllReviews(sortType) {
+    var reviews = await apiGetReviews();
     renderMainReviews(reviews);
     renderReviewsList(reviews, sortType || 'latest');
 }
 
+// ===== 点赞 =====
 function attachLikeHandlers() {
     var likedItems = JSON.parse(localStorage.getItem(LIKED_KEY) || '[]');
     document.querySelectorAll('.like-btn').forEach(function(btn) {
@@ -64,51 +146,115 @@ function attachLikeHandlers() {
                 likedItems = likedItems.filter(function(i) { return i !== id; });
                 countEl.textContent = count - 1;
                 this.classList.remove('liked');
-                updateReviewLikes(id, -1);
+                apiLikeReview(id, -1);
             } else {
                 likedItems.push(id);
                 countEl.textContent = count + 1;
                 this.classList.add('liked');
-                updateReviewLikes(id, 1);
+                apiLikeReview(id, 1);
             }
             localStorage.setItem(LIKED_KEY, JSON.stringify(likedItems));
         });
     });
 }
 
-function updateReviewLikes(id, delta) {
-    var reviews = getReviews();
-    for (var i = 0; i < reviews.length; i++) {
-        if (reviews[i].id == id) { reviews[i].likes += delta; break; }
-    }
-    saveReviews(reviews);
-}
-
-function getCurrentUserId() {
-    var localUser = localStorage.getItem('currentUser');
-    if (localUser) return localUser;
-    if (typeof firebase !== 'undefined' && firebase.apps.length && firebase.auth().currentUser) {
-        return firebase.auth().currentUser.email || firebase.auth().currentUser.uid;
-    }
-    return null;
-}
-
-function deleteReview(id) {
+// ===== 删除评论 =====
+async function deleteReview(id) {
     if (!confirm('确定要删除这条评价吗？')) return;
-    var reviews = getReviews();
-    reviews = reviews.filter(function(r) { return r.id != id; });
-    saveReviews(reviews);
-    renderAllReviews();
+    await apiDeleteReview(id, getCurrentUserId());
+    await renderAllReviews();
     showNotification('评价已删除', 'success');
 }
 
 function attachDeleteHandlers() {
-    var currentId = getCurrentUserId();
     document.querySelectorAll('.review-delete-btn').forEach(function(btn) {
         btn.addEventListener('click', function() {
-            var reviewId = parseInt(this.getAttribute('data-review-id'));
-            deleteReview(reviewId);
+            deleteReview(parseInt(this.getAttribute('data-review-id')));
         });
+    });
+}
+
+// ===== 回复（楼中楼） =====
+function attachReplyToggleHandlers() {
+    document.querySelectorAll('.reply-toggle-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var reviewId = this.getAttribute('data-review-id');
+            var section = document.getElementById('replySection-' + reviewId);
+            if (section.style.display === 'none') {
+                loadAndRenderReplies(reviewId, section);
+                section.style.display = 'block';
+                this.innerHTML = '<i class="fas fa-reply"></i> 收起';
+            } else {
+                section.style.display = 'none';
+                var r = document.querySelector('[data-review-id="' + reviewId + '"] .reply-toggle-btn');
+                if (r) {
+                    var count = section.querySelectorAll('.reply-item').length;
+                    r.innerHTML = '<i class="fas fa-reply"></i> 回复 (' + count + ')';
+                }
+            }
+        });
+    });
+}
+
+async function loadAndRenderReplies(reviewId, container) {
+    var replies = await apiGetReplies(reviewId);
+    var currentId = getCurrentUserId();
+    container.innerHTML = '<div class="reply-list">' +
+        replies.map(function(rp) {
+            var delBtn = (currentId && rp.authorId === currentId) ? '<button class="reply-delete-btn" data-reply-id="' + rp.id + '" data-review-id="' + reviewId + '"><i class="fas fa-times"></i></button>' : '';
+            return '<div class="reply-item"><span class="reply-avatar">' + rp.avatar + '</span><div class="reply-body"><strong>' + esc(rp.nickname) + '</strong><span class="reply-time">' + rp.time + '</span><p>' + esc(rp.text) + '</p></div>' + delBtn + '</div>';
+        }).join('') +
+        '</div>' +
+        '<form class="reply-form" data-review-id="' + reviewId + '">' +
+        '<textarea placeholder="写下你的回复..." rows="2" required></textarea>' +
+        '<button type="submit" class="reply-submit-btn"><i class="fas fa-paper-plane"></i> 回复</button>' +
+        '</form>';
+    attachReplyDeleteHandlers(container);
+    attachReplySubmitHandlers(container, reviewId);
+}
+
+function attachReplyDeleteHandlers(container) {
+    container.querySelectorAll('.reply-delete-btn').forEach(function(btn) {
+        btn.addEventListener('click', async function() {
+            var replyId = this.getAttribute('data-reply-id');
+            var reviewId = this.getAttribute('data-review-id');
+            if (!confirm('确定要删除这条回复吗？')) return;
+            await apiDeleteReply(replyId, getCurrentUserId());
+            var section = document.getElementById('replySection-' + reviewId);
+            loadAndRenderReplies(reviewId, section);
+            showNotification('回复已删除', 'success');
+        });
+    });
+}
+
+function attachReplySubmitHandlers(container, reviewId) {
+    container.querySelector('.reply-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        var currentId = getCurrentUserId();
+        if (!currentId) { showNotification('请先登录后再回复', 'error'); return; }
+        var textarea = this.querySelector('textarea');
+        var text = textarea.value.trim();
+        if (!text) return;
+        var replyData = {
+            nickname: localStorage.getItem('currentUserName') || '用户',
+            avatar: localStorage.getItem('userAvatar') || localStorage.getItem('userAvatarImg') ? '<img src="' + (localStorage.getItem('userAvatarImg') || '') + '">' : '👤',
+            text: text,
+            time: new Date().toISOString().split('T')[0],
+            authorId: currentId
+        };
+        if (localStorage.getItem('userAvatarImg')) {
+            replyData.avatar = '📷';
+        } else if (localStorage.getItem('userAvatar')) {
+            replyData.avatar = localStorage.getItem('userAvatar');
+        }
+        var result = await apiCreateReply(reviewId, replyData);
+        if (result) {
+            var section = document.getElementById('replySection-' + reviewId);
+            loadAndRenderReplies(reviewId, section);
+            showNotification('回复成功！', 'success');
+        } else {
+            showNotification('回复失败，请稍后重试', 'error');
+        }
     });
 }
 
@@ -1216,13 +1362,13 @@ function submitReview() {
         avg: avg,
         likes: 0,
         time: today,
-        authorId: getCurrentUserId()
+        authorId: getCurrentUserId(),
+        replyCount: 0
     };
 
-    var reviews = getReviews();
-    reviews.push(review);
-    saveReviews(reviews);
-    renderAllReviews();
+    apiCreateReview(review).then(function() {
+        renderAllReviews();
+    });
 
     showNotification('评价发布成功！', 'success');
     document.getElementById('reviewForm').reset();
@@ -1268,38 +1414,71 @@ function handleUrge() {
 }
 window.handleUrge = handleUrge;
 
-// 备用登录函数（支持离线/Firebase双通道）
+// Firebase超时包装（大陆网络8秒无响应则放弃）
+function firebaseTimeout(promise, ms) {
+    return new Promise(function(resolve, reject) {
+        var timer = setTimeout(function() { reject(new Error('timeout')); }, ms);
+        promise.then(function(r) { clearTimeout(timer); resolve(r); }).catch(function(e) { clearTimeout(timer); reject(e); });
+    });
+}
+
+// 登录函数（本地优先，Firebase后备）
 function doLogin(e) {
     e.preventDefault();
     var acc = document.getElementById('loginAccount').value.trim();
     var pwd = document.getElementById('loginPassword').value;
     if (!acc || !pwd) { showNotification('请输入账号和密码', 'error'); return; }
 
-    // 先尝试Firebase
-    if (typeof firebase !== 'undefined' && firebase.apps.length) {
-        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-            .then(function() {
-                return firebase.auth().signInWithEmailAndPassword(acc + '@yifang.user', pwd);
-            })
-            .then(function() {
-                localStorage.setItem('currentUser', acc);
-                localStorage.setItem('currentUserName', acc);
-                var m = document.getElementById('loginModal');
-                m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
-                showNotification('登录成功！', 'success');setTimeout(function(){location.reload()},300)
-            })
-            .catch(function(err) {
-                if (err.code === 'auth/network-request-failed') {
-                    // Firebase不可用，使用本地账号
-                    loginLocal(acc, pwd);
-                } else {
-                    var msg = err.code === 'auth/user-not-found' ? '账号不存在' : err.code === 'auth/wrong-password' ? '密码错误' : err.message;
-                    showNotification(msg, 'error');
-                }
-            });
-    } else {
-        // Firebase未加载，直接用本地
+    var users = JSON.parse(localStorage.getItem('localUsers') || '{}');
+
+    // 本地账号存在 → 立即验证
+    if (users[acc]) {
+        if (users[acc].password !== pwd) {
+            showNotification('密码错误', 'error');
+            return;
+        }
         loginLocal(acc, pwd);
+        // 后台尝试同步Firebase（不影响用户体验）
+        if (typeof firebase !== 'undefined' && firebase.apps.length) {
+            firebaseTimeout(
+                firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+                    .then(function() { return firebase.auth().signInWithEmailAndPassword(acc + '@yifang.user', pwd); }),
+                5000
+            ).catch(function() {});
+        }
+        return;
+    }
+
+    // 本地不存在 → 尝试Firebase（带超时）
+    if (typeof firebase !== 'undefined' && firebase.apps.length) {
+        var loginBtn = document.querySelector('#loginForm button[type=submit]');
+        if (loginBtn) { loginBtn.disabled = true; loginBtn.textContent = '连接中...'; }
+        firebaseTimeout(
+            firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+                .then(function() { return firebase.auth().signInWithEmailAndPassword(acc + '@yifang.user', pwd); }),
+            8000
+        ).then(function() {
+            users[acc] = { name: acc, password: pwd };
+            localStorage.setItem('localUsers', JSON.stringify(users));
+            localStorage.setItem('currentUser', acc);
+            localStorage.setItem('currentUserName', acc);
+            var m = document.getElementById('loginModal');
+            m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
+            showNotification('登录成功！', 'success');setTimeout(function(){location.reload()},300)
+        }).catch(function(err) {
+            if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = '登录'; }
+            if (err.message === 'timeout') {
+                showNotification('网络连接超时，请检查网络后重试', 'error');
+            } else if (err.code === 'auth/user-not-found') {
+                showNotification('账号不存在，请先注册', 'error');
+            } else if (err.code === 'auth/wrong-password') {
+                showNotification('密码错误', 'error');
+            } else {
+                showNotification('登录失败：' + (err.message || '未知错误'), 'error');
+            }
+        });
+    } else {
+        showNotification('账号不存在，请先注册', 'error');
     }
 }
 
@@ -1317,7 +1496,7 @@ function loginLocal(acc, pwd) {
 }
 window.doLogin = doLogin;
 
-// 本地账号注册
+// 注册函数（本地优先，Firebase后台同步）
 function doRegister(e) {
     e.preventDefault();
     var name = document.getElementById('registerName').value.trim();
@@ -1328,32 +1507,21 @@ function doRegister(e) {
     if (pwd !== cfm) { showNotification('两次密码不一致', 'error'); return; }
     if (pwd.length < 6) { showNotification('密码至少6位', 'error'); return; }
 
-    // 检查本地是否已存在
     var users = JSON.parse(localStorage.getItem('localUsers') || '{}');
     if (users[acc]) { showNotification('该账号已被注册', 'error'); return; }
 
-    // 先尝试Firebase注册
+    // 本地注册（立即可用）
+    registerLocal(name, acc, pwd);
+
+    // 后台尝试Firebase同步（静默，不影响用户体验）
     if (typeof firebase !== 'undefined' && firebase.apps.length) {
-        firebase.auth().createUserWithEmailAndPassword(acc + '@yifang.user', pwd)
-            .then(function(result) { return result.user.updateProfile({ displayName: name }); })
-            .then(function() {
-                localStorage.setItem('currentUser', acc);
-                localStorage.setItem('currentUserName', name);
-                var m = document.getElementById('loginModal');
-                m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
-                showNotification('注册成功！', 'success');setTimeout(function(){location.reload()},300)
-            })
-            .catch(function(err) {
-                if (err.code === 'auth/network-request-failed') {
-                    // Firebase不可用，注册到本地
-                    registerLocal(name, acc, pwd);
-                } else {
-                    showNotification(err.code === 'auth/email-already-in-use' ? '该账号已被注册' : err.message, 'error');
-                }
-            });
-    } else {
-        registerLocal(name, acc, pwd);
+        firebaseTimeout(
+            firebase.auth().createUserWithEmailAndPassword(acc + '@yifang.user', pwd)
+                .then(function(result) { return result.user.updateProfile({ displayName: name }); }),
+            5000
+        ).catch(function() {});
     }
+}
 }
 
 function registerLocal(name, acc, pwd) {
