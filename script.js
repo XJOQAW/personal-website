@@ -488,7 +488,7 @@ function initApp() {
                     localStorage.setItem('currentUser', account);
                     localStorage.setItem('currentUserName', account);
                     closeLogin();
-                    showNotification('登录成功！', 'success');
+                    showNotification('登录成功！', 'success');setTimeout(function(){location.reload()},300)
                 })
                 .catch(function(err) { showNotification('登录失败：' + err.message, 'error'); });
         });
@@ -506,7 +506,7 @@ function initApp() {
                     localStorage.setItem('currentUser', account);
                     localStorage.setItem('currentUserName', name);
                     closeLogin();
-                    showNotification('注册成功！', 'success');
+                    showNotification('注册成功！', 'success');setTimeout(function(){location.reload()},300)
                 })
                 .catch(function(err) { showNotification('注册失败：' + err.message, 'error'); });
         });
@@ -520,7 +520,7 @@ function initApp() {
                     localStorage.setItem('currentUser', acc);
                     localStorage.setItem('currentUserName', name);
                     closeLogin();
-                    showNotification('Google登录成功！', 'success');
+                    showNotification('Google登录成功！', 'success');setTimeout(function(){location.reload()},300)
                 })
                 .catch(function(err) { showNotification('登录失败：' + err.message, 'error'); });
         });
@@ -1286,7 +1286,7 @@ function doLogin(e) {
                 localStorage.setItem('currentUserName', acc);
                 var m = document.getElementById('loginModal');
                 m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
-                showNotification('登录成功！', 'success');
+                showNotification('登录成功！', 'success');setTimeout(function(){location.reload()},300)
             })
             .catch(function(err) {
                 if (err.code === 'auth/network-request-failed') {
@@ -1313,7 +1313,7 @@ function loginLocal(acc, pwd) {
     var m = document.getElementById('loginModal');
     m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
     updateLocalAuthUI();
-    showNotification('登录成功！（本地模式）', 'success');
+    showNotification('登录成功！（本地模式）', 'success');setTimeout(function(){location.reload()},300)
 }
 window.doLogin = doLogin;
 
@@ -1341,7 +1341,7 @@ function doRegister(e) {
                 localStorage.setItem('currentUserName', name);
                 var m = document.getElementById('loginModal');
                 m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
-                showNotification('注册成功！', 'success');
+                showNotification('注册成功！', 'success');setTimeout(function(){location.reload()},300)
             })
             .catch(function(err) {
                 if (err.code === 'auth/network-request-failed') {
@@ -1365,7 +1365,7 @@ function registerLocal(name, acc, pwd) {
     var m = document.getElementById('loginModal');
     m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
     updateLocalAuthUI();
-    showNotification('注册成功！（本地模式）', 'success');
+    showNotification('注册成功！（本地模式）', 'success');setTimeout(function(){location.reload()},300)
 }
 window.doRegister = doRegister;
 
