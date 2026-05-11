@@ -569,6 +569,7 @@ function initApp() {
             if (auth) {
                 auth.signOut().then(function() {
                     showNotification('已退出登录', 'success');
+                    setTimeout(function() { location.reload(); }, 300);
                 });
             }
         });
@@ -745,6 +746,7 @@ function initApp() {
                 auth.signOut().then(function() {
                     closeAccount();
                     showNotification('已退出登录', 'success');
+                    setTimeout(function() { location.reload(); }, 300);
                 });
             }
         });
