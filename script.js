@@ -3,7 +3,10 @@
 var REVIEWS_KEY = 'siteReviews';
 var REPLIES_KEY = 'siteReplies';
 var LIKED_KEY = 'likedReviews';
-var WORKER_URL = 'https://yifang-comments.ytongxing00.workers.dev';
+var GIST_ID = 'b97a92321d279d5b38750669bf6ae4a8';
+if (typeof GIST_TOKEN === 'undefined') var GIST_TOKEN = '';
+var GIST_RAW = 'https://gist.githubusercontent.com/raw/' + GIST_ID;
+var GIST_API = 'https://api.github.com/gists/' + GIST_ID;
 
 function getReviews() {
     try { return JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]'); } catch(e) { return []; }
@@ -21,18 +24,12 @@ function esc(s) {
     var d = document.createElement('div'); d.textContent = s; return d.innerHTML;
 }
 
-// ===== Worker API 辅助（云端同步，失败不报错） =====
-function apiPost(path, body) {
-    fetch(WORKER_URL + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).catch(function(){});
+// ===== GitHub Gist API 辅助 =====
+function gistRead(file, callback) {
+    fetch(GIST_RAW + '/' + file).then(function(r) { return r.json(); }).then(callback).catch(function(){});
 }
-function apiDelete(path) {
-    fetch(WORKER_URL + path, { method: 'DELETE' }).catch(function(){});
-}
-function apiPatch(path, body) {
-    fetch(WORKER_URL + path, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).catch(function(){});
-}
-function apiGet(path, callback) {
-    fetch(WORKER_URL + path).then(function(r) { return r.json(); }).then(function(data) { callback(data); }).catch(function(){});
+function gistWrite(files) {
+    fetch(GIST_API, { method: 'PATCH', headers: { 'Authorization': 'Bearer ' + GIST_TOKEN, 'Content-Type': 'application/json' }, body: JSON.stringify({ files: files }) }).catch(function(){});
 }
 
 function renderMainReviews(reviews) {
@@ -75,18 +72,13 @@ function renderReviewsList(reviews, sortType) {
 }
 
 function renderAllReviews(sortType) {
-    // 先从云端加载
-    apiGet('/api/reviews', function(remoteReviews) {
+    gistRead('reviews.json', function(remoteReviews) {
         if (remoteReviews && remoteReviews.length > 0) {
-            // 云端有数据 → 使用云端数据并缓存到本地
             saveReviews(remoteReviews);
             renderMainReviews(remoteReviews);
             renderReviewsList(remoteReviews, sortType || 'latest');
-            // 同步加载回复
-            loadAllReplies();
             return;
         }
-        // 云端无数据 → 使用本地
         var reviews = getReviews();
         renderMainReviews(reviews);
         renderReviewsList(reviews, sortType || 'latest');
@@ -141,7 +133,7 @@ function addReply(reviewId, replyData) {
     replyData.reviewId = reviewId;
     all.push(replyData);
     saveReplies(all);
-    apiPost('/api/reviews/' + reviewId + '/replies', replyData);
+    gistWrite({ 'replies.json': { content: JSON.stringify(all) } });
     return replyData;
 }
 
@@ -149,7 +141,7 @@ function deleteReplyById(replyId) {
     var all = getReplies();
     all = all.filter(function(r) { return r.id != replyId; });
     saveReplies(all);
-    apiDelete('/api/replies/' + replyId + '?authorId=' + encodeURIComponent(getCurrentUserId()));
+    gistWrite({ 'replies.json': { content: JSON.stringify(all) } });
 }
 
 function getCurrentUserId() {
@@ -166,7 +158,12 @@ function deleteReview(id) {
     var reviews = getReviews();
     reviews = reviews.filter(function(r) { return r.id != id; });
     saveReviews(reviews);
-    apiDelete('/api/reviews/' + id + '?authorId=' + encodeURIComponent(getCurrentUserId()));
+    gistWrite({ 'reviews.json': { content: JSON.stringify(reviews) } });
+    // 同时删除该评论的回复
+    var allReplies = getReplies();
+    allReplies = allReplies.filter(function(r) { return r.reviewId != id; });
+    saveReplies(allReplies);
+    gistWrite({ 'replies.json': { content: JSON.stringify(allReplies) } });
     renderAllReviews();
     showNotification('评价已删除', 'success');
 }
@@ -212,18 +209,12 @@ function attachReplyHandlers() {
 }
 
 function renderReplySection(reviewId, container) {
-    // 从云端加载回复
-    apiGet('/api/reviews/' + reviewId + '/replies', function(remoteReplies) {
+    gistRead('replies.json', function(remoteReplies) {
         var replies;
         if (remoteReplies && remoteReplies.length > 0) {
-            // 云端有数据 → 同步到本地
-            var all = getReplies();
-            all = all.filter(function(r) { return r.reviewId != reviewId; });
-            remoteReplies.forEach(function(r) { all.push(r); });
-            saveReplies(all);
-            replies = remoteReplies;
+            saveReplies(remoteReplies);
+            replies = remoteReplies.filter(function(r) { return r.reviewId == reviewId; });
         } else {
-            // 用本地数据
             replies = getRepliesForReview(reviewId);
         }
         var currentId = getCurrentUserId();
@@ -1387,7 +1378,7 @@ function submitReview() {
     var reviews = getReviews();
     reviews.push(review);
     saveReviews(reviews);
-    apiPost('/api/reviews', review);
+    gistWrite({ 'reviews.json': { content: JSON.stringify(reviews) } });
     renderAllReviews();
 
     showNotification('评价发布成功！', 'success');
