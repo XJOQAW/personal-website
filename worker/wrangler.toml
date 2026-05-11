@@ -5,4 +5,4 @@ compatibility_date = "2024-10-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "yifang-db"
-database_id = "YOUR_D1_DATABASE_ID"
+database_id = "72514b9f-2cfd-49da-b969-4364597ae32d"

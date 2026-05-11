@@ -3,6 +3,7 @@
 var REVIEWS_KEY = 'siteReviews';
 var REPLIES_KEY = 'siteReplies';
 var LIKED_KEY = 'likedReviews';
+var WORKER_URL = 'https://yifang-comments.ytongxing00.workers.dev';
 
 function getReviews() {
     try { return JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]'); } catch(e) { return []; }
@@ -18,6 +19,17 @@ function saveReplies(replies) {
 }
 function esc(s) {
     var d = document.createElement('div'); d.textContent = s; return d.innerHTML;
+}
+
+// ===== Worker API 辅助（云端同步，失败不报错） =====
+function apiPost(path, body) {
+    fetch(WORKER_URL + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).catch(function(){});
+}
+function apiDelete(path) {
+    fetch(WORKER_URL + path, { method: 'DELETE' }).catch(function(){});
+}
+function apiPatch(path, body) {
+    fetch(WORKER_URL + path, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }).catch(function(){});
 }
 
 function renderMainReviews(reviews) {
@@ -109,6 +121,7 @@ function addReply(reviewId, replyData) {
     replyData.reviewId = reviewId;
     all.push(replyData);
     saveReplies(all);
+    apiPost('/api/reviews/' + reviewId + '/replies', replyData);
     return replyData;
 }
 
@@ -116,6 +129,7 @@ function deleteReplyById(replyId) {
     var all = getReplies();
     all = all.filter(function(r) { return r.id != replyId; });
     saveReplies(all);
+    apiDelete('/api/replies/' + replyId + '?authorId=' + encodeURIComponent(getCurrentUserId()));
 }
 
 function getCurrentUserId() {
@@ -132,6 +146,7 @@ function deleteReview(id) {
     var reviews = getReviews();
     reviews = reviews.filter(function(r) { return r.id != id; });
     saveReviews(reviews);
+    apiDelete('/api/reviews/' + id + '?authorId=' + encodeURIComponent(getCurrentUserId()));
     renderAllReviews();
     showNotification('评价已删除', 'success');
 }
@@ -1338,6 +1353,7 @@ function submitReview() {
     var reviews = getReviews();
     reviews.push(review);
     saveReviews(reviews);
+    apiPost('/api/reviews', review);
     renderAllReviews();
 
     showNotification('评价发布成功！', 'success');
