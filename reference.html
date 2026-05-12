@@ -199,12 +199,14 @@
             html += '<div class="char-sort-tabs"><button class="char-sort-tab active" data-sort="hot">热门排行</button><button class="char-sort-tab" data-sort="alpha">名字排序</button></div>';
             html += '<div class="char-grid char-grid-hot">';
             hotChars.forEach(function(c, i) {
-                html += '<a href="character.html?name=' + encodeURIComponent(c) + '&game=' + encodeURIComponent(game.name) + '" class="char-card-link"><div class="char-card"><div class="char-img"><span class="char-rank">NO.' + (i+1) + '</span></div><p class="char-name">' + c + '</p></div></a>';
+                var thumb = 'images/characters/' + game.name.replace(/[:：]/g, '_') + '/' + c + '/1.png';
+                html += '<a href="character.html?name=' + encodeURIComponent(c) + '&game=' + encodeURIComponent(game.name) + '" class="char-card-link"><div class="char-card"><div class="char-img"><img src="' + thumb + '" alt="' + c + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'<span class=char-rank>NO.' + (i+1) + '</span>\'" loading="lazy"><noscript><span class="char-rank">NO.' + (i+1) + '</span></noscript></div><p class="char-name">' + c + '</p></div></a>';
             });
             html += '</div>';
             html += '<div class="char-grid char-grid-alpha" style="display:none;">';
             alphaChars.forEach(function(c, i) {
-                html += '<a href="character.html?name=' + encodeURIComponent(c) + '&game=' + encodeURIComponent(game.name) + '" class="char-card-link"><div class="char-card"><div class="char-img"><span class="char-rank alpha">' + c.charAt(0) + '</span></div><p class="char-name">' + c + '</p></div></a>';
+                var thumb = 'images/characters/' + game.name.replace(/[:：]/g, '_') + '/' + c + '/1.png';
+                html += '<a href="character.html?name=' + encodeURIComponent(c) + '&game=' + encodeURIComponent(game.name) + '" class="char-card-link"><div class="char-card"><div class="char-img"><img src="' + thumb + '" alt="' + c + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'<span class=\' + 'char-rank alpha' + '\'>' + c.charAt(0) + '</span>\'" loading="lazy"></div><p class="char-name">' + c + '</p></div></a>';
             });
             html += '</div>';
             group.innerHTML = html;
