@@ -1087,9 +1087,10 @@ img { max-width:100%; display:block; }
 .char-img img { width:100%; height:100%; object-fit:cover; object-position:top center; }
 .char-name { padding:10px; text-align:center; font-size:13px; font-weight:600; color:var(--text); }
 #lightboxModal { z-index:3000; }
-#lightboxModal .modal-box { background:transparent; box-shadow:none; transform:none; }
+#lightboxModal .modal-box { background:transparent; box-shadow:none; transform:none; display:flex; flex-direction:column; align-items:center; justify-content:center; margin:auto; }
 #lightboxModal.active .modal-box { transform:none; }
 #lightboxModal .modal-close { background:rgba(0,0,0,0.5); color:#fff; top:8px; right:8px; }
+#lightboxImg { margin:0 auto; display:block; }
 
 /* 搜索下拉建议 */
 .search-box { position:relative; }
