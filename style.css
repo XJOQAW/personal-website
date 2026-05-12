@@ -1077,7 +1077,8 @@ img { max-width:100%; display:block; }
 .char-group-title { font-size:18px; font-weight:700; margin-bottom:8px; }
 .char-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:16px; }
 .char-card { background:var(--card); border-radius:14px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.04); transition:all 0.3s; cursor:pointer; }
-.char-card:hover { transform:translateY(-4px); box-shadow:0 8px 20px rgba(0,0,0,0.1); }
+.char-card-link { text-decoration:none; color:inherit; display:block; }
+.char-card-link:hover .char-card { transform:translateY(-4px); box-shadow:0 8px 20px rgba(0,0,0,0.1); }
 .char-img { aspect-ratio:3/4; background:linear-gradient(135deg,var(--primary),var(--secondary)); display:flex; align-items:center; justify-content:center; position:relative; }
 .char-rank { font-size:20px; font-weight:900; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,0.3); }
 .char-rank.alpha { font-size:28px; }

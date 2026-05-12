@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动作参考 - 一方通行</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=39">
+    <style>
+        .char-header {
+            text-align:center; padding:60px 20px 30px;
+        }
+        .char-header .char-avatar {
+            width:100px; height:100px; border-radius:50%;
+            background:linear-gradient(135deg,var(--primary),var(--secondary));
+            display:flex; align-items:center; justify-content:center;
+            margin:0 auto 16px; font-size:40px; color:#fff;
+        }
+        .char-header h1 { font-size:clamp(28px,5vw,44px); font-weight:700; }
+        .char-header .char-source { color:var(--text-secondary); font-size:16px; }
+        .pose-grid {
+            display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+            gap:16px; padding:0 0 40px;
+        }
+        .pose-card {
+            background:var(--card); border-radius:14px; overflow:hidden;
+            box-shadow:0 2px 8px rgba(0,0,0,0.04); transition:all 0.3s;
+            cursor:pointer; aspect-ratio:3/4;
+        }
+        .pose-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,0.12); }
+        .pose-card .pose-img {
+            height:70%; background:var(--bg-alt);
+            display:flex; align-items:center; justify-content:center;
+            font-size:48px; color:var(--text-secondary);
+        }
+        .pose-card .pose-info { padding:12px; text-align:center; }
+        .pose-card .pose-info h4 { font-size:14px; margin-bottom:2px; }
+        .pose-card .pose-info p { font-size:12px; color:var(--text-secondary); }
+        .no-data {
+            text-align:center; padding:60px 20px; color:var(--text-secondary);
+        }
+        .no-data i { font-size:48px; display:block; margin-bottom:16px; opacity:0.3; }
+    </style>
+</head>
+<body>
+    <nav class="nav visible" id="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">一方通行</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="portfolio.html" class="nav-link">作品</a>
+                <a href="reference.html" class="nav-link active">动作参考</a>
+                <a href="index.html#pricing" class="nav-link">价格</a>
+                <a href="index.html#contact" class="nav-link">联系</a>
+            </div>
+            <div class="nav-actions">
+                <button class="nav-theme" id="themeBtn"><i class="fas fa-moon"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top:80px">
+        <a href="reference.html" class="back-btn"><i class="fas fa-arrow-left"></i> 返回动作参考</a>
+        <section class="section" style="padding-top:20px;">
+            <div class="container" id="charContent"></div>
+        </section>
+    </main>
+
+    <footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>一方通行</h3><p>用严谨丈量创作</p></div></div><div class="footer-bottom"><p>© 2026 一方通行</p></div></div></footer>
+
+    <script src="config.js"></script>
+    <script src="script.js?v=39"></script>
+    <script>
+    // 角色数据（与 reference.html 同步）
+    var refData = {
+        二游: [
+            {name:'原神',chars:['胡桃','雷电将军','钟离','甘雨','芙宁娜','神里绫华','那维莱特','纳西妲','刻晴','八重神子','温迪','优菈','宵宫','夜兰','达达利亚','琴']},
+            {name:'崩坏：星穹铁道',chars:['银狼','镜流','景元','刃','符玄','知更鸟','姬子','卡芙卡','丹恒','三月七','瓦尔特','布洛妮娅','希儿','罗刹','砂金','黑塔']},
+            {name:'崩坏3rd',chars:['琪亚娜','雷电芽衣','布洛妮娅','八重樱','德丽莎','希儿','符华','丽塔']},
+            {name:'鸣潮',chars:['漂泊者','秧秧','维里奈','卡卡罗','吟霖','炽霞','安可','秋水','莫特菲','丹瑾','桃祈','凌阳','忌炎','鉴心','今汐','长离','折枝','相里要','守岸人','椿','散华','白芷','渊武','灯灯','釉瑚','珂莱塔','洛可可','菲比','布兰特','坎特蕾拉']},
+            {name:'绝区零',chars:['艾莲','妮可','安比','猫又','比利','格莉丝','珂蕾妲','安东']},
+            {name:'明日方舟',chars:['阿米娅','能天使','银灰','斯卡蒂','陈','德克萨斯','史尔特尔','凯尔希','拉普兰德','W']},
+            {name:'蔚蓝档案',chars:['白子','星野','爱丽丝','日奈','优香','玛丽','若藻','鹤城','茜香','花子','芹香','小春','纱织','泉']},
+            {name:'碧蓝航线',chars:['企业','贝尔法斯特','绫波','爱宕','欧根亲王','俾斯麦','独角兽','埃吉尔']},
+            {name:'少女前线',chars:['M4A1','AK-12','AN-94','Kar98k','HK416','WA2000','UMP45','春田']},
+            {name:'重返未来：1999',chars:['十四行诗','星锑','兔毛手袋','远旅','气球派对','苹果','未锈凯']},
+            {name:'无期迷途',chars:['海拉','卓娅','白逸','兰利','艾瑞尔','赫卡蒂']},
+            {name:'阴阳师',chars:['大岳丸','鬼切','茨木童子','酒吞童子','大天狗','妖刀姬','不知火','玉藻前']}
+        ],
+        单机: [
+            {name:'艾尔登法环',chars:['玛莉卡','拉妮','梅琳娜','玛莲妮亚','维克']},
+            {name:'黑暗之魂3',chars:['防火女','索拉尔','洋葱骑士','咒术老师']},
+            {name:'只狼',chars:['狼','苇名弦一郎','永真','苇名一心']},
+            {name:'鬼泣',chars:['但丁','维吉尔','尼禄','翠西']},
+            {name:'尼尔：机械纪元',chars:['2B','9S','A2']},
+            {name:'女神异闻录5',chars:['Joker','高卷杏','新岛真','芳泽霞']},
+            {name:'最终幻想7',chars:['蒂法','克劳德','爱丽丝','萨菲罗斯']},
+            {name:'生化危机',chars:['里昂','艾达·王','克里斯','克莱尔']}
+        ],
+        网游: [
+            {name:'英雄联盟',chars:['金克丝','阿狸','亚索','拉克丝','伊泽瑞尔','艾希']},
+            {name:'永劫无间',chars:['宁红夜','季沧海','迦南','崔三娘']},
+            {name:'守望先锋',chars:['D.Va','源氏','黑百合','天使']}
+        ],
+        手游: [
+            {name:'王者荣耀',chars:['貂蝉','李白','王昭君','孙悟空','西施','公孙离']},
+            {name:'第五人格',chars:['园丁','杰克','先知','红蝶']}
+        ],
+        番剧: {
+            '战斗/热血':[
+                {name:'咒术回战',chars:['五条悟','虎杖悠仁','伏黑惠','钉崎野蔷薇','两面宿傩','狗卷棘']},
+                {name:'鬼灭之刃',chars:['灶门炭治郎','灶门祢豆子','我妻善逸','嘴平伊之助','富冈义勇','蝴蝶忍']},
+                {name:'进击的巨人',chars:['利威尔','艾伦','三笠','阿尔敏','韩吉']},
+                {name:'电锯人',chars:['玛奇玛','电次','帕瓦','早川秋','姬野']},
+                {name:'死神',chars:['黑崎一护','朽木露琪亚','日番谷冬狮郎','朽木白哉','浦原喜助','井上织姬']},
+                {name:'海贼王',chars:['路飞','索隆','山治','娜美','罗','女帝']},
+                {name:'火影忍者',chars:['漩涡鸣人','宇智波佐助','旗木卡卡西','宇智波鼬','日向雏田','春野樱']},
+                {name:'龙珠',chars:['孙悟空','贝吉塔','悟饭','弗利萨','人造人18号']},
+                {name:'JOJO的奇妙冒险',chars:['空条承太郎','DIO','乔鲁诺','布加拉提','岸边露伴']},
+                {name:'一拳超人',chars:['埼玉','杰诺斯','龙卷','吹雪','饿狼','King']},
+                {name:'葬送的芙莉莲',chars:['芙莉莲','菲伦','辛美尔','休塔尔克']},
+                {name:'家庭教师',chars:['沢田纲吉','云雀恭弥','六道骸','狱寺隼人','山本武']}
+            ],
+            '恋爱/青春':[
+                {name:'更衣人偶坠入爱河',chars:['喜多川海梦','五条新菜','珠珠']},
+                {name:'堀与宫村',chars:['堀京子','宫村伊澄','石川透']},
+                {name:'五等分的新娘',chars:['中野三玖','中野二乃','中野一花','中野四叶','中野五月']},
+                {name:'辉夜大小姐',chars:['四宫辉夜','白银御行','藤原千花','石上优']},
+                {name:'青春猪头少年',chars:['樱岛麻衣','梓川咲太','古贺朋绘']}
+            ],
+            '异世界/奇幻':[
+                {name:'Re:从零开始',chars:['蕾姆','拉姆','爱蜜莉雅','菜月昴','碧翠丝']},
+                {name:'转生史莱姆',chars:['利姆鲁','米莉姆','朱菜','紫苑','苍影']},
+                {name:'无职转生',chars:['洛琪希','艾莉丝','希露菲','鲁迪乌斯']},
+                {name:'为美好世界献上祝福',chars:['惠惠','阿库娅','达克妮斯','佐藤和真']},
+                {name:'盾之勇者',chars:['岩谷尚文','拉芙塔莉雅','菲洛','梅尔蒂']},
+                {name:'OVERLORD',chars:['安兹','雅儿贝德','夏提雅','迪米乌哥斯']}
+            ],
+            '科幻/机甲':[
+                {name:'EVA',chars:['绫波丽','明日香','渚薰','碇真嗣']},
+                {name:'反叛的鲁路修',chars:['鲁路修','C.C.','朱雀','卡莲']},
+                {name:'命运石之门',chars:['牧濑红莉栖','冈部伦太郎','椎名真由理']},
+                {name:'赛博朋克',chars:['露西','大卫','瑞贝卡']}
+            ],
+            '日常/搞笑':[
+                {name:'间谍过家家',chars:['阿尼亚','约尔','黄昏','邦德']},
+                {name:'孤独摇滚',chars:['后藤一里','喜多郁代','伊地知虹夏','山田凉']},
+                {name:'小林家的龙女仆',chars:['托尔','康娜','小林']}
+            ],
+            '悬疑/推理':[
+                {name:'文豪野犬',chars:['太宰治','中岛敦','芥川龙之介','中原中也']},
+                {name:'死亡笔记',chars:['L','夜神月','弥海砂']},
+                {name:'夏日重现',chars:['网代慎平','小舟潮','南方日鹤']}
+            ]
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var params = new URLSearchParams(window.location.search);
+        var charName = params.get('name');
+        var gameName = params.get('game');
+        document.title = (charName || '角色') + ' 动作参考 - 一方通行';
+
+        // 查找角色所属作品
+        var sourceName = gameName || '';
+        var allGames = [];
+        Object.keys(refData).forEach(function(k) {
+            if (k === '番剧') {
+                Object.keys(refData[k]).forEach(function(cat) {
+                    refData[k][cat].forEach(function(g) { allGames.push(g); });
+                });
+            } else {
+                refData[k].forEach(function(g) { allGames.push(g); });
+            }
+        });
+        // 尝试找到角色的作品
+        if (!gameName) {
+            allGames.forEach(function(g) {
+                if (g.chars.indexOf(charName) !== -1) sourceName = g.name;
+            });
+        }
+
+        var avatarEmojis = {
+            '原神':'⚔️','崩坏：星穹铁道':'🚂','崩坏3rd':'🎀','鸣潮':'🌊','绝区零':'⚡',
+            '明日方舟':'🏥','蔚蓝档案':'📘','碧蓝航线':'⚓','少女前线':'🔫','重返未来：1999':'⏰',
+            '无期迷途':'🌙','阴阳师':'👹','艾尔登法环':'💍','黑暗之魂3':'🔥','只狼':'🗡️',
+            '鬼泣':'😈','尼尔：机械纪元':'🤖','女神异闻录5':'🎭','最终幻想7':'🌌','生化危机':'🧟',
+            '英雄联盟':'🏆','永劫无间':'🐉','守望先锋':'🛡️','王者荣耀':'👑','第五人格':'🕯️',
+            '咒术回战':'✋','鬼灭之刃':'🌊','进击的巨人':'🧱','电锯人':'⛓️','死神':'💀',
+            '海贼王':'🏴','火影忍者':'🍥','龙珠':'🐉','JOJO的奇妙冒险':'🌟','一拳超人':'👊',
+            '葬送的芙莉莲':'🧝','家庭教师':'🔥','更衣人偶坠入爱河':'💕','堀与宫村':'🏠',
+            '五等分的新娘':'💒','辉夜大小姐':'💘','青春猪头少年':'🐰','Re:从零开始':'🔁',
+            '转生史莱姆':'💧','无职转生':'📖','为美好世界献上祝福':'💥','盾之勇者':'🛡️',
+            'OVERLORD':'💀','EVA':'🤖','反叛的鲁路修':'👁️','命运石之门':'⏳','赛博朋克':'🤖',
+            '间谍过家家':'🥜','孤独摇滚':'🎸','小林家的龙女仆':'🐉','文豪野犬':'📝',
+            '死亡笔记':'📓','夏日重现':'☀️'
+        };
+        var avatarEmoji = avatarEmojis[sourceName] || '🎬';
+
+        var posesTemplate = '';
+        for (var i = 1; i <= 9; i++) {
+            posesTemplate += '<div class="pose-card"><div class="pose-img"><span>NO.' + i + '</span></div><div class="pose-info"><h4>动作参考 #' + i + '</h4><p>' + charName + ' · ' + sourceName + '</p></div></div>';
+        }
+
+        document.getElementById('charContent').innerHTML =
+            '<div class="char-header">' +
+            '<div class="char-avatar">' + avatarEmoji + '</div>' +
+            '<h1>' + charName + '</h1>' +
+            '<p class="char-source">' + sourceName + '</p>' +
+            '</div>' +
+            '<div class="section-header"><span class="section-tag">动作参考</span><h2>参考姿势</h2><p>点击查看完整大图</p></div>' +
+            '<div class="pose-grid">' + posesTemplate + '</div>' +
+            '<div class="no-data"><i class="fas fa-camera-retro"></i><p>更多参考动作即将上线</p></div>';
+    });
+    </script>
+</body>
+</html>
