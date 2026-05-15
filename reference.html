@@ -57,6 +57,22 @@
         </section>
     </main>
 
+    <!-- 许愿池 -->
+    <div class="wish-pool" id="wishPool">
+        <div class="wish-pool-header" id="wishPoolHeader">
+            <span><i class="fas fa-star"></i> 许愿池</span>
+            <button class="wish-pool-toggle" id="wishPoolToggle"><i class="fas fa-chevron-down"></i></button>
+        </div>
+        <div class="wish-pool-body" id="wishPoolBody">
+            <p class="wish-pool-desc">想看哪个角色的动作参考？</p>
+            <div class="wish-pool-form">
+                <input type="text" id="wishInput" placeholder="输入角色名称" autocomplete="off">
+                <button id="wishSubmit"><i class="fas fa-paper-plane"></i></button>
+            </div>
+            <div class="wish-pool-list" id="wishList"></div>
+        </div>
+    </div>
+
     <footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>一方通行</h3><p>用严谨丈量创作</p></div></div><div class="footer-bottom"><p>© 2026 一方通行</p></div></div></footer>
 
     <div class="modal" id="loginModal"><div class="modal-box"><button class="modal-close" onclick="document.getElementById('loginModal').style.opacity='0';document.getElementById('loginModal').style.visibility='hidden';document.getElementById('loginModal').style.pointerEvents='none'">&times;</button><h2 id="loginTitle">登录</h2><div class="login-tabs"><button class="login-tab active" data-tab="login">登录</button><button class="login-tab" data-tab="register">注册</button></div><form class="login-form" id="loginForm" onsubmit="doLogin(event)"><div class="input-group"><i class="fas fa-user"></i><input type="text" id="loginAccount" placeholder="账号" required></div><div class="input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="密码" required></div><button type="submit" class="btn btn-primary btn-full">登录</button></form><form class="login-form" id="registerForm" style="display:none" onsubmit="doRegister(event)"><div class="input-group"><i class="fas fa-user"></i><input type="text" id="registerName" placeholder="用户名" required></div><div class="input-group"><i class="fas fa-at"></i><input type="text" id="registerAccount" placeholder="自定义账号" required></div><div class="input-group"><i class="fas fa-lock"></i><input type="password" id="registerPassword" placeholder="密码" required></div><div class="input-group"><i class="fas fa-lock"></i><input type="password" id="registerConfirm" placeholder="确认密码" required></div><button type="submit" class="btn btn-primary btn-full">注册</button></form><div class="login-divider"><span>或者</span></div><button class="btn btn-google" id="googleLoginBtn"><i class="fab fa-google"></i> Google登录</button></div></div>
@@ -314,6 +330,59 @@
             });
             document.addEventListener('click', function(e) { if (!searchInput.contains(e.target) && !suggestBox.contains(e.target)) suggestBox.classList.remove('active'); });
         }
+
+        // ===== 许愿池 =====
+        var WISH_KEY = 'siteWishes';
+        function getWishes() {
+            try { return JSON.parse(localStorage.getItem(WISH_KEY) || '[]'); } catch(e) { return []; }
+        }
+        function saveWishes(wishes) {
+            localStorage.setItem(WISH_KEY, JSON.stringify(wishes));
+        }
+        function renderWishes() {
+            var list = document.getElementById('wishList');
+            var wishes = getWishes();
+            wishes.sort(function(a,b){ return b.votes - a.votes; });
+            list.innerHTML = wishes.map(function(w, i) {
+                return '<div class="wish-item"><span class="wish-avatar">👤</span><div class="wish-content"><strong>' + w.name + '</strong><span>' + w.time + '</span></div><button class="wish-vote" data-idx="' + i + '">👍 ' + (w.votes || 0) + '</button></div>';
+            }).join('') || '<p style="text-align:center;color:var(--text-secondary);font-size:12px;padding:20px 0;">还没有人许愿，快来第一个！</p>';
+            // 投票按钮
+            document.querySelectorAll('.wish-vote').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var idx = parseInt(this.getAttribute('data-idx'));
+                    var wishes = getWishes();
+                    wishes.sort(function(a,b){ return b.votes - a.votes; });
+                    if (wishes[idx]) { wishes[idx].votes = (wishes[idx].votes || 0) + 1; }
+                    // 去重后存回原顺序
+                    var all = getWishes();
+                    for (var j = 0; j < all.length; j++) {
+                        if (all[j].name === wishes[idx].name && all[j].time === wishes[idx].time) {
+                            all[j].votes = wishes[idx].votes;
+                            break;
+                        }
+                    }
+                    saveWishes(all);
+                    renderWishes();
+                });
+            });
+        }
+        document.getElementById('wishSubmit').addEventListener('click', function() {
+            var input = document.getElementById('wishInput');
+            var name = input.value.trim();
+            if (!name) return;
+            var wishes = getWishes();
+            wishes.push({ name: name, time: new Date().toISOString().split('T')[0], votes: 0 });
+            saveWishes(wishes);
+            input.value = '';
+            renderWishes();
+        });
+        document.getElementById('wishInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') document.getElementById('wishSubmit').click();
+        });
+        document.getElementById('wishPoolHeader').addEventListener('click', function() {
+            document.getElementById('wishPool').classList.toggle('collapsed');
+        });
+        renderWishes();
     });
     </script>
 </body>
