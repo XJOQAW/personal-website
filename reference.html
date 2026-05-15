@@ -219,7 +219,7 @@
             html += '<div class="char-grid char-grid-hot">';
             hotChars.forEach(function(c, i) {
                 var gameKey = game.name.replace(/[:：]/g, '_') + '|' + c;
-                var thumb = 'images/characters/' + game.name.replace(/[:：]/g, '_') + '/' + c + '/1.png';
+                var thumb = 'images/characters/' + game.name.replace(/[:：]/g, '_') + '/' + c + '/thumb.png';
                 if (knownThumbs.indexOf(gameKey) !== -1) {
                     html += '<a href="character.html?name=' + encodeURIComponent(c) + '&game=' + encodeURIComponent(game.name) + '" class="char-card-link"><div class="char-card"><div class="char-img"><img src="' + thumb + '" alt="' + c + '" onerror="this.style.display=\'none\'" loading="eager"><span class="char-rank">NO.' + (i+1) + '</span></div><p class="char-name">' + c + '</p></div></a>';
                 } else {
@@ -230,7 +230,7 @@
             html += '<div class="char-grid char-grid-alpha" style="display:none;">';
             alphaChars.forEach(function(c, i) {
                 var gameKey = game.name.replace(/[:：]/g, '_') + '|' + c;
-                var thumb = 'images/characters/' + game.name.replace(/[:：]/g, '_') + '/' + c + '/1.png';
+                var thumb = 'images/characters/' + game.name.replace(/[:：]/g, '_') + '/' + c + '/thumb.png';
                 if (knownThumbs.indexOf(gameKey) !== -1) {
                     html += '<a href="character.html?name=' + encodeURIComponent(c) + '&game=' + encodeURIComponent(game.name) + '" class="char-card-link"><div class="char-card"><div class="char-img"><img src="' + thumb + '" alt="' + c + '" onerror="this.style.display=\'none\'" loading="eager"><span class="char-rank alpha">' + c.charAt(0) + '</span></div><p class="char-name">' + c + '</p></div></a>';
                 } else {
