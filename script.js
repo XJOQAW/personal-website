@@ -1282,7 +1282,7 @@ function submitRefund() {
     var reason = document.getElementById('refundReason').value;
     if (!reason.trim()) { showNotification('请填写退款原因', 'error'); return; }
     var formData = new FormData();
-    formData.append('access_key', '2386150e-5aa8-4115-b47f-552e4c0167bd');
+    formData.append('access_key', '08de3ce1-85fc-4b07-a2f3-bf778d80e8ea');
     formData.append('subject', '一方通行 - 退款申请');
     formData.append('from_name', '一方通行网站');
     formData.append('退款原因', reason);
@@ -1414,7 +1414,7 @@ function handleUrge() {
     }
     
     var formData = new FormData();
-    formData.append('access_key', '2386150e-5aa8-4115-b47f-552e4c0167bd');
+    formData.append('access_key', '08de3ce1-85fc-4b07-a2f3-bf778d80e8ea');
     formData.append('subject', '一方通行 - 催返图通知');
     formData.append('from_name', '一方通行网站');
     formData.append('催返提示', '客户催返图，请尽快处理订单 #001');
