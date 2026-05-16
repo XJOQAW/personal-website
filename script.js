@@ -1032,22 +1032,37 @@ function initApp() {
             if (!tid) { showNotification('请填写交易单号', 'error'); return; }
             if (!confirm('确认已支付 ' + document.getElementById('paymentPrice').textContent + ' ？')) return;
 
-            pendingFormData.append('screenshot', document.getElementById('paymentScreenshot').files[0]);
-            pendingFormData.append('交易单号', tid);
+            var params = {
+                from_name: '一方通行网站',
+                cn: pendingFormData.get('CN') || '',
+                qq: pendingFormData.get('QQ') || '',
+                wechat: pendingFormData.get('微信') || '',
+                service_type: pendingFormData.get('服务类型') || '',
+                package: pendingFormData.get('套餐选择') || '',
+                message: pendingFormData.get('需求描述') || '',
+                transaction_id: tid,
+                subject: '一方通行 - 新预约咨询'
+            };
 
-            fetch('https://api.web3forms.com/submit', { method: 'POST', body: pendingFormData })
-                .then(function(r) { return r.json(); })
-                .then(function(data) {
-                    paymentModal.classList.remove('active');
-                    if (data.success) {
+            if (typeof emailjs !== 'undefined') {
+                emailjs.init('REGKsKT8zEFNRHyBQ');
+                emailjs.send('service_ze9zcfx', 'template_tiii15a', params)
+                    .then(function() {
+                        paymentModal.classList.remove('active');
                         showNotification('提交成功！我会在24小时内回复您。', 'success');
                         var orders = JSON.parse(localStorage.getItem('consultations') || '[]');
-                        orders.unshift({ service: contactForm.querySelector('select[name="服务类型"]').value, package: contactForm.querySelector('select[name="套餐选择"]').value, time: new Date().toLocaleString('zh-CN') });
+                        orders.unshift({ service: params.service_type, package: params.package, time: new Date().toLocaleString('zh-CN') });
                         localStorage.setItem('consultations', JSON.stringify(orders));
                         contactForm.reset();
-                    } else { showNotification('提交失败', 'error'); }
-                })
-                .catch(function() { showNotification('网络错误', 'error'); });
+                    })
+                    .catch(function(err) {
+                        paymentModal.classList.remove('active');
+                        showNotification('提交失败，请稍后重试', 'error');
+                        console.error('EmailJS Error:', err);
+                    });
+            } else {
+                showNotification('邮件服务未加载，请刷新页面', 'error');
+            }
         });
     }
 
