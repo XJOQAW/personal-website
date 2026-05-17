@@ -236,7 +236,7 @@
                         <input type="text" id="rescueCN" placeholder="你的CN（必填）">
                         <textarea id="rescueDesc" placeholder="描述一下这张照片哪里需要修（选填）..."></textarea>
                         <input type="text" id="rescueContact" placeholder="联系方式 QQ/微信（必填，方便接收修好的图）">
-                        <button class="btn btn-primary btn-full" id="rescueSubmit">提交投稿</button>
+                        <button class="btn btn-primary btn-full" id="rescueSubmit" onclick="window.submitRescue()">提交投稿</button>
                     </div>
                     <p class="limit-bar">本月已投稿 <span class="used" id="monthUsed">0</span>/5 张</p>
                 </div>
@@ -578,7 +578,7 @@
         }
     });
 
-    document.getElementById('rescueSubmit').onclick = function() {
+    window.submitRescue = function() {
         var uid = getUid();
         if (!uid) { showNotification('请先登录', 'error'); return; }
         if (getMonthUsage() >= MONTH_LIMIT) { showNotification('本月投稿次数已用完', 'error'); return; }
