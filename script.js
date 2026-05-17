@@ -3,7 +3,7 @@
 var REVIEWS_KEY = 'siteReviews';
 var REPLIES_KEY = 'siteReplies';
 var LIKED_KEY = 'likedReviews';
-var API = 'http://8.137.188.207/api';
+var API = 'https://8.137.188.207/api';
 
 function wGet(p,cb){fetch(API+p).then(function(r){return r.json()}).then(cb).catch(function(){});}
 function wPost(p,b,cb){fetch(API+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(function(r){return r.json()}).then(cb||function(){}).catch(function(){});}
