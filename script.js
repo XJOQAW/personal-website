@@ -1396,7 +1396,8 @@ function submitReview() {
     reviews.push(review);
     saveReviews(reviews);
     fetch(WORKER_API + '/api/reviews', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(review)}).catch(function(){});
-    renderAllReviews();
+    renderMainReviews(reviews);
+    renderReviewsList(reviews, 'latest');
 
     showNotification('评价发布成功！', 'success');
     document.getElementById('reviewForm').reset();
