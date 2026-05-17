@@ -473,6 +473,24 @@
         showNotification('投稿成功！请耐心等待返图', 'success');
     });
 
+    // 初始化 - 如果没有数据，加载示例
+    var rescues = getRescues();
+    if (rescues.length === 0) {
+        rescues.push({
+            id: 1,
+            authorId: 'sample',
+            cn: '世界线',
+            nickname: '世界线',
+            image: 'images/rescues/sample_before.jpg',
+            desc: '想要更加梦幻的光影效果',
+            contact: 'YFTX0616',
+            fixed: 'images/rescues/sample_after.jpg',
+            time: '2026-02-11',
+            monthKey: '2026-2'
+        });
+        saveRescues(rescues);
+    }
+
     if (typeof gistRead !== 'undefined') {
         gistRead('rescues.json', function(remote) {
             if (remote && remote.length > 0) saveRescues(remote);
