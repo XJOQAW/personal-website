@@ -298,7 +298,11 @@
     <script src="config.js"></script>
     <script src="script.js?v=39"></script>
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    (function initRescue() {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initRescue);
+        return;
+    }
     var RESCUE_KEY = 'siteRescues';
     var MONTH_LIMIT = 5;
 
@@ -704,7 +708,7 @@
         renderGallery();
         renderBA();
     }
-    });
+    })();
     </script>
 </body>
 </html>
