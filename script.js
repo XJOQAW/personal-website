@@ -3,13 +3,21 @@
 var REVIEWS_KEY = 'siteReviews';
 var REPLIES_KEY = 'siteReplies';
 var LIKED_KEY = 'likedReviews';
-var GIST_ID = 'b97a92321d279d5b38750669bf6ae4a8';
-if (typeof GIST_TOKEN === 'undefined') var GIST_TOKEN = 'ghp_' + '8E0gQ88j8Wa9cWa9TRxZcMjADM1PJH1lZWyP';
-var GIST_RAW = 'https://gist.githubusercontent.com/raw/' + GIST_ID;
-var GIST_API = 'https://api.github.com/gists/' + GIST_ID;
+var WORKER_URL = 'https://yifang-comments.ytongxing00.workers.dev';
 
-function getReviews() {
-    try { return JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]'); } catch(e) { return []; }
+// Worker API 辅助
+function wGet(path, cb) { fetch(WORKER_URL+path).then(function(r){return r.json()}).then(cb).catch(function(){}); }
+function wPost(path,body,cb) { fetch(WORKER_URL+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json()}).then(cb||function(){}).catch(function(){}); }
+function wDelete(path) { fetch(WORKER_URL+path,{method:'DELETE'}).catch(function(){}); }
+function wPatch(path,body) { fetch(WORKER_URL+path,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).catch(function(){}); }
+function wPost(path, body, cb) {
+    fetch(WORKER_URL + path, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(function(r){return r.json()}).then(cb||function(){}).catch(function(){});
+}
+function wDelete(path) {
+    fetch(WORKER_URL + path, {method:'DELETE'}).catch(function(){});
+}
+function wPatch(path, body) {
+    fetch(WORKER_URL + path, {method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).catch(function(){});
 }
 function saveReviews(reviews) {
     localStorage.setItem(REVIEWS_KEY, JSON.stringify(reviews));
@@ -23,141 +31,6 @@ function saveReplies(replies) {
 function esc(s) {
     var d = document.createElement('div'); d.textContent = s; return d.innerHTML;
 }
-
-// ===== GitHub Gist API 辅助 =====
-function gistRead(file, callback) {
-    fetch(GIST_RAW + '/' + file).then(function(r) { return r.json(); }).then(callback).catch(function(){});
-}
-// Gist写入（防冲突：300ms内多次调用合并为一次）
-var _gistPending = {};
-var _gistTimer = null;
-function gistWrite(files) {
-    for (var k in files) _gistPending[k] = files[k];
-    if (_gistTimer) return;
-    _gistTimer = setTimeout(function() {
-        var pending = _gistPending;
-        _gistPending = {};
-        _gistTimer = null;
-        fetch(GIST_API, { method: 'PATCH', headers: { 'Authorization': 'Bearer ' + GIST_TOKEN, 'Content-Type': 'application/json' }, body: JSON.stringify({ files: pending }) })
-            .then(function(r) { if (!r.ok) console.error('Gist write FAILED:', r.status); })
-            .catch(function(e) { console.error('Gist write ERROR:', e.message); });
-    }, 300);
-}
-
-function renderMainReviews(reviews) {
-    var mainGrid = document.getElementById('reviewsMainGrid');
-    if (!mainGrid) return;
-    var currentId = getCurrentUserId();
-    if (reviews.length === 0) {
-        mainGrid.innerHTML = '<p class="account-empty">暂无评价，欢迎分享您的创作体验</p>';
-    } else {
-        mainGrid.innerHTML = reviews.map(function(r) {
-            var starsStr = '★'.repeat(r.avg) + '☆'.repeat(5 - r.avg);
-            var delBtn = (currentId && r.authorId && r.authorId === currentId) ? '<button class="review-delete-btn" data-review-id="' + r.id + '" title="删除评价"><i class="fas fa-trash-alt"></i></button>' : '';
-            var replies = getRepliesForReview(r.id);
-            var replyCount = replies.length;
-            return '<div class="review-card" style="position:relative;" data-review-id="' + r.id + '"><div class="review-stars">' + starsStr + '</div><p class="review-text">"' + esc(r.text) + '"</p><div class="review-author"><span class="review-avatar">' + r.avatar + '</span><div><strong>' + esc(r.nickname) + '</strong><span>' + esc(r.identity) + '</span></div></div><span class="review-time-display">' + r.time + '</span><button class="reply-toggle-btn reply-go-modal" data-review-id="' + r.id + '"><i class="fas fa-reply"></i> 回复 (' + replyCount + ')</button>' + delBtn + '</div>';
-        }).reverse().join('');
-        attachDeleteHandlers();
-        attachMainReplyHandlers();
-    }
-}
-
-function renderReviewsList(reviews, sortType) {
-    var list = document.getElementById('reviewsList');
-    if (!list) return;
-    var currentId = getCurrentUserId();
-    var sorted = reviews.slice();
-    if (sortType === 'latest') sorted.reverse();
-    else if (sortType === 'hottest') sorted.sort(function(a,b){ return b.likes - a.likes; });
-    if (sorted.length === 0) { list.innerHTML = ''; return; }
-    list.innerHTML = sorted.map(function(r) {
-        var starsStr = '★'.repeat(r.avg) + '☆'.repeat(5 - r.avg);
-        var delBtn = (currentId && r.authorId && r.authorId === currentId) ? '<button class="review-delete-btn" data-review-id="' + r.id + '" title="删除评价"><i class="fas fa-trash-alt"></i></button>' : '';
-        var replies = getRepliesForReview(r.id);
-        var replyCount = replies.length;
-        return '<div class="review-item" data-likes="' + r.likes + '" data-time="' + r.time + '" data-id="' + r.id + '" style="position:relative;" data-review-id="' + r.id + '">' + delBtn + '<div class="review-item-content"><div class="review-stars">' + starsStr + '</div><p>"' + esc(r.text) + '"</p></div><div class="review-item-footer"><div class="review-item-author"><span>' + r.avatar + '</span><div><strong>' + esc(r.nickname) + '</strong><span>' + esc(r.identity) + '</span></div></div><div class="review-item-meta"><span>' + r.time + '</span><button class="like-btn" data-id="' + r.id + '"><i class="fas fa-heart"></i> <span>' + r.likes + '</span></button><button class="reply-toggle-btn" data-review-id="' + r.id + '"><i class="fas fa-reply"></i> (' + replyCount + ')</button></div></div><div class="reply-section" id="replySection-' + r.id + '" style="display:none;"></div></div>';
-    }).join('');
-    attachLikeHandlers();
-    attachDeleteHandlers();
-    attachReplyHandlers();
-}
-
-function renderAllReviews(sortType) {
-    // 先立即渲染本地数据
-    var local = getReviews();
-    renderMainReviews(local);
-    renderReviewsList(local, sortType || 'latest');
-    // 再从 Gist 加载云端数据覆盖
-    gistRead('reviews.json', function(remoteReviews) {
-        if (remoteReviews && remoteReviews.length > local.length) {
-            saveReviews(remoteReviews);
-            renderMainReviews(remoteReviews);
-            renderReviewsList(remoteReviews, sortType || 'latest');
-        }
-    });
-}
-
-function loadAllReplies() {
-    // 简单策略：本地已有回复则用本地，否则等用户点回复时再加载
-}
-
-function attachLikeHandlers() {
-    var likedItems = JSON.parse(localStorage.getItem(LIKED_KEY) || '[]');
-    document.querySelectorAll('.like-btn').forEach(function(btn) {
-        var id = btn.getAttribute('data-id');
-        if (likedItems.indexOf(id) !== -1) btn.classList.add('liked');
-        btn.addEventListener('click', function() {
-            var countEl = this.querySelector('span');
-            var count = parseInt(countEl.textContent);
-            if (likedItems.indexOf(id) !== -1) {
-                likedItems = likedItems.filter(function(i) { return i !== id; });
-                countEl.textContent = count - 1;
-                this.classList.remove('liked');
-                updateReviewLikes(id, -1);
-            } else {
-                likedItems.push(id);
-                countEl.textContent = count + 1;
-                this.classList.add('liked');
-                updateReviewLikes(id, 1);
-            }
-            localStorage.setItem(LIKED_KEY, JSON.stringify(likedItems));
-        });
-    });
-}
-
-function updateReviewLikes(id, delta) {
-    var reviews = getReviews();
-    for (var i = 0; i < reviews.length; i++) {
-        if (reviews[i].id == id) { reviews[i].likes += delta; break; }
-    }
-    saveReviews(reviews);
-}
-
-// ===== 回复（楼中楼） =====
-function getRepliesForReview(reviewId) {
-    var all = getReplies();
-    return all.filter(function(r) { return r.reviewId == reviewId; }).sort(function(a, b) { return a.id - b.id; });
-}
-
-function addReply(reviewId, replyData) {
-    var all = getReplies();
-    replyData.id = Date.now();
-    replyData.reviewId = reviewId;
-    all.push(replyData);
-    saveReplies(all);
-    gistWrite({ 'replies.json': { content: JSON.stringify(all) } });
-    return replyData;
-}
-
-function deleteReplyById(replyId) {
-    var all = getReplies();
-    all = all.filter(function(r) { return r.id != replyId; });
-    saveReplies(all);
-    gistWrite({ 'replies.json': { content: JSON.stringify(all) } });
-}
-
-function getCurrentUserId() {
     var localUser = localStorage.getItem('currentUser');
     if (localUser) return localUser;
     if (typeof firebase !== 'undefined' && firebase.apps.length && firebase.auth().currentUser) {
@@ -171,12 +44,10 @@ function deleteReview(id) {
     var reviews = getReviews();
     reviews = reviews.filter(function(r) { return r.id != id; });
     saveReviews(reviews);
-    gistWrite({ 'reviews.json': { content: JSON.stringify(reviews) } });
-    // 同时删除该评论的回复
+    wDelete('/api/reviews/' + id + '?authorId=' + encodeURIComponent(getCurrentUserId()));
     var allReplies = getReplies();
     allReplies = allReplies.filter(function(r) { return r.reviewId != id; });
     saveReplies(allReplies);
-    gistWrite({ 'replies.json': { content: JSON.stringify(allReplies) } });
     renderAllReviews();
     showNotification('评价已删除', 'success');
 }
@@ -222,7 +93,7 @@ function attachReplyHandlers() {
 }
 
 function renderReplySection(reviewId, container) {
-    gistRead('replies.json', function(remoteReplies) {
+    wGet('/api/reviews/' + reviewId + '/replies', function(remoteReplies) {
         var replies;
         if (remoteReplies && remoteReplies.length > 0) {
             saveReplies(remoteReplies);
@@ -1406,7 +1277,7 @@ function submitReview() {
     var reviews = getReviews();
     reviews.push(review);
     saveReviews(reviews);
-    gistWrite({ 'reviews.json': { content: JSON.stringify(reviews) } });
+    wPost('/api/reviews', review);
     renderAllReviews();
 
     showNotification('评价发布成功！', 'success');
