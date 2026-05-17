@@ -28,7 +28,7 @@
             position:relative; width:100%; overflow:hidden;
             cursor:ew-resize; user-select:none; line-height:0;
         }
-        .ba-compare .ba-img { width:100%; display:block; }
+        .ba-compare .ba-img { width:100%; display:block; -webkit-user-drag:none; pointer-events:none; }
         .ba-compare .ba-overlay {
             position:absolute; top:0; left:0; width:100%; height:100%;
             clip-path:inset(0 50% 0 0); overflow:hidden;
@@ -106,7 +106,7 @@
             cursor:ew-resize; user-select:none; border-radius:8px;
             margin-bottom:12px; line-height:0;
         }
-        .detail-ba-wrap .ba-img { width:100%; display:block; }
+        .detail-ba-wrap .ba-img { width:100%; display:block; -webkit-user-drag:none; pointer-events:none; }
         .detail-ba-wrap .ba-overlay {
             position:absolute; top:0; left:0; width:100%; height:100%;
             clip-path:inset(0 50% 0 0); overflow:hidden;
@@ -313,7 +313,7 @@
         document.getElementById('detailTitle').textContent = (r.cn || r.nickname) + ' 的投稿';
         var baHTML = '';
         if (r.fixed) {
-            baHTML = '<div class="detail-ba-wrap"><img class="ba-img" src="' + r.fixed + '" alt="修复后"><div class="ba-overlay"><img class="ba-img" src="' + r.image + '" alt="原图"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div>';
+            baHTML = '<div class="detail-ba-wrap" onselectstart="return false"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.image + '" alt="原图" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div>';
             initDetailSlider();
         } else {
             baHTML = '<img src="' + r.image + '" style="max-width:100%;border-radius:8px;margin-bottom:12px;">';
@@ -400,7 +400,7 @@
         var fixed = getRescues().filter(function(r){ return r.fixed; }).slice(-4);
         if (fixed.length === 0) return;
         grid.innerHTML = fixed.map(function(r) {
-            return '<div class="ba-card"><h4>' + (r.cn || r.nickname) + ' 的投稿</h4><div class="ba-compare"><img class="ba-img" src="' + r.fixed + '" alt="修复后"><div class="ba-overlay"><img class="ba-img" src="' + r.image + '" alt="原图"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div></div>';
+            return '<div class="ba-card"><h4>' + (r.cn || r.nickname) + ' 的投稿</h4><div class="ba-compare" onselectstart="return false"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.image + '" alt="原图" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div></div>';
         }).reverse().join('');
         initBASliders();
     }
