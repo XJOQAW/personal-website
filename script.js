@@ -6,6 +6,7 @@ var LIKED_KEY = 'likedReviews';
 var GIST_ID = 'b97a92321d279d5b38750669bf6ae4a8';
 if (typeof GIST_TOKEN === 'undefined') var GIST_TOKEN = '';
 var GIST_RAW = 'https://gist.githubusercontent.com/raw/' + GIST_ID;
+var WORKER_API = 'https://yifang-comments.ytongxing00.workers.dev';
 var GIST_API = 'https://api.github.com/gists/' + GIST_ID;
 
 function getReviews() {
@@ -72,17 +73,16 @@ function renderReviewsList(reviews, sortType) {
 }
 
 function renderAllReviews(sortType) {
-    gistRead('reviews.json', function(remoteReviews) {
-        if (remoteReviews && remoteReviews.length > 0) {
-            saveReviews(remoteReviews);
-            renderMainReviews(remoteReviews);
-            renderReviewsList(remoteReviews, sortType || 'latest');
-            return;
+    var reviews = getReviews();
+    renderMainReviews(reviews);
+    renderReviewsList(reviews, sortType || 'latest');
+    fetch(WORKER_API + '/api/reviews').then(function(r){return r.json()}).then(function(remote) {
+        if (remote && remote.length > 0) {
+            saveReviews(remote);
+            renderMainReviews(remote);
+            renderReviewsList(remote, sortType || 'latest');
         }
-        var reviews = getReviews();
-        renderMainReviews(reviews);
-        renderReviewsList(reviews, sortType || 'latest');
-    });
+    }).catch(function(){});
 }
 
 function loadAllReplies() {
@@ -158,7 +158,7 @@ function deleteReview(id) {
     var reviews = getReviews();
     reviews = reviews.filter(function(r) { return r.id != id; });
     saveReviews(reviews);
-    gistWrite({ 'reviews.json': { content: JSON.stringify(reviews) } });
+    fetch(WORKER_API + '/api/reviews/' + id + '?authorId=' + encodeURIComponent(getCurrentUserId()), {method:'DELETE'}).catch(function(){});
     // 同时删除该评论的回复
     var allReplies = getReplies();
     allReplies = allReplies.filter(function(r) { return r.reviewId != id; });
@@ -1393,7 +1393,7 @@ function submitReview() {
     var reviews = getReviews();
     reviews.push(review);
     saveReviews(reviews);
-    gistWrite({ 'reviews.json': { content: JSON.stringify(reviews) } });
+    fetch(WORKER_API + '/api/reviews', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(review)}).catch(function(){});
     renderAllReviews();
 
     showNotification('评价发布成功！', 'success');
