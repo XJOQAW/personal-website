@@ -608,10 +608,10 @@
         var cn = document.getElementById('rescueCN').value.trim();
         var contact = document.getElementById('rescueContact').value.trim();
         alert('E: cn=' + cn + ' contact=' + contact);
-        if (!cn) { showNotification('请填写CN', 'error'); return; }
-        if (!contact) { showNotification('请留下联系方式', 'error'); return; }
+        if (!cn) { alert('CN空'); return; }
+        if (!contact) { alert('contact空'); return; }
         var desc = document.getElementById('rescueDesc').value.trim();
-
+        alert('E2: 准备创建对象');
         var rescue = {
             id: Date.now(),
             authorId: uid,
@@ -624,9 +624,12 @@
             time: new Date().toISOString().split('T')[0],
             monthKey: getMonthKey()
         };
+        alert('E3: 准备保存');
         var rescues = getRescues();
         rescues.push(rescue);
+        alert('E4: 调用 saveRescues');
         saveRescues(rescues);
+        alert('E5: 保存完成');
         rescueFile = null;
         document.getElementById('rescueFileInput').value = '';
         document.getElementById('rescuePreview').style.display = 'none';
