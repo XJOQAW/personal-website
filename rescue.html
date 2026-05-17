@@ -368,7 +368,7 @@
             if (r.fixed) {
                 imgsHTML += '<div class="thumb"><img src="' + r.fixed + '" alt="成图"><span class="thumb-label" style="background:rgba(46,125,50,0.8);">成图</span></div>';
             }
-            imgsHTML += '<div class="gallery-overlay"><span class="cn-avatar">' + (r.avatar || '👤') + '</span><span class="cn-name">' + (r.cn || r.nickname) + '</span><span class="cn-time">' + r.time + '</span></div></div>';
+            imgsHTML += '<div class="gallery-overlay" style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;"></div></div>';
 
             var cmpBtn = r.fixed ? '<button class="gallery-compare-btn" data-id="' + r.id + '">🔍 查看对比</button>' : '';
 
@@ -378,8 +378,13 @@
                 return '<div class="comment-item"><span class="comment-avatar">' + (cm.avatar || '👤') + '</span><div class="comment-body"><strong>' + (cm.name || '匿名') + '</strong><span class="cm-time">' + (cm.time || '') + '</span><p>' + (cm.text || '') + '</p></div>' + cmDel + '</div>';
             }).join('');
 
-            return '<div class="gallery-item" data-id="' + r.id + '">' + delBtn + imgsHTML +
+            return '<div class="gallery-item" data-id="' + r.id + '">' + delBtn +
                 '<div class="gallery-body">' +
+                '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="font-size:20px;">' + (r.avatar || '👤') + '</span><strong>' + (r.cn || r.nickname) + '</strong><span style="font-size:11px;color:var(--text-secondary);margin-left:auto;">' + r.time + '</span></div>' +
+                '<span class="gallery-status-tag ' + statusTagClass + '">' + statusText + '</span>' +
+                '<div class="desc-text">' + (r.desc || '') + '</div>' +
+                cmpBtn +
+                '</div>' + imgsHTML +
                 '<span class="gallery-status-tag ' + statusTagClass + '">' + statusText + '</span>' +
                 '<div class="desc-text">' + (r.desc || '') + '</div>' +
                 cmpBtn +
@@ -439,7 +444,7 @@
         var baHTML = '';
         if (r.fixed) {
             baHTML = '<div class="detail-ba-wrap" onselectstart="return false"><img class="ba-img" src="' + r.image + '" alt="原图" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div>';
-            initDetailSlider();
+            setTimeout(function(){ initDetailSlider(); }, 100);
         } else {
             baHTML = '<img src="' + r.image + '" style="max-width:100%;border-radius:8px;margin-bottom:12px;">';
         }
