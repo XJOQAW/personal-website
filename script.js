@@ -5,7 +5,7 @@ var REPLIES_KEY = 'siteReplies';
 var LIKED_KEY = 'likedReviews';
 var API = 'https://yifang-comments.ytongxing00.workers.dev';
 
-function wGet(p,cb){fetch(API+p).then(function(r){return r.json()}).then(cb).catch(function(){});}
+function wGet(p,cb){fetch(API+p).then(function(r){return r.json()}).then(cb).catch(function(e){console.log('API fail:',e)})}
 function wPost(p,b,cb){fetch(API+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(function(r){return r.json()}).then(cb||function(){}).catch(function(){});}
 function wDel(p){fetch(API+p,{method:'DELETE'}).catch(function(){});}
 var GIST_ID = 'b97a92321d279d5b38750669bf6ae4a8';
