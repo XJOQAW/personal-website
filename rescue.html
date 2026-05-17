@@ -391,10 +391,22 @@
                 '</div>';
         }).join('');
 
+        // 点击图片放大查看
         document.querySelectorAll('.gallery-item').forEach(function(item) {
             item.addEventListener('click', function(e) {
                 if (e.target.closest('.rescue-del-btn') || e.target.closest('button') || e.target.closest('input') || e.target.closest('form')) return;
-                showDetail(parseInt(this.getAttribute('data-id')));
+                var id = parseInt(this.getAttribute('data-id'));
+                var r = getRescues().find(function(x){ return x.id === id; });
+                if (!r) return;
+                // 点击图片区域只显示图片
+                if (e.target.closest('.thumb')) {
+                    document.getElementById('detailTitle').textContent = (r.cn || r.nickname) + ' 的原图';
+                    document.getElementById('detailContent').innerHTML = '<img src="' + (e.target.closest('.thumb').querySelector('img').src) + '" style="max-width:100%;border-radius:8px;">';
+                } else {
+                    document.getElementById('detailTitle').textContent = (r.cn || r.nickname) + ' 的投稿';
+                    document.getElementById('detailContent').innerHTML = '<img src="' + r.image + '" style="max-width:100%;border-radius:8px;margin-bottom:10px;"><p><strong>CN：</strong>' + (r.cn || '-') + '</p><p><strong>描述：</strong>' + (r.desc || '无') + '</p><p><strong>时间：</strong>' + r.time + '</p>';
+                }
+                document.getElementById('rescueDetailModal').classList.add('active');
             });
         });
         // 评论删除
@@ -671,6 +683,11 @@
         return false;
     }
     window.submitGalleryComment = submitGalleryComment;
+
+    // 点击空白处关闭详情模态框
+    document.getElementById('rescueDetailModal').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('active');
+    });
 
     // 初始化 - 加载示例
     var rescues = getRescues();
