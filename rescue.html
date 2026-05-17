@@ -87,10 +87,7 @@
             border-radius:4px; z-index:1;
         }
         .gallery-item .gallery-overlay {
-            position:absolute; top:0; left:0; padding:12px 16px;
-            background:linear-gradient(rgba(0,0,0,0.5),transparent);
-            color:#fff; width:100%; z-index:2; display:flex;
-            align-items:center; gap:10px;
+            display:none;
         }
         .gallery-item .gallery-overlay .cn-avatar { font-size:22px; }
         .gallery-item .gallery-overlay .cn-name { font-size:16px; font-weight:600; }
@@ -368,7 +365,7 @@
             if (r.fixed) {
                 imgsHTML += '<div class="thumb"><img src="' + r.fixed + '" alt="成图"><span class="thumb-label" style="background:rgba(46,125,50,0.8);">成图</span></div>';
             }
-            imgsHTML += '<div class="gallery-overlay" style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;"></div></div>';
+            imgsHTML += '</div>';
 
             var cmpBtn = r.fixed ? '<button class="gallery-compare-btn" data-id="' + r.id + '">🔍 查看对比</button>' : '';
 
