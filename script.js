@@ -78,9 +78,13 @@ function renderAllReviews(sortType) {
     renderReviewsList(reviews, sortType || 'latest');
     fetch(WORKER_API + '/api/reviews').then(function(r){return r.json()}).then(function(remote) {
         if (remote && remote.length > 0) {
-            saveReviews(remote);
-            renderMainReviews(remote);
-            renderReviewsList(remote, sortType || 'latest');
+            var merged = reviews.slice();
+            remote.forEach(function(rr) {
+                if (!merged.some(function(lr){ return lr.id == rr.id; })) merged.push(rr);
+            });
+            try { saveReviews(merged); } catch(e) {}
+            renderMainReviews(merged);
+            renderReviewsList(merged, sortType || 'latest');
         }
     }).catch(function(){});
 }
@@ -164,7 +168,9 @@ function deleteReview(id) {
     allReplies = allReplies.filter(function(r) { return r.reviewId != id; });
     saveReplies(allReplies);
     gistWrite({ 'replies.json': { content: JSON.stringify(allReplies) } });
-    renderAllReviews();
+    var reviewsNow = getReviews();
+    renderMainReviews(reviewsNow);
+    renderReviewsList(reviewsNow, 'latest');
     showNotification('评价已删除', 'success');
 }
 
