@@ -420,12 +420,10 @@
         var overlay = cmp.querySelector('.ba-overlay');
         var handle = cmp.querySelector('.ba-handle');
         var hint = cmp.querySelector('.ba-hint');
-        var direction = 1;
-        var pct = 50;
+        var pct = 35;
         var timer = setInterval(function() {
-            pct += direction * 1;
-            if (pct >= 95) direction = -1;
-            if (pct <= 5) direction = 1;
+            pct += 0.4;
+            if (pct > 65) pct = 35;
             overlay.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
             handle.style.left = pct + '%';
         }, 30);
