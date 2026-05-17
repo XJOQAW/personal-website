@@ -31,6 +31,7 @@ function saveReplies(replies) {
 function esc(s) {
     var d = document.createElement('div'); d.textContent = s; return d.innerHTML;
 }
+function getCurrentUserId() {
     var localUser = localStorage.getItem('currentUser');
     if (localUser) return localUser;
     if (typeof firebase !== 'undefined' && firebase.apps.length && firebase.auth().currentUser) {
