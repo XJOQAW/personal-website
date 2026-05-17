@@ -1,1 +1,1 @@
-var GIST_TOKEN = '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';
+var GIST_TOKEN = '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';
