@@ -32,8 +32,8 @@
             position:absolute; top:0; height:100%;
             background-size:cover; background-position:center;
         }
-        .ba-compare .ba-after { left:0; width:100%; }
-        .ba-compare .ba-before { left:0; width:50%; border-right:2px solid #fff; }
+        .ba-compare .ba-before { left:0; width:100%; }
+        .ba-compare .ba-after { left:0; width:50%; border-right:2px solid #fff; border-left:none; }
         .ba-compare .ba-handle {
             position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
             width:40px; height:40px; border-radius:50%;
@@ -101,8 +101,8 @@
         .rescue-detail-modal .modal-box { max-width:700px; }
         .detail-ba-wrap { position:relative; width:100%; aspect-ratio:4/3; overflow:hidden; cursor:ew-resize; border-radius:8px; margin-bottom:12px; }
         .detail-ba-wrap .ba-before, .detail-ba-wrap .ba-after { position:absolute; top:0; height:100%; background-size:cover; background-position:center; }
-        .detail-ba-wrap .ba-after { left:0; width:100%; }
-        .detail-ba-wrap .ba-before { left:0; width:50%; border-right:2px solid #fff; }
+        .detail-ba-wrap .ba-before { left:0; width:100%; }
+        .detail-ba-wrap .ba-after { left:0; width:50%; border-right:2px solid #fff; }
         .detail-ba-wrap .ba-handle { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:36px; height:36px; border-radius:50%; background:rgba(255,255,255,0.9); display:flex; align-items:center; justify-content:center; pointer-events:none; }
         .admin-upload { margin-top:10px; padding:10px; background:var(--bg-alt); border-radius:8px; }
         .admin-upload label { font-size:13px; font-weight:600; display:block; margin-bottom:6px; }
@@ -297,7 +297,7 @@
         document.getElementById('detailTitle').textContent = (r.cn || r.nickname) + ' 的投稿';
         var baHTML = '';
         if (r.fixed) {
-            baHTML = '<div class="detail-ba-wrap"><div class="ba-after" style="background-image:url(' + r.fixed + ')"></div><div class="ba-before" style="background-image:url(' + r.image + ')"><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div></div>';
+            baHTML = '<div class="detail-ba-wrap"><div class="ba-before" style="background-image:url(' + r.image + ')"></div><div class="ba-after" style="background-image:url(' + r.fixed + ')"><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div></div>';
             initDetailSlider();
         } else {
             baHTML = '<img src="' + r.image + '" style="max-width:100%;border-radius:8px;margin-bottom:12px;">';
@@ -331,25 +331,25 @@
 
     function initDetailSlider() {
         document.querySelectorAll('.detail-ba-wrap').forEach(function(cmp) {
-            var before = cmp.querySelector('.ba-before');
+            var after = cmp.querySelector('.ba-after');
             var handle = cmp.querySelector('.ba-handle');
             var dragging = false;
             cmp.addEventListener('mousedown', function(){ dragging = true; });
-            cmp.addEventListener('mouseup', function(){ dragging = false; });
+            window.addEventListener('mouseup', function(){ dragging = false; });
             cmp.addEventListener('mouseleave', function(){ dragging = false; });
             cmp.addEventListener('mousemove', function(e) {
                 if (!dragging) return;
                 var rect = cmp.getBoundingClientRect();
                 var x = e.clientX - rect.left;
                 var pct = Math.max(5, Math.min(95, x / rect.width * 100));
-                before.style.width = pct + '%';
+                after.style.width = pct + '%';
                 handle.style.left = pct + '%';
             });
             cmp.addEventListener('touchmove', function(e) {
                 var rect = cmp.getBoundingClientRect();
                 var x = e.touches[0].clientX - rect.left;
                 var pct = Math.max(5, Math.min(95, x / rect.width * 100));
-                before.style.width = pct + '%';
+                after.style.width = pct + '%';
                 handle.style.left = pct + '%';
             });
         });
@@ -385,32 +385,32 @@
         var fixed = getRescues().filter(function(r){ return r.fixed; }).slice(-4);
         if (fixed.length === 0) return;
         grid.innerHTML = fixed.map(function(r) {
-            return '<div class="ba-card"><h4>' + (r.cn || r.nickname) + ' 的投稿</h4><div class="ba-compare"><div class="ba-after" style="background-image:url(' + r.fixed + ')"></div><div class="ba-before" style="background-image:url(' + r.image + ')"><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div></div></div>';
+            return '<div class="ba-card"><h4>' + (r.cn || r.nickname) + ' 的投稿</h4><div class="ba-compare"><div class="ba-before" style="background-image:url(' + r.image + ')"></div><div class="ba-after" style="background-image:url(' + r.fixed + ')"><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div></div></div>';
         }).reverse().join('');
         initBASliders();
     }
 
     function initBASliders() {
         document.querySelectorAll('.ba-compare').forEach(function(cmp) {
-            var before = cmp.querySelector('.ba-before');
+            var after = cmp.querySelector('.ba-after');
             var handle = cmp.querySelector('.ba-handle');
             var dragging = false;
             cmp.addEventListener('mousedown', function(){ dragging = true; });
-            cmp.addEventListener('mouseup', function(){ dragging = false; });
+            window.addEventListener('mouseup', function(){ dragging = false; });
             cmp.addEventListener('mouseleave', function(){ dragging = false; });
             cmp.addEventListener('mousemove', function(e) {
                 if (!dragging) return;
                 var rect = cmp.getBoundingClientRect();
                 var x = e.clientX - rect.left;
                 var pct = Math.max(5, Math.min(95, x / rect.width * 100));
-                before.style.width = pct + '%';
+                after.style.width = pct + '%';
                 handle.style.left = pct + '%';
             });
             cmp.addEventListener('touchmove', function(e) {
                 var rect = cmp.getBoundingClientRect();
                 var x = e.touches[0].clientX - rect.left;
                 var pct = Math.max(5, Math.min(95, x / rect.width * 100));
-                before.style.width = pct + '%';
+                after.style.width = pct + '%';
                 handle.style.left = pct + '%';
             });
         });
