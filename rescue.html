@@ -69,41 +69,39 @@
         .rescue-form textarea { resize:vertical; min-height:60px; }
         .limit-bar { text-align:center; font-size:13px; color:var(--text-secondary); margin:8px 0; }
         .limit-bar .used { color:var(--primary); font-weight:600; }
-        .gallery-grid { display:flex; flex-direction:column; gap:20px; }
-        .gallery-post {
+        .gallery-grid { display:flex; flex-direction:column; gap:16px; }
+        .gallery-item {
             background:var(--card); border-radius:14px; overflow:hidden;
             box-shadow:0 2px 8px rgba(0,0,0,0.06); position:relative;
         }
-        .gallery-post-header {
-            display:flex; align-items:center; gap:10px; padding:12px 16px;
-            border-bottom:1px solid var(--border);
-        }
-        .gallery-post-header .cn-avatar { font-size:24px; }
-        .gallery-post-header .cn-name { font-size:15px; font-weight:600; }
-        .gallery-post-header .cn-time { font-size:11px; color:var(--text-secondary); margin-left:auto; }
         .gallery-imgs { display:flex; line-height:0; }
         .gallery-imgs .thumb { flex:1; position:relative; overflow:hidden; }
         .gallery-imgs .thumb img { width:100%; display:block; }
-        .gallery-imgs .thumb-label {
+        .thumb-label {
             position:absolute; bottom:6px; left:6px; padding:2px 8px;
             color:#fff; font-size:11px; border-radius:4px; z-index:1;
         }
-        .gallery-post-body { padding:12px 16px; }
-        .gallery-desc { font-size:13px; color:var(--text-secondary); margin-bottom:6px; }
+        .gallery-cn-row {
+            display:flex; align-items:center; gap:8px; padding:12px 14px 6px;
+        }
+        .gallery-cn-row .cn-avatar { font-size:22px; }
+        .gallery-cn-row .cn-name { font-size:15px; font-weight:600; }
+        .gallery-cn-row .cn-time { font-size:11px; color:var(--text-secondary); margin-left:auto; }
+        .gallery-desc { padding:0 14px 10px; font-size:13px; color:var(--text-secondary); }
         .gallery-status-tag {
             display:inline-block; padding:3px 10px; border-radius:10px; font-size:11px;
-            margin-bottom:6px;
+            margin:0 14px 8px;
         }
         .gallery-status-tag.pending { background:var(--bg-alt); color:var(--text-secondary); }
         .gallery-status-tag.done { background:#e8f5e9; color:#2e7d32; }
         .gallery-compare-btn {
-            display:inline-block; padding:6px 14px;
+            display:inline-block; margin:0 14px 10px; padding:6px 14px;
             border:1px solid var(--primary); border-radius:6px;
             background:transparent; color:var(--primary); font-size:12px;
             cursor:pointer;
         }
         .gallery-compare-btn:hover { background:var(--primary); color:#fff; }
-        .gallery-comments { border-top:1px solid var(--border); padding:8px 16px; }
+        .gallery-comments { border-top:1px solid var(--border); padding:8px 14px; }
         .gallery-comments .comment-item { display:flex; gap:6px; padding:2px 0; align-items:flex-start; }
         .gallery-comments .comment-avatar {
             width:20px; height:20px; border-radius:50%; background:var(--bg-alt);
@@ -121,7 +119,7 @@
         .comment-item:hover .gallery-comment-del { opacity:0.5; }
         .gallery-comment-del:hover { color:#ff3b30; }
         .gallery-comment-form {
-            display:flex; gap:6px; padding:8px 16px; border-top:1px solid var(--border);
+            display:flex; gap:6px; padding:8px 14px; border-top:1px solid var(--border);
         }
         .gallery-comment-form input {
             flex:1; padding:6px 10px; border:1px solid var(--border);
@@ -132,10 +130,7 @@
             padding:6px 14px; border:none; border-radius:6px;
             background:var(--primary); color:#fff; font-size:12px; cursor:pointer;
         }
-        .gallery-wall {
-            background:var(--bg-alt); border-radius:16px; padding:20px;
-            box-shadow:inset 0 0 0 1px var(--border);
-        }
+        .rescue-del-btn {
             position:absolute; top:8px; right:8px; z-index:2;
             width:24px; height:24px; border-radius:50%;
             border:none; background:rgba(255,59,48,0.15); color:#ff3b30;
@@ -241,7 +236,7 @@
                         <input type="text" id="rescueCN" placeholder="你的CN（必填）">
                         <textarea id="rescueDesc" placeholder="描述一下这张照片哪里需要修（选填）..."></textarea>
                         <input type="text" id="rescueContact" placeholder="联系方式 QQ/微信（必填，方便接收修好的图）">
-                        <button class="btn btn-primary btn-full" id="rescueSubmit" onclick="window.submitRescue()">提交投稿</button>
+                        <button class="btn btn-primary btn-full" id="rescueSubmit">提交投稿</button>
                     </div>
                     <p class="limit-bar">本月已投稿 <span class="used" id="monthUsed">0</span>/5 张</p>
                 </div>
@@ -256,10 +251,8 @@
                     <h2>所有投稿</h2>
                     <p id="galleryLoginTip" style="font-size:14px;color:var(--primary);"></p>
                 </div>
-                <div class="gallery-wall">
                 <div class="gallery-grid" id="galleryGrid">
                     <p class="account-empty">加载中...</p>
-                </div>
                 </div>
             </div>
         </section>
@@ -299,10 +292,7 @@
     <script src="script.js?v=39"></script>
     <script>
     (function initRescue() {
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initRescue);
-        return;
-    }
+    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initRescue); return; }
     var RESCUE_KEY = 'siteRescues';
     var MONTH_LIMIT = 5;
 
@@ -316,12 +306,8 @@
     function getUid() {
         return (typeof getCurrentUserId !== 'undefined') ? getCurrentUserId() : (localStorage.getItem('currentUser') || null);
     }
-    function imgSrc(r) {
-        if (r._hasImage) return localStorage.getItem('rescue_thumb_' + r.id) || r.image || '';
-        return r.image || '';
-    }
-    function imgFull(r) {
-        if (r._hasImage) return localStorage.getItem('rescue_img_' + r.id) || r.image || '';
+    function getImg(r) {
+        if (r._hasImage) return localStorage.getItem('rescue_thumb_' + r.id) || '';
         return r.image || '';
     }
     function getMonthKey() {
@@ -336,7 +322,7 @@
         var grid = document.getElementById('galleryGrid');
         if (!grid) return;
         var uid = getUid();
-        var rescues = getRescues();
+        var rescues = getRescues().filter(function(r){ return !r.isDemo; });
         rescues.sort(function(a,b){ return b.id - a.id; });
         if (!uid) {
             grid.innerHTML = '<p class="account-empty">请先<a href="javascript:void(0)" onclick="var m=document.getElementById(\'loginModal\');m.style.opacity=\'1\';m.style.visibility=\'visible\';m.style.pointerEvents=\'auto\'" style="color:var(--primary);">登录</a>后查看投稿墙</p>';
@@ -351,12 +337,8 @@
             var statusText = r.fixed ? '已修复' : '待处理';
             var statusTagClass = r.fixed ? 'done' : 'pending';
 
-            var imgsHTML = '<div class="gallery-imgs"><div class="thumb"><img src="' + imgSrc(r) + '"><span class="thumb-label" style="background:rgba(0,0,0,0.6);">原图</span></div>';
-            if (r.fixed) {
-                imgsHTML += '<div class="thumb"><img src="' + r.fixed + '"><span class="thumb-label" style="background:rgba(46,125,50,0.8);">成图</span></div>';
-            } else {
-                imgsHTML += '<div class="thumb" style="display:flex;align-items:center;justify-content:center;background:var(--bg-alt);"><span style="color:var(--text-secondary);font-size:14px;">正在拯救中...</span></div>';
-            }
+            var imgsHTML = '<div class="gallery-imgs"><div class="thumb"><img src="' + getImg(r) + '"><span class="thumb-label" style="background:rgba(0,0,0,0.6);">原图</span></div>';
+            if (r.fixed) imgsHTML += '<div class="thumb"><img src="' + r.fixed + '"><span class="thumb-label" style="background:rgba(46,125,50,0.8);">成图</span></div>';
             imgsHTML += '</div>';
 
             var cmpBtn = r.fixed ? '<button class="gallery-compare-btn" data-id="' + r.id + '">查看对比</button>' : '';
@@ -366,21 +348,19 @@
                 return '<div class="comment-item"><span class="comment-avatar">' + (cm.avatar || '👤') + '</span><div class="comment-body"><strong>' + cm.name + '</strong><span class="cm-time">' + (cm.time||'') + '</span><p>' + cm.text + '</p></div>' + cmDel + '</div>';
             }).join('');
 
-            return '<div class="gallery-post" data-id="' + r.id + '">' + delBtn +
-                '<div class="gallery-post-header"><span class="cn-avatar">' + (r.avatar||'👤') + '</span><span class="cn-name">' + (r.cn||r.nickname) + '</span><span class="cn-time">' + r.time + '</span></div>' +
+            return '<div class="gallery-item" data-id="' + r.id + '">' + delBtn +
+                '<div class="gallery-cn-row"><span class="cn-avatar">' + (r.avatar||'👤') + '</span><span class="cn-name">' + (r.cn||r.nickname) + '</span><span class="cn-time">' + r.time + '</span></div>' +
                 imgsHTML +
-                '<div class="gallery-post-body">' +
                 '<span class="gallery-status-tag ' + statusTagClass + '">' + statusText + '</span>' +
                 '<div class="gallery-desc">' + (r.desc||'') + '</div>' +
                 cmpBtn +
-                '</div>' +
                 '<div class="gallery-comments">' + (commentsHTML || '<div class="comment-item" style="justify-content:center;font-size:11px;color:var(--text-secondary);">暂无评论</div>') + '</div>' +
                 '<form class="gallery-comment-form" onsubmit="return submitGalleryComment(event,' + r.id + ')"><input type="text" placeholder="写评论..."><button>发送</button></form>' +
                 '</div>';
         }).join('');
 
         // 点击图片放大查看
-        document.querySelectorAll('.gallery-post').forEach(function(item) {
+        document.querySelectorAll('.gallery-item').forEach(function(item) {
             item.addEventListener('click', function(e) {
                 if (e.target.closest('.rescue-del-btn') || e.target.closest('button') || e.target.closest('input') || e.target.closest('form')) return;
                 var id = parseInt(this.getAttribute('data-id'));
@@ -392,7 +372,7 @@
                     document.getElementById('detailContent').innerHTML = '<img src="' + (e.target.closest('.thumb').querySelector('img').src) + '" style="max-width:100%;border-radius:8px;">';
                 } else {
                     document.getElementById('detailTitle').textContent = (r.cn || r.nickname) + ' 的投稿';
-                    document.getElementById('detailContent').innerHTML = '<img src="' + imgFull(r) + '" style="max-width:100%;border-radius:8px;margin-bottom:10px;"><p><strong>CN：</strong>' + (r.cn || '-') + '</p><p><strong>描述：</strong>' + (r.desc || '无') + '</p><p><strong>时间：</strong>' + r.time + '</p>';
+                    document.getElementById('detailContent').innerHTML = '<img src="' + r.image + '" style="max-width:100%;border-radius:8px;margin-bottom:10px;"><p><strong>CN：</strong>' + (r.cn || '-') + '</p><p><strong>描述：</strong>' + (r.desc || '无') + '</p><p><strong>时间：</strong>' + r.time + '</p>';
                 }
                 document.getElementById('rescueDetailModal').classList.add('active');
             });
@@ -440,10 +420,10 @@
         document.getElementById('detailTitle').textContent = (r.cn || r.nickname) + ' 的投稿';
         var baHTML = '';
         if (r.fixed) {
-            baHTML = '<div class="detail-ba-wrap" onselectstart="return false"><img class="ba-img" src="' + imgFull(r) + '" alt="原图" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div>';
+            baHTML = '<div class="detail-ba-wrap" onselectstart="return false"><img class="ba-img" src="' + r.image + '" alt="原图" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div>';
             setTimeout(function(){ initDetailSlider(); }, 100);
         } else {
-            baHTML = '<img src="' + imgFull(r) + '" style="max-width:100%;border-radius:8px;margin-bottom:12px;">';
+            baHTML = '<img src="' + r.image + '" style="max-width:100%;border-radius:8px;margin-bottom:12px;">';
         }
         var adminHTML = '';
         if (getUid()) {
@@ -528,7 +508,7 @@
         if (fixed.length === 0) return;
         grid.innerHTML = fixed.map(function(r, idx) {
             var hintHTML = idx === 0 ? '<div class="ba-hint">← 滑动对比 →</div>' : '';
-            return '<div class="ba-card"><h4>' + (r.cn || r.nickname) + ' 的投稿</h4><div class="ba-compare" onselectstart="return false">' + hintHTML + '<img class="ba-img" src="' + imgFull(r) + '" alt="原图" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div></div>';
+            return '<div class="ba-card"><h4>' + (r.cn || r.nickname) + ' 的投稿</h4><div class="ba-compare" onselectstart="return false">' + hintHTML + '<img class="ba-img" src="' + r.image + '" alt="原图" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div></div>';
         }).reverse().join('');
         initBASliders();
         autoSlideHint();
@@ -605,8 +585,7 @@
         }
     });
 
-    console.log('attaching submit via onclick');
-    window.submitRescue = function() {
+    document.getElementById('rescueSubmit').onclick = function() {
         var uid = getUid();
         if (!uid) { showNotification('请先登录', 'error'); return; }
         if (getMonthUsage() >= MONTH_LIMIT) { showNotification('本月投稿次数已用完', 'error'); return; }
@@ -618,10 +597,10 @@
         var desc = document.getElementById('rescueDesc').value.trim();
 
         var id = Date.now();
-        // 原图单独存储，避免 JSON.stringify 大文件崩溃
+        // 原图单独存储，避免大图导致 JSON.stringify 崩溃
         localStorage.setItem('rescue_img_' + id, rescueFile);
 
-        // 生成缩略图用于显示
+        // 生成缩略图用于列表显示
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');
         var img = new Image();
@@ -632,21 +611,19 @@
             canvas.height = img.height * scale;
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
             var thumb = canvas.toDataURL('image/jpeg', 0.6);
+            localStorage.setItem('rescue_thumb_' + id, thumb);
 
             var rescue = {
                 id: id, authorId: uid, cn: cn,
                 nickname: localStorage.getItem('currentUserName') || cn,
                 desc: desc, contact: contact, fixed: null,
                 time: new Date().toISOString().split('T')[0],
-                monthKey: getMonthKey()
+                monthKey: getMonthKey(),
+                _hasImage: true
             };
-            // 存储元数据（不含图片，文件很小）
-            rescue._hasImage = true; // 标记有图片
             var rescues = getRescues();
             rescues.push(rescue);
             saveRescues(rescues);
-            // 单独存缩略图
-            localStorage.setItem('rescue_thumb_' + id, thumb);
 
             rescueFile = null;
             document.getElementById('rescueFileInput').value = '';
@@ -660,41 +637,6 @@
         };
         img.src = rescueFile;
     };
-        doSubmit(rescueFile, cn, contact, desc, uid);
-    };
-
-    function doSubmit(imgData, cn, contact, desc, uid) {
-        var rescue = {
-    function doSubmit(imgData, cn, contact, desc, uid) {
-        var rescue = {
-            id: Date.now(),
-            authorId: uid,
-            cn: cn,
-            nickname: localStorage.getItem('currentUserName') || cn,
-            image: imgData,
-            desc: desc,
-            contact: contact,
-            fixed: null,
-            time: new Date().toISOString().split('T')[0],
-            monthKey: getMonthKey()
-        };
-        alert('E3: 准备保存');
-        var rescues = getRescues();
-        rescues.push(rescue);
-        alert('E4: 调用 saveRescues');
-        saveRescues(rescues);
-        alert('E5: 保存完成');
-        rescueFile = null;
-        document.getElementById('rescueFileInput').value = '';
-        if (document.getElementById('rescuePreview')) document.getElementById('rescuePreview').style.display = 'none';
-        document.getElementById('rescueDesc').value = '';
-        document.getElementById('rescueCN').value = '';
-        document.getElementById('rescueContact').value = '';
-        updateUI();
-        renderGallery();
-        alert('G: 渲染完成');
-        showNotification('投稿成功！请耐心等待返图', 'success');
-    }
 
     function submitGalleryComment(e, id) {
         e.preventDefault();
@@ -745,6 +687,7 @@
         id: 1, authorId: 'sample', cn: '测试1', nickname: '测试1',
         avatar: '🌸',
         image: 'images/rescues/sample_before.jpg',
+        isDemo: true,
         desc: '想要更加梦幻的光影效果',
         contact: 'YFTX0616',
         fixed: 'images/rescues/sample_after.jpg',
