@@ -3,13 +3,8 @@
 var REVIEWS_KEY = 'siteReviews';
 var REPLIES_KEY = 'siteReplies';
 var LIKED_KEY = 'likedReviews';
-var API = 'https://yifang-comments.ytongxing00.workers.dev';
-
-function wGet(p,cb){fetch(API+p).then(function(r){return r.json()}).then(cb).catch(function(e){console.log('API fail:',e)})}
-function wPost(p,b,cb){fetch(API+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(function(r){return r.json()}).then(cb||function(){}).catch(function(){});}
-function wDel(p){fetch(API+p,{method:'DELETE'}).catch(function(){});}
 var GIST_ID = 'b97a92321d279d5b38750669bf6ae4a8';
-if (typeof GIST_TOKEN === 'undefined') var GIST_TOKEN = 'ghp_' + '8E0gQ88j8Wa9cWa9TRxZcMjADM1PJH1lZWyP';
+if (typeof GIST_TOKEN === 'undefined') var GIST_TOKEN = '';
 var GIST_RAW = 'https://gist.githubusercontent.com/raw/' + GIST_ID;
 var GIST_API = 'https://api.github.com/gists/' + GIST_ID;
 
@@ -33,20 +28,8 @@ function esc(s) {
 function gistRead(file, callback) {
     fetch(GIST_RAW + '/' + file).then(function(r) { return r.json(); }).then(callback).catch(function(){});
 }
-// Gist写入（防冲突：300ms内多次调用合并为一次）
-var _gistPending = {};
-var _gistTimer = null;
 function gistWrite(files) {
-    for (var k in files) _gistPending[k] = files[k];
-    if (_gistTimer) return;
-    _gistTimer = setTimeout(function() {
-        var pending = _gistPending;
-        _gistPending = {};
-        _gistTimer = null;
-        fetch(GIST_API, { method: 'PATCH', headers: { 'Authorization': 'Bearer ' + GIST_TOKEN, 'Content-Type': 'application/json' }, body: JSON.stringify({ files: pending }) })
-            .then(function(r) { if (!r.ok) console.error('Gist write FAILED:', r.status); })
-            .catch(function(e) { console.error('Gist write ERROR:', e.message); });
-    }, 300);
+    fetch(GIST_API, { method: 'PATCH', headers: { 'Authorization': 'Bearer ' + GIST_TOKEN, 'Content-Type': 'application/json' }, body: JSON.stringify({ files: files }) }).catch(function(){});
 }
 
 function renderMainReviews(reviews) {
@@ -89,23 +72,17 @@ function renderReviewsList(reviews, sortType) {
 }
 
 function renderAllReviews(sortType) {
-    // 先立即渲染本地数据
-    var local = getReviews();
-    renderMainReviews(local);
-    renderReviewsList(local, sortType || 'latest');
-    // 再从 Gist 加载云端数据覆盖
-        var local = getReviews();
-        renderMainReviews(local);
-        renderReviewsList(local, sortType || 'latest');
-        wGet('/api/reviews', function(remote) {
-            if (remote && remote.length > 0) {
-                var merged = local.slice();
-                remote.forEach(function(rr) { if (!merged.some(function(lr){return lr.id==rr.id})) merged.push(rr); });
-                saveReviews(merged);
-                renderMainReviews(merged);
-                renderReviewsList(merged, sortType || 'latest');
-            }
-        });
+    gistRead('reviews.json', function(remoteReviews) {
+        if (remoteReviews && remoteReviews.length > 0) {
+            saveReviews(remoteReviews);
+            renderMainReviews(remoteReviews);
+            renderReviewsList(remoteReviews, sortType || 'latest');
+            return;
+        }
+        var reviews = getReviews();
+        renderMainReviews(reviews);
+        renderReviewsList(reviews, sortType || 'latest');
+    });
 }
 
 function loadAllReplies() {
@@ -156,7 +133,7 @@ function addReply(reviewId, replyData) {
     replyData.reviewId = reviewId;
     all.push(replyData);
     saveReplies(all);
-    wPost('/api/reviews/' + reviewId + '/replies', replyData);
+    gistWrite({ 'replies.json': { content: JSON.stringify(all) } });
     return replyData;
 }
 
@@ -164,7 +141,7 @@ function deleteReplyById(replyId) {
     var all = getReplies();
     all = all.filter(function(r) { return r.id != replyId; });
     saveReplies(all);
-    wDel('/api/replies/' + replyId + '?authorId=' + encodeURIComponent(getCurrentUserId()));
+    gistWrite({ 'replies.json': { content: JSON.stringify(all) } });
 }
 
 function getCurrentUserId() {
@@ -181,10 +158,12 @@ function deleteReview(id) {
     var reviews = getReviews();
     reviews = reviews.filter(function(r) { return r.id != id; });
     saveReviews(reviews);
-    wDel('/api/reviews/' + id + '?authorId=' + encodeURIComponent(getCurrentUserId()));
+    gistWrite({ 'reviews.json': { content: JSON.stringify(reviews) } });
+    // 同时删除该评论的回复
     var allReplies = getReplies();
     allReplies = allReplies.filter(function(r) { return r.reviewId != id; });
     saveReplies(allReplies);
+    gistWrite({ 'replies.json': { content: JSON.stringify(allReplies) } });
     renderAllReviews();
     showNotification('评价已删除', 'success');
 }
@@ -230,7 +209,7 @@ function attachReplyHandlers() {
 }
 
 function renderReplySection(reviewId, container) {
-    wGet('/api/reviews/' + reviewId + '/replies', function(remoteReplies) {
+    gistRead('replies.json', function(remoteReplies) {
         var replies;
         if (remoteReplies && remoteReplies.length > 0) {
             saveReplies(remoteReplies);
@@ -1414,7 +1393,7 @@ function submitReview() {
     var reviews = getReviews();
     reviews.push(review);
     saveReviews(reviews);
-    wPost('/api/reviews', review);
+    gistWrite({ 'reviews.json': { content: JSON.stringify(reviews) } });
     renderAllReviews();
 
     showNotification('评价发布成功！', 'success');
