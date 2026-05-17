@@ -70,57 +70,64 @@
         .limit-bar { text-align:center; font-size:13px; color:var(--text-secondary); margin:8px 0; }
         .limit-bar .used { color:var(--primary); font-weight:600; }
         .gallery-grid {
-            display:flex; flex-direction:column; gap:20px;
+            display:flex; flex-direction:column; gap:14px;
         }
         .gallery-item {
             background:var(--card); border-radius:14px; overflow:hidden;
             box-shadow:0 2px 8px rgba(0,0,0,0.06); position:relative;
+            display:flex; gap:14px; padding:14px; align-items:flex-start;
         }
         .gallery-item .gallery-img-wrap {
-            position:relative; line-height:0;
+            width:120px; flex-shrink:0; line-height:0; border-radius:8px; overflow:hidden;
+            position:relative;
         }
         .gallery-item .gallery-img-wrap img {
             width:100%; display:block;
         }
-        .gallery-item .gallery-meta {
-            position:absolute; top:0; left:0; padding:10px 14px;
-            background:linear-gradient(rgba(0,0,0,0.5),transparent);
-            color:#fff; width:100%;
+        .gallery-item .gallery-info {
+            flex:1; min-width:0; display:flex; flex-direction:column; gap:6px;
         }
-        .gallery-item .gallery-meta strong { font-size:14px; display:block; }
-        .gallery-item .gallery-meta .time { font-size:11px; opacity:0.7; }
+        .gallery-item .gallery-info .cn { font-size:15px; font-weight:600; }
+        .gallery-item .gallery-info .meta { font-size:11px; color:var(--text-secondary); }
+        .gallery-item .gallery-info .desc { font-size:13px; color:var(--text-secondary); }
         .gallery-item .gallery-status-tag {
-            position:absolute; bottom:10px; right:10px;
-            padding:3px 10px; border-radius:10px; font-size:11px;
+            display:inline-block; padding:2px 10px; border-radius:10px; font-size:11px;
+            align-self:flex-start;
         }
-        .gallery-status-tag.pending { background:rgba(0,0,0,0.5); color:#fff; }
-        .gallery-status-tag.done { background:rgba(46,125,50,0.8); color:#fff; }
-        .gallery-item .gallery-body {
-            padding:14px; display:flex; flex-direction:column; gap:10px;
+        .gallery-status-tag.pending { background:var(--bg-alt); color:var(--text-secondary); }
+        .gallery-status-tag.done { background:#e8f5e9; color:#2e7d32; }
+        .gallery-compare-btn {
+            padding:5px 12px; border:1px solid var(--primary); border-radius:6px;
+            background:transparent; color:var(--primary); font-size:12px;
+            cursor:pointer; align-self:flex-start; transition:all 0.2s;
         }
-        .gallery-item .gallery-body .desc { font-size:13px; color:var(--text-secondary); }
-        .gallery-item .gallery-comments {
-            border-top:1px solid var(--border); padding:10px 14px;
+        .gallery-compare-btn:hover { background:var(--primary); color:#fff; }
+        .gallery-comments {
+            border-top:1px solid var(--border); margin-top:6px; padding-top:8px;
         }
-        .gallery-item .gallery-comments .comment-item {
-            display:flex; gap:8px; padding:6px 0; align-items:flex-start;
+        .gallery-comments .comment-item {
+            display:flex; gap:6px; padding:3px 0; align-items:flex-start;
         }
-        .gallery-item .gallery-comments .comment-avatar {
-            width:28px; height:28px; border-radius:50%;
-            background:var(--bg-alt); display:flex; align-items:center;
-            justify-content:center; font-size:14px; flex-shrink:0;
+        .gallery-comments .comment-avatar {
+            width:22px; height:22px; border-radius:50%; background:var(--bg-alt);
+            display:flex; align-items:center; justify-content:center;
+            font-size:12px; flex-shrink:0;
         }
-        .gallery-item .gallery-comments .comment-body { flex:1; min-width:0; }
-        .gallery-item .gallery-comments .comment-body strong { font-size:12px; }
-        .gallery-item .gallery-comments .comment-body p { font-size:12px; color:var(--text-secondary); margin-top:2px; }
-        .gallery-comment-form { display:flex; gap:8px; padding:10px 14px; border-top:1px solid var(--border); }
+        .gallery-comments .comment-body { flex:1; min-width:0; }
+        .gallery-comments .comment-body strong { font-size:11px; margin-right:6px; }
+        .gallery-comments .comment-body span { font-size:10px; color:var(--text-secondary); }
+        .gallery-comments .comment-body p { font-size:12px; color:var(--text-secondary); margin-top:1px; }
+        .gallery-comment-del { opacity:0; background:none; border:none; color:var(--text-secondary); font-size:10px; cursor:pointer; padding:2px; }
+        .comment-item:hover .gallery-comment-del { opacity:0.5; }
+        .gallery-comment-del:hover { color:#ff3b30; }
+        .gallery-comment-form { display:flex; gap:6px; padding-top:8px; border-top:1px solid var(--border); margin-top:6px; }
         .gallery-comment-form input {
-            flex:1; padding:8px 10px; border:1px solid var(--border);
-            border-radius:8px; font-size:13px; background:var(--bg); color:var(--text);
+            flex:1; padding:6px 10px; border:1px solid var(--border);
+            border-radius:6px; font-size:12px; background:var(--bg); color:var(--text);
         }
         .gallery-comment-form input:focus { outline:none; border-color:var(--primary); }
         .gallery-comment-form button {
-            padding:8px 14px; border:none; border-radius:8px;
+            padding:6px 12px; border:none; border-radius:6px;
             background:var(--primary); color:#fff; font-size:12px; cursor:pointer;
         }
         .gallery-item {
@@ -342,21 +349,47 @@
             var statusText = r.fixed ? '已修复' : '待处理';
             var statusTagClass = r.fixed ? 'done' : 'pending';
             var delBtn = (uid && r.authorId === uid) ? '<button class="rescue-del-btn" data-id="' + r.id + '"><i class="fas fa-trash-alt"></i></button>' : '';
+            var cmpBtn = r.fixed ? '<button class="gallery-compare-btn" data-id="' + r.id + '">🔍 查看对比</button>' : '';
             var comments = (r.comments || []);
-            var commentsHTML = comments.map(function(cm) {
-                return '<div class="comment-item"><span class="comment-avatar">' + (cm.avatar || '👤') + '</span><div class="comment-body"><strong>' + (cm.name || '匿名') + '</strong><p>' + (cm.text || '') + '</p></div></div>';
+            var commentsHTML = comments.map(function(cm, ci) {
+                var cmDel = (uid && cm.authorId === uid) ? '<button class="gallery-comment-del" data-rid="' + r.id + '" data-cidx="' + ci + '"><i class="fas fa-times"></i></button>' : '';
+                return '<div class="comment-item"><span class="comment-avatar">' + (cm.avatar || '👤') + '</span><div class="comment-body"><strong>' + (cm.name || '匿名') + '</strong><span>' + (cm.time || '') + '</span><p>' + (cm.text || '') + '</p></div>' + cmDel + '</div>';
             }).join('');
             return '<div class="gallery-item" data-id="' + r.id + '">' + delBtn +
-                '<div class="gallery-img-wrap"><img src="' + r.image + '" alt="投稿"><div class="gallery-meta"><strong>' + (r.cn || r.nickname) + '</strong><span class="time">' + r.time + '</span></div><span class="gallery-status-tag ' + statusTagClass + '">' + statusText + '</span></div>' +
-                '<div class="gallery-body"><p class="desc">' + (r.desc || '') + '</p></div>' +
-                '<div class="gallery-comments">' + (commentsHTML || '<p style="font-size:12px;color:var(--text-secondary);text-align:center;">暂无评论</p>') + '</div>' +
+                '<div class="gallery-img-wrap"><img src="' + r.image + '" alt="投稿"></div>' +
+                '<div class="gallery-info"><div class="cn">' + (r.cn || r.nickname) + '</div><div class="meta">' + r.time + ' · ' + statusText + '</div><div class="desc">' + (r.desc || '') + '</div>' + cmpBtn +
+                '<div class="gallery-comments">' + (commentsHTML || '<p style="font-size:11px;color:var(--text-secondary);text-align:center;padding:4px 0;">暂无评论</p>') + '</div>' +
                 '<form class="gallery-comment-form" onsubmit="return submitGalleryComment(event, ' + r.id + ')"><input type="text" placeholder="写评论..."><button type="submit">发送</button></form>' +
-                '</div>';
+                '</div></div>';
         }).join('');
 
         document.querySelectorAll('.gallery-item').forEach(function(item) {
             item.addEventListener('click', function(e) {
                 if (e.target.closest('.rescue-del-btn') || e.target.closest('button') || e.target.closest('input') || e.target.closest('form')) return;
+                showDetail(parseInt(this.getAttribute('data-id')));
+            });
+        });
+        // 评论删除
+        document.querySelectorAll('.gallery-comment-del').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var rid = parseInt(this.getAttribute('data-rid'));
+                var ci = parseInt(this.getAttribute('data-cidx'));
+                var rescues = getRescues();
+                for (var i = 0; i < rescues.length; i++) {
+                    if (rescues[i].id === rid && rescues[i].comments) {
+                        rescues[i].comments.splice(ci, 1);
+                        break;
+                    }
+                }
+                saveRescues(rescues);
+                renderGallery();
+            });
+        });
+        // 查看对比
+        document.querySelectorAll('.gallery-compare-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
                 showDetail(parseInt(this.getAttribute('data-id')));
             });
         });
@@ -599,7 +632,8 @@
                     name: localStorage.getItem('currentUserName') || '用户',
                     avatar: localStorage.getItem('userAvatar') || '👤',
                     text: text,
-                    time: new Date().toISOString().split('T')[0]
+                    time: new Date().toISOString().split('T')[0],
+                    authorId: uid
                 });
                 break;
             }
