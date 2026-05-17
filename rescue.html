@@ -483,20 +483,10 @@
     function updateUI() {
         var uid = getUid();
         var used = getMonthUsage();
-        var formArea = document.getElementById('uploadFormArea');
         var loginTip = document.getElementById('uploadLoginTip');
         var galleryTip = document.getElementById('galleryLoginTip');
         var submitBtn = document.getElementById('rescueSubmit');
         var usedEl = document.getElementById('monthUsed');
-        if (!uid) {
-            if (formArea) formArea.style.display = 'none';
-            if (loginTip) loginTip.style.display = 'block';
-            if (galleryTip) galleryTip.innerHTML = '请先<a href="javascript:void(0)" onclick="var m=document.getElementById(\'loginModal\');m.style.opacity=\'1\';m.style.visibility=\'visible\';m.style.pointerEvents=\'auto\'" style="color:var(--primary);">登录</a>查看投稿墙';
-            return;
-        }
-        if (formArea) formArea.style.display = 'block';
-        if (loginTip) loginTip.style.display = 'none';
-        if (galleryTip) galleryTip.innerHTML = '';
         if (usedEl) usedEl.textContent = used;
         if (submitBtn) {
             submitBtn.disabled = used >= MONTH_LIMIT;
