@@ -491,14 +491,20 @@
         saveRescues(rescues);
     }
 
+    var initDone = false;
     if (typeof gistRead !== 'undefined') {
         gistRead('rescues.json', function(remote) {
-            if (remote && remote.length > 0) saveRescues(remote);
-            updateUI();
-            renderGallery();
-            renderBA();
+            if (!initDone) { initDone = true; initRender(remote); }
         });
+        setTimeout(function() {
+            if (!initDone) { initDone = true; initRender(null); }
+        }, 3000);
     } else {
+        initRender(null);
+    }
+
+    function initRender(remote) {
+        if (remote && remote.length > getRescues().length) saveRescues(remote);
         updateUI();
         renderGallery();
         renderBA();
