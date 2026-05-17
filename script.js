@@ -29,7 +29,10 @@ function gistRead(file, callback) {
     fetch(GIST_RAW + '/' + file).then(function(r) { return r.json(); }).then(callback).catch(function(){});
 }
 function gistWrite(files) {
-    fetch(GIST_API, { method: 'PATCH', headers: { 'Authorization': 'Bearer ' + GIST_TOKEN, 'Content-Type': 'application/json' }, body: JSON.stringify({ files: files }) }).catch(function(){});
+    var fileNames = Object.keys(files).join(',');
+    fetch(GIST_API, { method: 'PATCH', headers: { 'Authorization': 'Bearer ' + GIST_TOKEN, 'Content-Type': 'application/json' }, body: JSON.stringify({ files: files }) })
+        .then(function(r) { if (!r.ok) console.error('Gist write FAILED:', r.status, fileNames); })
+        .catch(function(e) { console.error('Gist write ERROR:', e.message, fileNames); });
 }
 
 function renderMainReviews(reviews) {
