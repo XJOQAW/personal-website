@@ -74,54 +74,44 @@
             background:var(--card); border-radius:14px; overflow:hidden;
             box-shadow:0 2px 8px rgba(0,0,0,0.06); position:relative;
         }
-        .gallery-item .gallery-imgs {
-            display:flex; gap:0; line-height:0; position:relative;
+        .gallery-imgs { display:flex; line-height:0; }
+        .gallery-imgs .thumb { flex:1; position:relative; overflow:hidden; }
+        .gallery-imgs .thumb img { width:100%; display:block; }
+        .thumb-label {
+            position:absolute; bottom:6px; left:6px; padding:2px 8px;
+            color:#fff; font-size:11px; border-radius:4px; z-index:1;
         }
-        .gallery-item .gallery-imgs .thumb {
-            flex:1; overflow:hidden; position:relative;
+        .gallery-cn-row {
+            display:flex; align-items:center; gap:8px; padding:12px 14px 6px;
         }
-        .gallery-item .gallery-imgs .thumb img { width:100%; display:block; }
-        .gallery-item .gallery-imgs .thumb-label {
-            position:absolute; bottom:8px; left:8px; padding:2px 8px;
-            background:rgba(0,0,0,0.6); color:#fff; font-size:11px;
-            border-radius:4px; z-index:1;
-        }
-        .gallery-item .gallery-overlay {
-            display:none;
-        }
-        .gallery-item .gallery-overlay .cn-avatar { font-size:22px; }
-        .gallery-item .gallery-overlay .cn-name { font-size:16px; font-weight:600; }
-        .gallery-item .gallery-overlay .cn-time { font-size:11px; opacity:0.7; margin-left:auto; }
-        .gallery-item .gallery-body {
-            padding:14px; display:flex; flex-direction:column; gap:8px;
-        }
-        .gallery-item .gallery-body .desc-text { font-size:14px; color:var(--text-secondary); }
+        .gallery-cn-row .cn-avatar { font-size:22px; }
+        .gallery-cn-row .cn-name { font-size:15px; font-weight:600; }
+        .gallery-cn-row .cn-time { font-size:11px; color:var(--text-secondary); margin-left:auto; }
+        .gallery-desc { padding:0 14px 10px; font-size:13px; color:var(--text-secondary); }
         .gallery-status-tag {
-            display:inline-block; padding:3px 12px; border-radius:10px; font-size:12px; align-self:flex-start;
+            display:inline-block; padding:3px 10px; border-radius:10px; font-size:11px;
+            margin:0 14px 8px;
         }
         .gallery-status-tag.pending { background:var(--bg-alt); color:var(--text-secondary); }
         .gallery-status-tag.done { background:#e8f5e9; color:#2e7d32; }
         .gallery-compare-btn {
-            padding:8px 16px; border:1px solid var(--primary); border-radius:8px;
-            background:transparent; color:var(--primary); font-size:13px;
-            cursor:pointer; align-self:flex-start; transition:all 0.2s;
+            display:inline-block; margin:0 14px 10px; padding:6px 14px;
+            border:1px solid var(--primary); border-radius:6px;
+            background:transparent; color:var(--primary); font-size:12px;
+            cursor:pointer;
         }
         .gallery-compare-btn:hover { background:var(--primary); color:#fff; }
-        .gallery-comments {
-            border-top:1px solid var(--border); padding:10px 14px;
-        }
-        .gallery-comments .comment-item {
-            display:flex; gap:6px; padding:3px 0; align-items:flex-start;
-        }
+        .gallery-comments { border-top:1px solid var(--border); padding:8px 14px; }
+        .gallery-comments .comment-item { display:flex; gap:6px; padding:2px 0; align-items:flex-start; }
         .gallery-comments .comment-avatar {
-            width:22px; height:22px; border-radius:50%; background:var(--bg-alt);
+            width:20px; height:20px; border-radius:50%; background:var(--bg-alt);
             display:flex; align-items:center; justify-content:center;
-            font-size:12px; flex-shrink:0;
+            font-size:11px; flex-shrink:0;
         }
         .gallery-comments .comment-body { flex:1; min-width:0; }
-        .gallery-comments .comment-body strong { font-size:12px; margin-right:6px; }
+        .gallery-comments .comment-body strong { font-size:11px; margin-right:6px; }
         .gallery-comments .comment-body .cm-time { font-size:10px; color:var(--text-secondary); }
-        .gallery-comments .comment-body p { font-size:12px; color:var(--text-secondary); margin-top:2px; }
+        .gallery-comments .comment-body p { font-size:12px; color:var(--text-secondary); margin-top:1px; }
         .gallery-comment-del {
             opacity:0; background:none; border:none; color:var(--text-secondary);
             font-size:10px; cursor:pointer; padding:2px; margin-left:auto;
@@ -129,39 +119,19 @@
         .comment-item:hover .gallery-comment-del { opacity:0.5; }
         .gallery-comment-del:hover { color:#ff3b30; }
         .gallery-comment-form {
-            display:flex; gap:8px; padding:10px 14px; border-top:1px solid var(--border);
+            display:flex; gap:6px; padding:8px 14px; border-top:1px solid var(--border);
         }
         .gallery-comment-form input {
-            flex:1; padding:8px 12px; border:1px solid var(--border);
-            border-radius:8px; font-size:13px; background:var(--bg); color:var(--text);
+            flex:1; padding:6px 10px; border:1px solid var(--border);
+            border-radius:6px; font-size:12px; background:var(--bg); color:var(--text);
         }
         .gallery-comment-form input:focus { outline:none; border-color:var(--primary); }
         .gallery-comment-form button {
-            padding:8px 16px; border:none; border-radius:8px;
-            background:var(--primary); color:#fff; font-size:13px; cursor:pointer;
+            padding:6px 14px; border:none; border-radius:6px;
+            background:var(--primary); color:#fff; font-size:12px; cursor:pointer;
         }
-        .gallery-item {
-            background:var(--card); border-radius:12px; overflow:hidden;
-            box-shadow:0 2px 6px rgba(0,0,0,0.04); transition:transform 0.3s;
-            cursor:pointer; position:relative;
-        }
-        .gallery-item:hover { transform:translateY(-4px); }
-        .gallery-item .gallery-img {
-            aspect-ratio:3/4; background:var(--bg-alt);
-            display:flex; align-items:center; justify-content:center;
-            overflow:hidden;
-        }
-        .gallery-item .gallery-img img { width:100%; height:100%; object-fit:cover; }
-        .gallery-item .gallery-info { padding:8px 10px; font-size:12px; }
-        .gallery-item .gallery-info strong { display:block; font-size:13px; }
-        .gallery-item .gallery-status {
-            padding:2px 8px; border-radius:10px; font-size:10px;
-            display:inline-block; margin-top:4px;
-        }
-        .gallery-item .status-pending { background:var(--bg-alt); color:var(--text-secondary); }
-        .gallery-item .status-done { background:#e8f5e9; color:#2e7d32; }
         .rescue-del-btn {
-            position:absolute; top:6px; right:8px; z-index:2;
+            position:absolute; top:8px; right:8px; z-index:2;
             width:24px; height:24px; border-radius:50%;
             border:none; background:rgba(255,59,48,0.15); color:#ff3b30;
             font-size:10px; cursor:pointer; opacity:0.7; transition:all 0.2s;
@@ -356,34 +326,29 @@
             return;
         }
         grid.innerHTML = rescues.map(function(r) {
+            var delBtn = (uid && r.authorId === uid) ? '<button class="rescue-del-btn" data-id="' + r.id + '"><i class="fas fa-trash-alt"></i></button>' : '';
             var statusText = r.fixed ? '已修复' : '待处理';
             var statusTagClass = r.fixed ? 'done' : 'pending';
-            var delBtn = (uid && r.authorId === uid) ? '<button class="rescue-del-btn" data-id="' + r.id + '"><i class="fas fa-trash-alt"></i></button>' : '';
 
-            var imgsHTML = '<div class="gallery-imgs">';
-            imgsHTML += '<div class="thumb"><img src="' + r.image + '" alt="原图"><span class="thumb-label" style="background:rgba(0,0,0,0.6);">原图</span></div>';
-            if (r.fixed) {
-                imgsHTML += '<div class="thumb"><img src="' + r.fixed + '" alt="成图"><span class="thumb-label" style="background:rgba(46,125,50,0.8);">成图</span></div>';
-            }
+            var imgsHTML = '<div class="gallery-imgs"><div class="thumb"><img src="' + r.image + '"><span class="thumb-label" style="background:rgba(0,0,0,0.6);">原图</span></div>';
+            if (r.fixed) imgsHTML += '<div class="thumb"><img src="' + r.fixed + '"><span class="thumb-label" style="background:rgba(46,125,50,0.8);">成图</span></div>';
             imgsHTML += '</div>';
 
-            var cmpBtn = r.fixed ? '<button class="gallery-compare-btn" data-id="' + r.id + '">🔍 查看对比</button>' : '';
+            var cmpBtn = r.fixed ? '<button class="gallery-compare-btn" data-id="' + r.id + '">查看对比</button>' : '';
 
-            var comments = (r.comments || []);
-            var commentsHTML = comments.map(function(cm, ci) {
-                var cmDel = (uid && cm.authorId === uid) ? '<button class="gallery-comment-del" data-rid="' + r.id + '" data-cidx="' + ci + '"><i class="fas fa-times"></i></button>' : '';
-                return '<div class="comment-item"><span class="comment-avatar">' + (cm.avatar || '👤') + '</span><div class="comment-body"><strong>' + (cm.name || '匿名') + '</strong><span class="cm-time">' + (cm.time || '') + '</span><p>' + (cm.text || '') + '</p></div>' + cmDel + '</div>';
+            var commentsHTML = (r.comments || []).map(function(cm, ci) {
+                var cmDel = (uid && cm.authorId === uid) ? '<button class="gallery-comment-del" data-rid="' + r.id + '" data-cidx="' + ci + '">×</button>' : '';
+                return '<div class="comment-item"><span class="comment-avatar">' + (cm.avatar || '👤') + '</span><div class="comment-body"><strong>' + cm.name + '</strong><span class="cm-time">' + (cm.time||'') + '</span><p>' + cm.text + '</p></div>' + cmDel + '</div>';
             }).join('');
 
             return '<div class="gallery-item" data-id="' + r.id + '">' + delBtn +
-                '<div class="gallery-body">' +
-                '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;"><span style="font-size:20px;">' + (r.avatar || '👤') + '</span><strong>' + (r.cn || r.nickname) + '</strong><span style="font-size:11px;color:var(--text-secondary);margin-left:auto;">' + r.time + '</span></div>' +
+                '<div class="gallery-cn-row"><span class="cn-avatar">' + (r.avatar||'👤') + '</span><span class="cn-name">' + (r.cn||r.nickname) + '</span><span class="cn-time">' + r.time + '</span></div>' +
+                imgsHTML +
                 '<span class="gallery-status-tag ' + statusTagClass + '">' + statusText + '</span>' +
-                '<div class="desc-text">' + (r.desc || '') + '</div>' +
+                '<div class="gallery-desc">' + (r.desc||'') + '</div>' +
                 cmpBtn +
-                '</div>' + imgsHTML +
-                '<div class="gallery-comments">' + (commentsHTML || '<p style="font-size:12px;color:var(--text-secondary);text-align:center;padding:4px 0;">暂无评论</p>') + '</div>' +
-                '<form class="gallery-comment-form" onsubmit="return submitGalleryComment(event, ' + r.id + ')"><input type="text" placeholder="写评论..."><button type="submit">发送</button></form>' +
+                '<div class="gallery-comments">' + (commentsHTML || '<div class="comment-item" style="justify-content:center;font-size:11px;color:var(--text-secondary);">暂无评论</div>') + '</div>' +
+                '<form class="gallery-comment-form" onsubmit="return submitGalleryComment(event,' + r.id + ')"><input type="text" placeholder="写评论..."><button>发送</button></form>' +
                 '</div>';
         }).join('');
 
