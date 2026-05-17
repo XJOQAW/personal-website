@@ -77,14 +77,10 @@ function renderAllReviews(sortType) {
     renderMainReviews(reviews);
     renderReviewsList(reviews, sortType || 'latest');
     fetch(WORKER_API + '/api/reviews').then(function(r){return r.json()}).then(function(remote) {
-        if (remote && remote.length > 0) {
-            var merged = reviews.slice();
-            remote.forEach(function(rr) {
-                if (!merged.some(function(lr){ return lr.id == rr.id; })) merged.push(rr);
-            });
-            try { saveReviews(merged); } catch(e) {}
-            renderMainReviews(merged);
-            renderReviewsList(merged, sortType || 'latest');
+        if (remote && remote.length >= 0) {
+            saveReviews(remote);
+            renderMainReviews(remote);
+            renderReviewsList(remote, sortType || 'latest');
         }
     }).catch(function(){});
 }
