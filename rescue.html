@@ -241,7 +241,7 @@
                         <input type="text" id="rescueCN" placeholder="你的CN（必填）">
                         <textarea id="rescueDesc" placeholder="描述一下这张照片哪里需要修（选填）..."></textarea>
                         <input type="text" id="rescueContact" placeholder="联系方式 QQ/微信（必填，方便接收修好的图）">
-                        <button class="btn btn-primary btn-full" id="rescueSubmit">提交投稿</button>
+                        <button class="btn btn-primary btn-full" id="rescueSubmit" onclick="window.submitRescue()">提交投稿</button>
                     </div>
                     <p class="limit-bar">本月已投稿 <span class="used" id="monthUsed">0</span>/5 张</p>
                 </div>
@@ -593,8 +593,8 @@
         }
     });
 
-    console.log('attaching submit listener...');
-    document.getElementById('rescueSubmit').addEventListener('click', function() {
+    console.log('attaching submit via onclick');
+    window.submitRescue = function() {
         console.log('submit clicked');
         var uid = getUid();
         if (!uid) { showNotification('请先登录', 'error'); return; }
@@ -618,22 +618,20 @@
             time: new Date().toISOString().split('T')[0],
             monthKey: getMonthKey()
         };
-
         var rescues = getRescues();
         rescues.push(rescue);
         saveRescues(rescues);
-
         rescueFile = null;
         document.getElementById('rescueFileInput').value = '';
         document.getElementById('rescuePreview').style.display = 'none';
         document.getElementById('rescueDesc').value = '';
         document.getElementById('rescueCN').value = '';
         document.getElementById('rescueContact').value = '';
-
         updateUI();
         renderGallery();
         showNotification('投稿成功！请耐心等待返图', 'success');
-    });
+    };
+    console.log('submit listener attached');
 
     function submitGalleryComment(e, id) {
         e.preventDefault();
