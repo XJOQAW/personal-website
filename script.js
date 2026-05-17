@@ -28,11 +28,20 @@ function esc(s) {
 function gistRead(file, callback) {
     fetch(GIST_RAW + '/' + file).then(function(r) { return r.json(); }).then(callback).catch(function(){});
 }
+// Gist写入（防冲突：300ms内多次调用合并为一次）
+var _gistPending = {};
+var _gistTimer = null;
 function gistWrite(files) {
-    var fileNames = Object.keys(files).join(',');
-    fetch(GIST_API, { method: 'PATCH', headers: { 'Authorization': 'Bearer ' + GIST_TOKEN, 'Content-Type': 'application/json' }, body: JSON.stringify({ files: files }) })
-        .then(function(r) { if (!r.ok) console.error('Gist write FAILED:', r.status, fileNames); })
-        .catch(function(e) { console.error('Gist write ERROR:', e.message, fileNames); });
+    for (var k in files) _gistPending[k] = files[k];
+    if (_gistTimer) return;
+    _gistTimer = setTimeout(function() {
+        var pending = _gistPending;
+        _gistPending = {};
+        _gistTimer = null;
+        fetch(GIST_API, { method: 'PATCH', headers: { 'Authorization': 'Bearer ' + GIST_TOKEN, 'Content-Type': 'application/json' }, body: JSON.stringify({ files: pending }) })
+            .then(function(r) { if (!r.ok) console.error('Gist write FAILED:', r.status); })
+            .catch(function(e) { console.error('Gist write ERROR:', e.message); });
+    }, 300);
 }
 
 function renderMainReviews(reviews) {
