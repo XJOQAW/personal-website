@@ -30,12 +30,11 @@
         }
         .ba-compare .ba-img { width:100%; display:block; }
         .ba-compare .ba-overlay {
-            position:absolute; top:0; left:0; height:100%; width:50%;
-            overflow:hidden; border-right:2px solid #fff;
+            position:absolute; top:0; left:0; width:100%; height:100%;
+            clip-path:inset(0 50% 0 0); overflow:hidden;
         }
         .ba-compare .ba-overlay .ba-img {
-            position:absolute; top:0; left:0; width:200%; height:100%;
-            object-fit:cover; max-width:none;
+            width:100%; display:block; height:100%; object-fit:cover;
         }
         .ba-compare .ba-handle {
             position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
@@ -109,12 +108,11 @@
         }
         .detail-ba-wrap .ba-img { width:100%; display:block; }
         .detail-ba-wrap .ba-overlay {
-            position:absolute; top:0; left:0; height:100%; width:50%;
-            overflow:hidden; border-right:2px solid #fff;
+            position:absolute; top:0; left:0; width:100%; height:100%;
+            clip-path:inset(0 50% 0 0); overflow:hidden;
         }
         .detail-ba-wrap .ba-overlay .ba-img {
-            position:absolute; top:0; left:0; width:200%; height:100%;
-            object-fit:cover; max-width:none;
+            width:100%; display:block; height:100%; object-fit:cover;
         }
         .detail-ba-wrap .ba-handle {
             position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
@@ -359,14 +357,14 @@
                 var rect = cmp.getBoundingClientRect();
                 var x = e.clientX - rect.left;
                 var pct = Math.max(2, Math.min(98, x / rect.width * 100));
-                overlay.style.width = pct + '%';
+                overlay.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
                 handle.style.left = pct + '%';
             });
             cmp.addEventListener('touchmove', function(e) {
                 var rect = cmp.getBoundingClientRect();
                 var x = e.touches[0].clientX - rect.left;
                 var pct = Math.max(2, Math.min(98, x / rect.width * 100));
-                overlay.style.width = pct + '%';
+                overlay.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
                 handle.style.left = pct + '%';
             });
         });
@@ -419,14 +417,14 @@
                 var rect = cmp.getBoundingClientRect();
                 var x = e.clientX - rect.left;
                 var pct = Math.max(2, Math.min(98, x / rect.width * 100));
-                overlay.style.width = pct + '%';
+                overlay.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
                 handle.style.left = pct + '%';
             });
             cmp.addEventListener('touchmove', function(e) {
                 var rect = cmp.getBoundingClientRect();
                 var x = e.touches[0].clientX - rect.left;
                 var pct = Math.max(2, Math.min(98, x / rect.width * 100));
-                overlay.style.width = pct + '%';
+                overlay.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
                 handle.style.left = pct + '%';
             });
         });
