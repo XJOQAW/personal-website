@@ -314,6 +314,7 @@
 
     function renderGallery() {
         var grid = document.getElementById('galleryGrid');
+        if (!grid) return;
         var uid = getUid();
         var rescues = getRescues().filter(function(r){ return !r.isDemo; });
         rescues.sort(function(a,b){ return b.id - a.id; });
