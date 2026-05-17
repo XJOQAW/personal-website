@@ -599,13 +599,15 @@
 
     console.log('attaching submit via onclick');
     window.submitRescue = function() {
-        alert('点击成功！');
+        alert('A:开始');
         var uid = getUid();
+        alert('B: uid=' + uid);
         if (!uid) { showNotification('请先登录', 'error'); return; }
-        if (getMonthUsage() >= MONTH_LIMIT) { showNotification('本月投稿次数已用完', 'error'); return; }
-        if (!rescueFile) { showNotification('请上传图片', 'error'); return; }
+        if (getMonthUsage() >= MONTH_LIMIT) { alert('C: 次数用完'); return; }
+        if (!rescueFile) { alert('D: 无图片'); return; }
         var cn = document.getElementById('rescueCN').value.trim();
         var contact = document.getElementById('rescueContact').value.trim();
+        alert('E: cn=' + cn + ' contact=' + contact);
         if (!cn) { showNotification('请填写CN', 'error'); return; }
         if (!contact) { showNotification('请留下联系方式', 'error'); return; }
         var desc = document.getElementById('rescueDesc').value.trim();
@@ -633,6 +635,7 @@
         document.getElementById('rescueContact').value = '';
         updateUI();
         renderGallery();
+        alert('G: 渲染完成');
         showNotification('投稿成功！请耐心等待返图', 'success');
     };
     console.log('submit listener attached');
