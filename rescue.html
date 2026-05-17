@@ -316,6 +316,14 @@
     function getUid() {
         return (typeof getCurrentUserId !== 'undefined') ? getCurrentUserId() : (localStorage.getItem('currentUser') || null);
     }
+    function imgSrc(r) {
+        if (r._hasImage) return localStorage.getItem('rescue_thumb_' + r.id) || r.image || '';
+        return r.image || '';
+    }
+    function imgFull(r) {
+        if (r._hasImage) return localStorage.getItem('rescue_img_' + r.id) || r.image || '';
+        return r.image || '';
+    }
     function getMonthKey() {
         var d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1);
     }
@@ -343,7 +351,7 @@
             var statusText = r.fixed ? '已修复' : '待处理';
             var statusTagClass = r.fixed ? 'done' : 'pending';
 
-            var imgsHTML = '<div class="gallery-imgs"><div class="thumb"><img src="' + r.image + '"><span class="thumb-label" style="background:rgba(0,0,0,0.6);">原图</span></div>';
+            var imgsHTML = '<div class="gallery-imgs"><div class="thumb"><img src="' + imgSrc(r) + '"><span class="thumb-label" style="background:rgba(0,0,0,0.6);">原图</span></div>';
             if (r.fixed) {
                 imgsHTML += '<div class="thumb"><img src="' + r.fixed + '"><span class="thumb-label" style="background:rgba(46,125,50,0.8);">成图</span></div>';
             } else {
@@ -384,7 +392,7 @@
                     document.getElementById('detailContent').innerHTML = '<img src="' + (e.target.closest('.thumb').querySelector('img').src) + '" style="max-width:100%;border-radius:8px;">';
                 } else {
                     document.getElementById('detailTitle').textContent = (r.cn || r.nickname) + ' 的投稿';
-                    document.getElementById('detailContent').innerHTML = '<img src="' + r.image + '" style="max-width:100%;border-radius:8px;margin-bottom:10px;"><p><strong>CN：</strong>' + (r.cn || '-') + '</p><p><strong>描述：</strong>' + (r.desc || '无') + '</p><p><strong>时间：</strong>' + r.time + '</p>';
+                    document.getElementById('detailContent').innerHTML = '<img src="' + imgFull(r) + '" style="max-width:100%;border-radius:8px;margin-bottom:10px;"><p><strong>CN：</strong>' + (r.cn || '-') + '</p><p><strong>描述：</strong>' + (r.desc || '无') + '</p><p><strong>时间：</strong>' + r.time + '</p>';
                 }
                 document.getElementById('rescueDetailModal').classList.add('active');
             });
@@ -432,10 +440,10 @@
         document.getElementById('detailTitle').textContent = (r.cn || r.nickname) + ' 的投稿';
         var baHTML = '';
         if (r.fixed) {
-            baHTML = '<div class="detail-ba-wrap" onselectstart="return false"><img class="ba-img" src="' + r.image + '" alt="原图" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div>';
+            baHTML = '<div class="detail-ba-wrap" onselectstart="return false"><img class="ba-img" src="' + imgFull(r) + '" alt="原图" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div>';
             setTimeout(function(){ initDetailSlider(); }, 100);
         } else {
-            baHTML = '<img src="' + r.image + '" style="max-width:100%;border-radius:8px;margin-bottom:12px;">';
+            baHTML = '<img src="' + imgFull(r) + '" style="max-width:100%;border-radius:8px;margin-bottom:12px;">';
         }
         var adminHTML = '';
         if (getUid()) {
@@ -520,7 +528,7 @@
         if (fixed.length === 0) return;
         grid.innerHTML = fixed.map(function(r, idx) {
             var hintHTML = idx === 0 ? '<div class="ba-hint">← 滑动对比 →</div>' : '';
-            return '<div class="ba-card"><h4>' + (r.cn || r.nickname) + ' 的投稿</h4><div class="ba-compare" onselectstart="return false">' + hintHTML + '<img class="ba-img" src="' + r.image + '" alt="原图" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div></div>';
+            return '<div class="ba-card"><h4>' + (r.cn || r.nickname) + ' 的投稿</h4><div class="ba-compare" onselectstart="return false">' + hintHTML + '<img class="ba-img" src="' + imgFull(r) + '" alt="原图" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div></div>';
         }).reverse().join('');
         initBASliders();
         autoSlideHint();
@@ -599,25 +607,71 @@
 
     console.log('attaching submit via onclick');
     window.submitRescue = function() {
-        alert('A:开始');
         var uid = getUid();
-        alert('B: uid=' + uid);
         if (!uid) { showNotification('请先登录', 'error'); return; }
-        if (getMonthUsage() >= MONTH_LIMIT) { alert('C: 次数用完'); return; }
-        if (!rescueFile) { alert('D: 无图片'); return; }
+        if (getMonthUsage() >= MONTH_LIMIT) { showNotification('本月投稿次数已用完', 'error'); return; }
+        if (!rescueFile) { showNotification('请上传图片', 'error'); return; }
         var cn = document.getElementById('rescueCN').value.trim();
         var contact = document.getElementById('rescueContact').value.trim();
-        alert('E: cn=' + cn + ' contact=' + contact);
-        if (!cn) { alert('CN空'); return; }
-        if (!contact) { alert('contact空'); return; }
+        if (!cn) { showNotification('请填写CN', 'error'); return; }
+        if (!contact) { showNotification('请留下联系方式', 'error'); return; }
         var desc = document.getElementById('rescueDesc').value.trim();
-        alert('E2: 准备创建对象');
+
+        var id = Date.now();
+        // 原图单独存储，避免 JSON.stringify 大文件崩溃
+        localStorage.setItem('rescue_img_' + id, rescueFile);
+
+        // 生成缩略图用于显示
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        var img = new Image();
+        img.onload = function() {
+            var maxW = 400;
+            var scale = Math.min(1, maxW / img.width);
+            canvas.width = img.width * scale;
+            canvas.height = img.height * scale;
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            var thumb = canvas.toDataURL('image/jpeg', 0.6);
+
+            var rescue = {
+                id: id, authorId: uid, cn: cn,
+                nickname: localStorage.getItem('currentUserName') || cn,
+                desc: desc, contact: contact, fixed: null,
+                time: new Date().toISOString().split('T')[0],
+                monthKey: getMonthKey()
+            };
+            // 存储元数据（不含图片，文件很小）
+            rescue._hasImage = true; // 标记有图片
+            var rescues = getRescues();
+            rescues.push(rescue);
+            saveRescues(rescues);
+            // 单独存缩略图
+            localStorage.setItem('rescue_thumb_' + id, thumb);
+
+            rescueFile = null;
+            document.getElementById('rescueFileInput').value = '';
+            document.getElementById('rescuePreview').style.display = 'none';
+            document.getElementById('rescueDesc').value = '';
+            document.getElementById('rescueCN').value = '';
+            document.getElementById('rescueContact').value = '';
+            updateUI();
+            renderGallery();
+            showNotification('投稿成功！请耐心等待返图', 'success');
+        };
+        img.src = rescueFile;
+    };
+        doSubmit(rescueFile, cn, contact, desc, uid);
+    };
+
+    function doSubmit(imgData, cn, contact, desc, uid) {
+        var rescue = {
+    function doSubmit(imgData, cn, contact, desc, uid) {
         var rescue = {
             id: Date.now(),
             authorId: uid,
             cn: cn,
             nickname: localStorage.getItem('currentUserName') || cn,
-            image: rescueFile,
+            image: imgData,
             desc: desc,
             contact: contact,
             fixed: null,
@@ -631,22 +685,16 @@
         saveRescues(rescues);
         alert('E5: 保存完成');
         rescueFile = null;
-        alert('E5a');
         document.getElementById('rescueFileInput').value = '';
-        alert('E5b');
-        document.getElementById('rescuePreview').style.display = 'none';
-        alert('E5c');
+        if (document.getElementById('rescuePreview')) document.getElementById('rescuePreview').style.display = 'none';
         document.getElementById('rescueDesc').value = '';
         document.getElementById('rescueCN').value = '';
         document.getElementById('rescueContact').value = '';
-        alert('E5d: 调用 updateUI');
         updateUI();
-        alert('E5e: 调用 renderGallery');
         renderGallery();
         alert('G: 渲染完成');
         showNotification('投稿成功！请耐心等待返图', 'success');
-    };
-    console.log('submit listener attached');
+    }
 
     function submitGalleryComment(e, id) {
         e.preventDefault();
