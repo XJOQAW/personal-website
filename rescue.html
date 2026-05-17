@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>废片拯救计划 - 一方通行</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=39">
+    <style>
+        .rescue-hero {
+            text-align:center; padding:60px 20px 40px;
+            background:linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color:#fff;
+        }
+        [data-theme="dark"] .rescue-hero { background:linear-gradient(135deg, #0d0b1a, #1a1530, #2d1b4e); }
+        .rescue-hero h1 { font-size:clamp(28px,5vw,44px); font-weight:700; margin-bottom:8px; }
+        .rescue-hero p { opacity:0.7; font-size:15px; }
+        .before-after-grid {
+            display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+            gap:20px; padding:30px 0;
+        }
+        .ba-card {
+            background:var(--card); border-radius:14px; overflow:hidden;
+            box-shadow:0 2px 8px rgba(0,0,0,0.06);
+        }
+        .ba-card h4 { padding:10px 14px; font-size:14px; }
+        .ba-compare {
+            position:relative; width:100%; aspect-ratio:4/3;
+            overflow:hidden; cursor:ew-resize; user-select:none;
+        }
+        .ba-compare .ba-before, .ba-compare .ba-after {
+            position:absolute; top:0; height:100%;
+            background-size:cover; background-position:center;
+        }
+        .ba-compare .ba-after { left:0; width:100%; }
+        .ba-compare .ba-before { left:0; width:50%; border-right:2px solid #fff; }
+        .ba-compare .ba-handle {
+            position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+            width:40px; height:40px; border-radius:50%;
+            background:rgba(255,255,255,0.9); box-shadow:0 2px 8px rgba(0,0,0,0.2);
+            display:flex; align-items:center; justify-content:center;
+            pointer-events:none;
+        }
+        .upload-area-rescue {
+            border:2px dashed var(--primary); border-radius:14px;
+            padding:40px 20px; text-align:center; cursor:pointer;
+            transition:all 0.2s; background:var(--bg-alt);
+            margin-bottom:16px;
+        }
+        .upload-area-rescue:hover { border-color:var(--secondary); background:rgba(255,107,157,0.03); }
+        .upload-area-rescue i { font-size:40px; color:var(--primary); margin-bottom:10px; display:block; }
+        .upload-area-rescue .preview-img { max-width:100%; max-height:250px; border-radius:8px; margin-top:10px; }
+        .rescue-form { display:flex; flex-direction:column; gap:10px; }
+        .rescue-form textarea, .rescue-form input {
+            width:100%; padding:10px 14px; border:1px solid var(--border);
+            border-radius:10px; font-family:var(--font); font-size:14px;
+            background:var(--bg); color:var(--text);
+        }
+        .rescue-form textarea:focus, .rescue-form input:focus { outline:none; border-color:var(--primary); }
+        .rescue-form textarea { resize:vertical; min-height:80px; }
+        .limit-bar { text-align:center; font-size:13px; color:var(--text-secondary); margin:8px 0; }
+        .limit-bar .used { color:var(--primary); font-weight:600; }
+        .gallery-grid {
+            display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+            gap:14px;
+        }
+        .gallery-item {
+            background:var(--card); border-radius:12px; overflow:hidden;
+            box-shadow:0 2px 6px rgba(0,0,0,0.04); transition:transform 0.3s;
+            cursor:pointer;
+        }
+        .gallery-item:hover { transform:translateY(-4px); }
+        .gallery-item .gallery-img {
+            aspect-ratio:3/4; background:var(--bg-alt);
+            display:flex; align-items:center; justify-content:center;
+            overflow:hidden;
+        }
+        .gallery-item .gallery-img img {
+            width:100%; height:100%; object-fit:cover;
+        }
+        .gallery-item .gallery-info { padding:8px 10px; font-size:12px; }
+        .gallery-item .gallery-info strong { display:block; font-size:13px; }
+        .gallery-item .gallery-status {
+            padding:2px 8px; border-radius:10px; font-size:10px;
+            display:inline-block; margin-top:4px;
+        }
+        .gallery-item .status-pending { background:var(--bg-alt); color:var(--text-secondary); }
+        .gallery-item .status-done { background:#e8f5e9; color:#2e7d32; }
+        .rescue-rules {
+            background:var(--card); border-radius:14px; padding:24px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.04);
+        }
+        .rescue-rules h4 { font-size:16px; margin-bottom:12px; }
+        .rescue-rules li { font-size:13px; color:var(--text-secondary); padding:4px 0; }
+        .rescue-detail-modal .modal-box { max-width:700px; }
+    </style>
+</head>
+<body>
+    <nav class="nav visible" id="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">一方通行</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="portfolio.html" class="nav-link">作品</a>
+                <a href="reference.html" class="nav-link">动作参考</a>
+                <a href="rescue.html" class="nav-link active">废片拯救</a>
+                <a href="index.html#pricing" class="nav-link">价格</a>
+                <a href="index.html#contact" class="nav-link">联系</a>
+            </div>
+            <div class="nav-actions">
+                <button class="nav-theme" id="themeBtn"><i class="fas fa-moon"></i></button>
+                <div class="auth-section" id="authSection">
+                    <button class="nav-login" id="loginBtn" onclick="var m=document.getElementById('loginModal');m.style.opacity='1';m.style.visibility='visible';m.style.pointerEvents='auto'">登录</button>
+                </div>
+                <div class="user-section" id="userSection" style="display:none;">
+                    <div class="user-info" id="userInfoBtn" onclick="document.getElementById('accountModal').classList.add('active')">
+                        <div class="user-avatar" id="userAvatar">👤</div>
+                        <span class="user-name" id="userName">用户</span>
+                    </div>
+                    <button class="nav-logout" id="logoutBtn" onclick="if(typeof firebase!=='undefined'&&firebase.apps.length)firebase.auth().signOut();localStorage.removeItem('currentUser');localStorage.removeItem('currentUserName');document.getElementById('authSection').style.display='flex';document.getElementById('userSection').style.display='none';setTimeout(function(){location.reload()},300)"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </div>
+            <button class="nav-hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+
+    <main style="padding-top:52px;">
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> 返回首页</a>
+
+        <section class="rescue-hero">
+            <h1>🎨 废片拯救计划</h1>
+            <p>无偿修图 · 返图时间不限 · 每人每月限5张</p>
+        </section>
+
+        <section class="section" style="padding-top:30px;">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">精选案例</span>
+                    <h2>Before / After</h2>
+                    <p>拖动滑块对比修图前后效果</p>
+                </div>
+                <div class="before-after-grid" id="baGrid">
+                    <p class="account-empty">还没有精选案例，快来投稿吧！</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-dark" id="uploadSection">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">投稿</span>
+                    <h2>投递你的废片</h2>
+                    <p id="uploadLimit" style="font-size:14px;color:var(--primary);"></p>
+                </div>
+                <div id="uploadFormArea">
+                    <div class="upload-area-rescue" id="rescueUploadArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>点击或拖拽上传图片</p>
+                        <input type="file" id="rescueFileInput" accept="image/*" hidden>
+                        <img class="preview-img" id="rescuePreview" style="display:none;">
+                    </div>
+                    <div class="rescue-form">
+                        <textarea id="rescueDesc" placeholder="描述一下这张照片哪里需要修（光影、色调、构图、去杂物等）..." rows="3"></textarea>
+                        <input type="text" id="rescueContact" placeholder="联系方式（QQ/微信，方便接收修好的图）">
+                        <button class="btn btn-primary btn-full" id="rescueSubmit">提交投稿</button>
+                    </div>
+                    <p class="limit-bar">本月已投稿 <span class="used" id="monthUsed">0</span>/5 张</p>
+                </div>
+                <p class="account-empty" id="uploadLoginTip" style="display:none;">请先<a href="javascript:void(0)" onclick="var m=document.getElementById('loginModal');m.style.opacity='1';m.style.visibility='visible';m.style.pointerEvents='auto'" style="color:var(--primary);">登录</a>后投稿</p>
+            </div>
+        </section>
+
+        <section class="section" id="gallerySection">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">投稿墙</span>
+                    <h2>所有投稿</h2>
+                    <p id="galleryLoginTip" style="font-size:14px;color:var(--primary);"></p>
+                </div>
+                <div class="gallery-grid" id="galleryGrid">
+                    <p class="account-empty">加载中...</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-dark">
+            <div class="container">
+                <div class="rescue-rules">
+                    <h4>⚠️ 投稿规则</h4>
+                    <ul>
+                        <li>✅ 完全免费，无需支付任何费用</li>
+                        <li>⏰ 返图时间不限，耐心等待即可</li>
+                        <li>🔐 需要登录后才能投稿和浏览投稿墙</li>
+                        <li>📊 每人每月限投5张</li>
+                        <li>👁️ 投稿即同意公开展示，如不愿公开请勿投稿</li>
+                        <li>🖼️ 建议上传原图分辨率，方便修图处理</li>
+                        <li>📧 请留下准确联系方式，否则无法发送返图</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>一方通行</h3><p>用严谨丈量创作</p></div></div><div class="footer-bottom"><p>© 2026 一方通行</p></div></div></footer>
+
+    <!-- 投稿详情模态框 -->
+    <div class="modal rescue-detail-modal" id="rescueDetailModal">
+        <div class="modal-box">
+            <button class="modal-close" onclick="document.getElementById('rescueDetailModal').classList.remove('active')">&times;</button>
+            <h3 id="detailTitle"></h3>
+            <div id="detailContent"></div>
+        </div>
+    </div>
+
+    <!-- 登录模态框 -->
+    <div class="modal" id="loginModal"><div class="modal-box"><button class="modal-close" onclick="document.getElementById('loginModal').style.opacity='0';document.getElementById('loginModal').style.visibility='hidden';document.getElementById('loginModal').style.pointerEvents='none'">&times;</button><h2 id="loginTitle">登录</h2><div class="login-tabs"><button class="login-tab active" data-tab="login">登录</button><button class="login-tab" data-tab="register">注册</button></div><form class="login-form" id="loginForm" onsubmit="doLogin(event)"><div class="input-group"><i class="fas fa-user"></i><input type="text" id="loginAccount" placeholder="账号" required></div><div class="input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="密码" required></div><button type="submit" class="btn btn-primary btn-full">登录</button></form><form class="login-form" id="registerForm" style="display:none" onsubmit="doRegister(event)"><div class="input-group"><i class="fas fa-user"></i><input type="text" id="registerName" placeholder="用户名" required></div><div class="input-group"><i class="fas fa-at"></i><input type="text" id="registerAccount" placeholder="自定义账号" required></div><div class="input-group"><i class="fas fa-lock"></i><input type="password" id="registerPassword" placeholder="密码" required></div><div class="input-group"><i class="fas fa-lock"></i><input type="password" id="registerConfirm" placeholder="确认密码" required></div><button type="submit" class="btn btn-primary btn-full">注册</button></form><div class="login-divider"><span>或者</span></div><button class="btn btn-google" id="googleLoginBtn"><i class="fab fa-google"></i> Google登录</button></div></div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js?v=39"></script>
+    <script>
+    // ===== 废片拯救计划 =====
+    var RESCUE_KEY = 'siteRescues';
+    var MONTH_LIMIT = 5;
+
+    function getRescues() {
+        try { return JSON.parse(localStorage.getItem(RESCUE_KEY) || '[]'); } catch(e) { return []; }
+    }
+    function saveRescues(r) {
+        localStorage.setItem(RESCUE_KEY, JSON.stringify(r));
+        if (typeof gistWrite !== 'undefined') gistWrite({ 'rescues.json': { content: JSON.stringify(r) } });
+    }
+    function getCurrentUserIdRescue() {
+        return (typeof getCurrentUserId !== 'undefined') ? getCurrentUserId() : (localStorage.getItem('currentUser') || null);
+    }
+
+    function getMonthKey() {
+        var d = new Date();
+        return d.getFullYear() + '-' + (d.getMonth() + 1);
+    }
+
+    function getMonthUsage() {
+        var uid = getCurrentUserIdRescue();
+        if (!uid) return 0;
+        var rescues = getRescues();
+        var key = getMonthKey();
+        return rescues.filter(function(r) { return r.authorId === uid && r.monthKey === key; }).length;
+    }
+
+    function renderGallery() {
+        var grid = document.getElementById('galleryGrid');
+        var uid = getCurrentUserIdRescue();
+        var rescues = getRescues();
+        rescues.sort(function(a,b){ return b.id - a.id; });
+        if (rescues.length === 0) {
+            grid.innerHTML = '<p class="account-empty">还没有投稿，快来投递第一张废片！</p>';
+        } else {
+            grid.innerHTML = rescues.map(function(r) {
+                var statusClass = r.fixed ? 'status-done' : 'status-pending';
+                var statusText = r.fixed ? '已修复' : '待处理';
+                return '<div class="gallery-item" data-id="' + r.id + '"><div class="gallery-img"><img src="' + r.image + '" alt="投稿" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'<span style=font-size:32px;opacity:0.3>📷</span>\'"></div><div class="gallery-info"><strong>' + (r.nickname || '匿名') + '</strong><p>' + (r.desc || '').substring(0, 30) + '</p><span class="gallery-status ' + statusClass + '">' + statusText + '</span></div></div>';
+            }).join('');
+        }
+        document.querySelectorAll('.gallery-item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                var id = parseInt(this.getAttribute('data-id'));
+                var rescues = getRescues();
+                var r = rescues.find(function(x){ return x.id === id; });
+                if (!r) return;
+                document.getElementById('detailTitle').textContent = r.nickname + ' 的投稿';
+                document.getElementById('detailContent').innerHTML = '<img src="' + r.image + '" style="max-width:100%;border-radius:8px;margin-bottom:12px;"><p><strong>描述：</strong>' + (r.desc || '无') + '</p><p><strong>时间：</strong>' + r.time + '</p><p><strong>状态：</strong>' + (r.fixed ? '已修复 ✅' : '待处理 ⏳') + '</p>';
+                document.getElementById('rescueDetailModal').classList.add('active');
+            });
+        });
+    }
+
+    function updateUploadUI() {
+        var uid = getCurrentUserIdRescue();
+        var used = getMonthUsage();
+        var formArea = document.getElementById('uploadFormArea');
+        var loginTip = document.getElementById('uploadLoginTip');
+        var galleryTip = document.getElementById('galleryLoginTip');
+        var submitBtn = document.getElementById('rescueSubmit');
+        var usedEl = document.getElementById('monthUsed');
+
+        if (!uid) {
+            if (formArea) formArea.style.display = 'none';
+            if (loginTip) loginTip.style.display = 'block';
+            if (galleryTip) galleryTip.innerHTML = '请先<a href="javascript:void(0)" onclick="var m=document.getElementById(\'loginModal\');m.style.opacity=\'1\';m.style.visibility=\'visible\';m.style.pointerEvents=\'auto\'" style="color:var(--primary);">登录</a>查看投稿墙';
+            return;
+        }
+        if (formArea) formArea.style.display = 'block';
+        if (loginTip) loginTip.style.display = 'none';
+        if (galleryTip) galleryTip.innerHTML = '';
+        if (usedEl) usedEl.textContent = used;
+        if (submitBtn) {
+            if (used >= MONTH_LIMIT) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = '本月投稿次数已用完';
+                document.getElementById('uploadLimit').textContent = '本月已满5张，下月再来！';
+            } else {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '提交投稿';
+                document.getElementById('uploadLimit').textContent = '还可投递 ' + (MONTH_LIMIT - used) + ' 张';
+            }
+        }
+    }
+
+    function renderBA() {
+        var grid = document.getElementById('baGrid');
+        var rescues = getRescues().filter(function(r){ return r.fixed; }).slice(-4);
+        if (rescues.length === 0) return;
+        grid.innerHTML = rescues.map(function(r) {
+            return '<div class="ba-card"><h4>' + r.nickname + ' 的投稿</h4><div class="ba-compare" data-before="' + r.image + '" data-after="' + r.fixed + '"><div class="ba-after" style="background-image:url(' + r.fixed + ')"></div><div class="ba-before" style="background-image:url(' + r.image + ')"><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div></div></div>';
+        }).reverse().join('');
+        initBASliders();
+    }
+
+    function initBASliders() {
+        document.querySelectorAll('.ba-compare').forEach(function(cmp) {
+            var before = cmp.querySelector('.ba-before');
+            var handle = cmp.querySelector('.ba-handle');
+            var dragging = false;
+            cmp.addEventListener('mousedown', function(){ dragging = true; });
+            cmp.addEventListener('mouseup', function(){ dragging = false; });
+            cmp.addEventListener('mouseleave', function(){ dragging = false; });
+            cmp.addEventListener('mousemove', function(e) {
+                if (!dragging) return;
+                var rect = cmp.getBoundingClientRect();
+                var x = e.clientX - rect.left;
+                var pct = Math.max(5, Math.min(95, x / rect.width * 100));
+                before.style.width = pct + '%';
+                handle.style.left = pct + '%';
+            });
+            cmp.addEventListener('touchmove', function(e) {
+                var rect = cmp.getBoundingClientRect();
+                var x = e.touches[0].clientX - rect.left;
+                var pct = Math.max(5, Math.min(95, x / rect.width * 100));
+                before.style.width = pct + '%';
+                handle.style.left = pct + '%';
+            });
+        });
+    }
+
+    // 上传
+    var rescueFile = null;
+    document.getElementById('rescueUploadArea').addEventListener('click', function() {
+        document.getElementById('rescueFileInput').click();
+    });
+    document.getElementById('rescueFileInput').addEventListener('change', function() {
+        if (this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                rescueFile = e.target.result;
+                document.getElementById('rescuePreview').src = rescueFile;
+                document.getElementById('rescuePreview').style.display = 'block';
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+
+    document.getElementById('rescueSubmit').addEventListener('click', function() {
+        var uid = getCurrentUserIdRescue();
+        if (!uid) { showNotification('请先登录', 'error'); return; }
+        var used = getMonthUsage();
+        if (used >= MONTH_LIMIT) { showNotification('本月投稿次数已用完', 'error'); return; }
+        if (!rescueFile) { showNotification('请上传图片', 'error'); return; }
+        var desc = document.getElementById('rescueDesc').value.trim();
+        var contact = document.getElementById('rescueContact').value.trim();
+        if (!desc) { showNotification('请描述需要修图的地方', 'error'); return; }
+        if (!contact) { showNotification('请留下联系方式', 'error'); return; }
+
+        var rescue = {
+            id: Date.now(),
+            authorId: uid,
+            nickname: localStorage.getItem('currentUserName') || '用户',
+            image: rescueFile,
+            desc: desc,
+            contact: contact,
+            fixed: null,
+            time: new Date().toISOString().split('T')[0],
+            monthKey: getMonthKey(),
+            votes: 0
+        };
+
+        var rescues = getRescues();
+        rescues.push(rescue);
+        saveRescues(rescues);
+
+        rescueFile = null;
+        document.getElementById('rescueFileInput').value = '';
+        document.getElementById('rescuePreview').style.display = 'none';
+        document.getElementById('rescueDesc').value = '';
+        document.getElementById('rescueContact').value = '';
+
+        updateUploadUI();
+        renderGallery();
+        showNotification('投稿成功！请耐心等待返图', 'success');
+    });
+
+    // 初始化
+    if (typeof gistRead !== 'undefined') {
+        gistRead('rescues.json', function(remote) {
+            if (remote && remote.length > 0) { saveRescues(remote); }
+            updateUploadUI();
+            renderGallery();
+            renderBA();
+        });
+    } else {
+        updateUploadUI();
+        renderGallery();
+        renderBA();
+    }
+    </script>
+</body>
+</html>
