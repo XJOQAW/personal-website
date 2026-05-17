@@ -71,55 +71,60 @@
         .limit-bar .used { color:var(--primary); font-weight:600; }
         .gallery-grid { display:flex; flex-direction:column; gap:16px; }
         .gallery-item {
-            background:var(--card); border-radius:14px; overflow:visible;
+            background:var(--card); border-radius:14px; overflow:hidden;
             box-shadow:0 2px 8px rgba(0,0,0,0.06); position:relative;
-            display:flex; gap:14px; padding:14px; align-items:flex-start;
         }
-        .gallery-item .gallery-imgs { flex-shrink:0; display:flex; gap:6px; }
+        .gallery-item .gallery-imgs {
+            display:flex; gap:0; line-height:0; position:relative;
+        }
         .gallery-item .gallery-imgs .thumb {
-            width:180px; border-radius:8px; overflow:hidden; line-height:0;
+            flex:1; overflow:hidden; position:relative;
         }
         .gallery-item .gallery-imgs .thumb img { width:100%; display:block; }
-        .gallery-item .gallery-imgs .thumb.fixed {
-            width:180px; border:2px solid #2e7d32;
-        }
         .gallery-item .gallery-imgs .thumb-label {
-            position:absolute; bottom:4px; left:4px; padding:1px 6px;
-            background:rgba(0,0,0,0.6); color:#fff; font-size:10px;
-            border-radius:4px;
+            position:absolute; bottom:8px; left:8px; padding:2px 8px;
+            background:rgba(0,0,0,0.6); color:#fff; font-size:11px;
+            border-radius:4px; z-index:1;
         }
-        .gallery-item .gallery-info { flex:1; min-width:0; display:flex; flex-direction:column; gap:6px; }
-        .gallery-item .gallery-info .cn-row { display:flex; align-items:center; gap:8px; }
-        .gallery-item .gallery-info .cn-avatar { font-size:18px; }
-        .gallery-item .gallery-info .cn-name { font-size:15px; font-weight:600; }
-        .gallery-item .gallery-info .cn-time { font-size:11px; color:var(--text-secondary); }
-        .gallery-item .gallery-info .desc-text { font-size:13px; color:var(--text-secondary); }
-        .gallery-item .gallery-status-tag {
-            display:inline-block; padding:2px 10px; border-radius:10px; font-size:11px; align-self:flex-start;
+        .gallery-item .gallery-overlay {
+            position:absolute; top:0; left:0; padding:12px 16px;
+            background:linear-gradient(rgba(0,0,0,0.5),transparent);
+            color:#fff; width:100%; z-index:2; display:flex;
+            align-items:center; gap:10px;
+        }
+        .gallery-item .gallery-overlay .cn-avatar { font-size:22px; }
+        .gallery-item .gallery-overlay .cn-name { font-size:16px; font-weight:600; }
+        .gallery-item .gallery-overlay .cn-time { font-size:11px; opacity:0.7; margin-left:auto; }
+        .gallery-item .gallery-body {
+            padding:14px; display:flex; flex-direction:column; gap:8px;
+        }
+        .gallery-item .gallery-body .desc-text { font-size:14px; color:var(--text-secondary); }
+        .gallery-status-tag {
+            display:inline-block; padding:3px 12px; border-radius:10px; font-size:12px; align-self:flex-start;
         }
         .gallery-status-tag.pending { background:var(--bg-alt); color:var(--text-secondary); }
         .gallery-status-tag.done { background:#e8f5e9; color:#2e7d32; }
         .gallery-compare-btn {
-            padding:6px 14px; border:1px solid var(--primary); border-radius:8px;
+            padding:8px 16px; border:1px solid var(--primary); border-radius:8px;
             background:transparent; color:var(--primary); font-size:13px;
             cursor:pointer; align-self:flex-start; transition:all 0.2s;
         }
         .gallery-compare-btn:hover { background:var(--primary); color:#fff; }
         .gallery-comments {
-            border-top:1px solid var(--border); margin-top:4px; padding-top:6px;
+            border-top:1px solid var(--border); padding:10px 14px;
         }
         .gallery-comments .comment-item {
-            display:flex; gap:6px; padding:2px 0; align-items:flex-start;
+            display:flex; gap:6px; padding:3px 0; align-items:flex-start;
         }
         .gallery-comments .comment-avatar {
-            width:20px; height:20px; border-radius:50%; background:var(--bg-alt);
+            width:22px; height:22px; border-radius:50%; background:var(--bg-alt);
             display:flex; align-items:center; justify-content:center;
-            font-size:11px; flex-shrink:0;
+            font-size:12px; flex-shrink:0;
         }
         .gallery-comments .comment-body { flex:1; min-width:0; }
-        .gallery-comments .comment-body strong { font-size:11px; margin-right:6px; }
+        .gallery-comments .comment-body strong { font-size:12px; margin-right:6px; }
         .gallery-comments .comment-body .cm-time { font-size:10px; color:var(--text-secondary); }
-        .gallery-comments .comment-body p { font-size:12px; color:var(--text-secondary); margin-top:1px; }
+        .gallery-comments .comment-body p { font-size:12px; color:var(--text-secondary); margin-top:2px; }
         .gallery-comment-del {
             opacity:0; background:none; border:none; color:var(--text-secondary);
             font-size:10px; cursor:pointer; padding:2px; margin-left:auto;
@@ -127,16 +132,16 @@
         .comment-item:hover .gallery-comment-del { opacity:0.5; }
         .gallery-comment-del:hover { color:#ff3b30; }
         .gallery-comment-form {
-            display:flex; gap:6px; padding-top:6px; border-top:1px solid var(--border); margin-top:4px;
+            display:flex; gap:8px; padding:10px 14px; border-top:1px solid var(--border);
         }
         .gallery-comment-form input {
-            flex:1; padding:6px 10px; border:1px solid var(--border);
-            border-radius:6px; font-size:12px; background:var(--bg); color:var(--text);
+            flex:1; padding:8px 12px; border:1px solid var(--border);
+            border-radius:8px; font-size:13px; background:var(--bg); color:var(--text);
         }
         .gallery-comment-form input:focus { outline:none; border-color:var(--primary); }
         .gallery-comment-form button {
-            padding:6px 12px; border:none; border-radius:6px;
-            background:var(--primary); color:#fff; font-size:12px; cursor:pointer;
+            padding:8px 16px; border:none; border-radius:8px;
+            background:var(--primary); color:#fff; font-size:13px; cursor:pointer;
         }
         .gallery-item {
             background:var(--card); border-radius:12px; overflow:hidden;
@@ -358,12 +363,12 @@
             var statusTagClass = r.fixed ? 'done' : 'pending';
             var delBtn = (uid && r.authorId === uid) ? '<button class="rescue-del-btn" data-id="' + r.id + '"><i class="fas fa-trash-alt"></i></button>' : '';
 
-            // 图片区：已修复的左右并排显示原图和成图，未修复的只显示原图
-            var imgsHTML = '<div class="gallery-imgs"><div class="thumb" style="position:relative;"><img src="' + r.image + '" alt="原图"><span class="thumb-label" style="position:absolute;bottom:4px;left:4px;background:rgba(0,0,0,0.6);color:#fff;font-size:10px;padding:1px 6px;border-radius:3px;">原图</span></div>';
+            var imgsHTML = '<div class="gallery-imgs">';
+            imgsHTML += '<div class="thumb"><img src="' + r.image + '" alt="原图"><span class="thumb-label" style="background:rgba(0,0,0,0.6);">原图</span></div>';
             if (r.fixed) {
-                imgsHTML += '<div class="thumb fixed" style="position:relative;"><img src="' + r.fixed + '" alt="成图"><span class="thumb-label" style="position:absolute;bottom:4px;left:4px;background:rgba(46,125,50,0.8);color:#fff;font-size:10px;padding:1px 6px;border-radius:3px;">成图</span></div>';
+                imgsHTML += '<div class="thumb"><img src="' + r.fixed + '" alt="成图"><span class="thumb-label" style="background:rgba(46,125,50,0.8);">成图</span></div>';
             }
-            imgsHTML += '</div>';
+            imgsHTML += '<div class="gallery-overlay"><span class="cn-avatar">' + (r.avatar || '👤') + '</span><span class="cn-name">' + (r.cn || r.nickname) + '</span><span class="cn-time">' + r.time + '</span></div></div>';
 
             var cmpBtn = r.fixed ? '<button class="gallery-compare-btn" data-id="' + r.id + '">🔍 查看对比</button>' : '';
 
@@ -374,14 +379,14 @@
             }).join('');
 
             return '<div class="gallery-item" data-id="' + r.id + '">' + delBtn + imgsHTML +
-                '<div class="gallery-info">' +
-                '<div class="cn-row"><span class="cn-avatar">' + (r.avatar || '👤') + '</span><span class="cn-name">' + (r.cn || r.nickname) + '</span><span class="cn-time">' + r.time + '</span></div>' +
+                '<div class="gallery-body">' +
                 '<span class="gallery-status-tag ' + statusTagClass + '">' + statusText + '</span>' +
                 '<div class="desc-text">' + (r.desc || '') + '</div>' +
                 cmpBtn +
-                '<div class="gallery-comments">' + (commentsHTML || '<p style="font-size:11px;color:var(--text-secondary);text-align:center;padding:3px 0;">暂无评论</p>') + '</div>' +
+                '</div>' +
+                '<div class="gallery-comments">' + (commentsHTML || '<p style="font-size:12px;color:var(--text-secondary);text-align:center;padding:4px 0;">暂无评论</p>') + '</div>' +
                 '<form class="gallery-comment-form" onsubmit="return submitGalleryComment(event, ' + r.id + ')"><input type="text" placeholder="写评论..."><button type="submit">发送</button></form>' +
-                '</div></div>';
+                '</div>';
         }).join('');
 
         document.querySelectorAll('.gallery-item').forEach(function(item) {
