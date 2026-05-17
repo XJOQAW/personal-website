@@ -43,6 +43,13 @@
             display:flex; align-items:center; justify-content:center;
             pointer-events:none; font-size:14px; z-index:3;
         }
+        .ba-hint {
+            position:absolute; bottom:10px; left:50%; transform:translateX(-50%);
+            background:rgba(0,0,0,0.6); color:#fff; padding:4px 12px;
+            border-radius:20px; font-size:11px; z-index:4; pointer-events:none;
+            animation:hintPulse 2s ease-in-out infinite;
+        }
+        @keyframes hintPulse { 0%,100%{opacity:0.7} 50%{opacity:1} }
         .upload-area-rescue {
             border:2px dashed var(--primary); border-radius:14px;
             padding:40px 20px; text-align:center; cursor:pointer;
@@ -356,14 +363,14 @@
                 if (!dragging) return;
                 var rect = cmp.getBoundingClientRect();
                 var x = e.clientX - rect.left;
-                var pct = Math.max(2, Math.min(98, x / rect.width * 100));
+                var pct = Math.max(0, Math.min(100, x / rect.width * 100));
                 overlay.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
                 handle.style.left = pct + '%';
             });
             cmp.addEventListener('touchmove', function(e) {
                 var rect = cmp.getBoundingClientRect();
                 var x = e.touches[0].clientX - rect.left;
-                var pct = Math.max(2, Math.min(98, x / rect.width * 100));
+                var pct = Math.max(0, Math.min(100, x / rect.width * 100));
                 overlay.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
                 handle.style.left = pct + '%';
             });
@@ -399,10 +406,37 @@
         var grid = document.getElementById('baGrid');
         var fixed = getRescues().filter(function(r){ return r.fixed; }).slice(-4);
         if (fixed.length === 0) return;
-        grid.innerHTML = fixed.map(function(r) {
-            return '<div class="ba-card"><h4>' + (r.cn || r.nickname) + ' 的投稿</h4><div class="ba-compare" onselectstart="return false"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.image + '" alt="原图" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div></div>';
+        grid.innerHTML = fixed.map(function(r, idx) {
+            var hintHTML = idx === 0 ? '<div class="ba-hint">← 滑动对比 →</div>' : '';
+            return '<div class="ba-card"><h4>' + (r.cn || r.nickname) + ' 的投稿</h4><div class="ba-compare" onselectstart="return false">' + hintHTML + '<img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.image + '" alt="原图" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div></div>';
         }).reverse().join('');
         initBASliders();
+        autoSlideHint();
+    }
+
+    function autoSlideHint() {
+        var cmp = document.querySelector('.ba-compare');
+        if (!cmp) return;
+        var overlay = cmp.querySelector('.ba-overlay');
+        var handle = cmp.querySelector('.ba-handle');
+        var hint = cmp.querySelector('.ba-hint');
+        var direction = 1;
+        var pct = 50;
+        var timer = setInterval(function() {
+            pct += direction * 1;
+            if (pct >= 95) direction = -1;
+            if (pct <= 5) direction = 1;
+            overlay.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
+            handle.style.left = pct + '%';
+        }, 30);
+        cmp.addEventListener('mousedown', function() {
+            clearInterval(timer);
+            if (hint) hint.style.display = 'none';
+        });
+        cmp.addEventListener('touchstart', function() {
+            clearInterval(timer);
+            if (hint) hint.style.display = 'none';
+        });
     }
 
     function initBASliders() {
@@ -416,14 +450,14 @@
                 if (!dragging) return;
                 var rect = cmp.getBoundingClientRect();
                 var x = e.clientX - rect.left;
-                var pct = Math.max(2, Math.min(98, x / rect.width * 100));
+                var pct = Math.max(0, Math.min(100, x / rect.width * 100));
                 overlay.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
                 handle.style.left = pct + '%';
             });
             cmp.addEventListener('touchmove', function(e) {
                 var rect = cmp.getBoundingClientRect();
                 var x = e.touches[0].clientX - rect.left;
-                var pct = Math.max(2, Math.min(98, x / rect.width * 100));
+                var pct = Math.max(0, Math.min(100, x / rect.width * 100));
                 overlay.style.clipPath = 'inset(0 ' + (100 - pct) + '% 0 0)';
                 handle.style.left = pct + '%';
             });
