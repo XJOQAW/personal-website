@@ -332,7 +332,11 @@
             var statusTagClass = r.fixed ? 'done' : 'pending';
 
             var imgsHTML = '<div class="gallery-imgs"><div class="thumb"><img src="' + r.image + '"><span class="thumb-label" style="background:rgba(0,0,0,0.6);">原图</span></div>';
-            if (r.fixed) imgsHTML += '<div class="thumb"><img src="' + r.fixed + '"><span class="thumb-label" style="background:rgba(46,125,50,0.8);">成图</span></div>';
+            if (r.fixed) {
+                imgsHTML += '<div class="thumb"><img src="' + r.fixed + '"><span class="thumb-label" style="background:rgba(46,125,50,0.8);">成图</span></div>';
+            } else {
+                imgsHTML += '<div class="thumb" style="display:flex;align-items:center;justify-content:center;background:var(--bg-alt);"><span style="color:var(--text-secondary);font-size:14px;">正在拯救中...</span></div>';
+            }
             imgsHTML += '</div>';
 
             var cmpBtn = r.fixed ? '<button class="gallery-compare-btn" data-id="' + r.id + '">查看对比</button>' : '';
