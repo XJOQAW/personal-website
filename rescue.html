@@ -631,12 +631,17 @@
         saveRescues(rescues);
         alert('E5: 保存完成');
         rescueFile = null;
+        alert('E5a');
         document.getElementById('rescueFileInput').value = '';
+        alert('E5b');
         document.getElementById('rescuePreview').style.display = 'none';
+        alert('E5c');
         document.getElementById('rescueDesc').value = '';
         document.getElementById('rescueCN').value = '';
         document.getElementById('rescueContact').value = '';
+        alert('E5d: 调用 updateUI');
         updateUI();
+        alert('E5e: 调用 renderGallery');
         renderGallery();
         alert('G: 渲染完成');
         showNotification('投稿成功！请耐心等待返图', 'success');
