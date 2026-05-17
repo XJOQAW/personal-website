@@ -528,17 +528,27 @@
     var rescues = getRescues();
     if (rescues.length === 0) {
         rescues.push({
-            id: 1,
-            authorId: 'sample',
-            cn: '世界线',
-            nickname: '世界线',
+            id: 1, authorId: 'sample', cn: '世界线', nickname: '世界线',
             image: 'images/rescues/sample_before.jpg',
             isDemo: true,
             desc: '想要更加梦幻的光影效果',
             contact: 'YFTX0616',
             fixed: 'images/rescues/sample_after.jpg',
-            time: '2026-02-11',
-            monthKey: '2026-2'
+            time: '2026-02-11', monthKey: '2026-2'
+        });
+        rescues.push({
+            id: 2, authorId: 'sample', cn: '甘雨', nickname: '甘雨',
+            image: 'images/rescues/sample_before.jpg',
+            desc: '脸型需要微调，背景去杂物',
+            contact: 'Ganyu_cos',
+            time: '2026-03-15', monthKey: '2026-3'
+        });
+        rescues.push({
+            id: 3, authorId: 'sample', cn: '露帕', nickname: '露帕',
+            image: 'images/rescues/sample_after.jpg',
+            desc: '整体色调偏暗，求调亮+磨皮',
+            contact: 'lupa_123',
+            time: '2026-04-20', monthKey: '2026-4'
         });
         saveRescues(rescues);
     }
