@@ -40,6 +40,23 @@ function getCurrentUserId() {
     return null;
 }
 
+function renderAllReviews(sortType) {
+    var local = getReviews();
+    renderMainReviews(local);
+    renderReviewsList(local, sortType || 'latest');
+    wGet('/api/reviews', function(remote) {
+        if (remote && remote.length > 0) {
+            var merged = local.slice();
+            remote.forEach(function(rr) {
+                if (!merged.some(function(lr){ return lr.id == rr.id; })) merged.push(rr);
+            });
+            saveReviews(merged);
+            renderMainReviews(merged);
+            renderReviewsList(merged, sortType || 'latest');
+        }
+    });
+}
+
 function deleteReview(id) {
     if (!confirm('确定要删除这条评价吗？')) return;
     var reviews = getReviews();
