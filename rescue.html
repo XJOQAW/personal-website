@@ -291,8 +291,6 @@
     <script src="config.js"></script>
     <script src="script.js?v=39"></script>
     <script>
-    (function initRescue() {
-    if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initRescue); return; }
     var RESCUE_KEY = 'siteRescues';
     var MONTH_LIMIT = 5;
 
@@ -303,12 +301,13 @@
         localStorage.setItem(RESCUE_KEY, JSON.stringify(r));
         if (typeof gistWrite !== 'undefined') gistWrite({ 'rescues.json': { content: JSON.stringify(r) } });
     }
-    function getUid() {
-        return (typeof getCurrentUserId !== 'undefined') ? getCurrentUserId() : (localStorage.getItem('currentUser') || null);
-    }
     function getImg(r) {
         if (r._hasImage) return localStorage.getItem('rescue_thumb_' + r.id) || '';
         return r.image || '';
+    }
+
+    function getUid() {
+        return (typeof getCurrentUserId !== 'undefined') ? getCurrentUserId() : (localStorage.getItem('currentUser') || null);
     }
     function getMonthKey() {
         var d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1);
@@ -322,7 +321,7 @@
         var grid = document.getElementById('galleryGrid');
         if (!grid) return;
         var uid = getUid();
-        var rescues = getRescues().filter(function(r){ return !r.isDemo; });
+        var rescues = getRescues();
         rescues.sort(function(a,b){ return b.id - a.id; });
         if (!uid) {
             grid.innerHTML = '<p class="account-empty">请先<a href="javascript:void(0)" onclick="var m=document.getElementById(\'loginModal\');m.style.opacity=\'1\';m.style.visibility=\'visible\';m.style.pointerEvents=\'auto\'" style="color:var(--primary);">登录</a>后查看投稿墙</p>';
@@ -338,7 +337,11 @@
             var statusTagClass = r.fixed ? 'done' : 'pending';
 
             var imgsHTML = '<div class="gallery-imgs"><div class="thumb"><img src="' + getImg(r) + '"><span class="thumb-label" style="background:rgba(0,0,0,0.6);">原图</span></div>';
-            if (r.fixed) imgsHTML += '<div class="thumb"><img src="' + r.fixed + '"><span class="thumb-label" style="background:rgba(46,125,50,0.8);">成图</span></div>';
+            if (r.fixed) {
+                imgsHTML += '<div class="thumb"><img src="' + r.fixed + '"><span class="thumb-label" style="background:rgba(46,125,50,0.8);">成图</span></div>';
+            } else {
+                imgsHTML += '<div class="thumb" style="display:flex;align-items:center;justify-content:center;background:var(--bg-alt);"><span style="color:var(--text-secondary);font-size:14px;">正在拯救中...</span></div>';
+            }
             imgsHTML += '</div>';
 
             var cmpBtn = r.fixed ? '<button class="gallery-compare-btn" data-id="' + r.id + '">查看对比</button>' : '';
@@ -372,7 +375,7 @@
                     document.getElementById('detailContent').innerHTML = '<img src="' + (e.target.closest('.thumb').querySelector('img').src) + '" style="max-width:100%;border-radius:8px;">';
                 } else {
                     document.getElementById('detailTitle').textContent = (r.cn || r.nickname) + ' 的投稿';
-                    document.getElementById('detailContent').innerHTML = '<img src="' + r.image + '" style="max-width:100%;border-radius:8px;margin-bottom:10px;"><p><strong>CN：</strong>' + (r.cn || '-') + '</p><p><strong>描述：</strong>' + (r.desc || '无') + '</p><p><strong>时间：</strong>' + r.time + '</p>';
+                    document.getElementById('detailContent').innerHTML = '<img src="' + getImg(r) + '" style="max-width:100%;border-radius:8px;margin-bottom:10px;"><p><strong>CN：</strong>' + (r.cn || '-') + '</p><p><strong>描述：</strong>' + (r.desc || '无') + '</p><p><strong>时间：</strong>' + r.time + '</p>';
                 }
                 document.getElementById('rescueDetailModal').classList.add('active');
             });
@@ -420,10 +423,10 @@
         document.getElementById('detailTitle').textContent = (r.cn || r.nickname) + ' 的投稿';
         var baHTML = '';
         if (r.fixed) {
-            baHTML = '<div class="detail-ba-wrap" onselectstart="return false"><img class="ba-img" src="' + r.image + '" alt="原图" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div>';
+            baHTML = '<div class="detail-ba-wrap" onselectstart="return false"><img class="ba-img" src="' + getImg(r) + '" alt="原图" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div>';
             setTimeout(function(){ initDetailSlider(); }, 100);
         } else {
-            baHTML = '<img src="' + r.image + '" style="max-width:100%;border-radius:8px;margin-bottom:12px;">';
+            baHTML = '<img src="' + getImg(r) + '" style="max-width:100%;border-radius:8px;margin-bottom:12px;">';
         }
         var adminHTML = '';
         if (getUid()) {
@@ -508,7 +511,7 @@
         if (fixed.length === 0) return;
         grid.innerHTML = fixed.map(function(r, idx) {
             var hintHTML = idx === 0 ? '<div class="ba-hint">← 滑动对比 →</div>' : '';
-            return '<div class="ba-card"><h4>' + (r.cn || r.nickname) + ' 的投稿</h4><div class="ba-compare" onselectstart="return false">' + hintHTML + '<img class="ba-img" src="' + r.image + '" alt="原图" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div></div>';
+            return '<div class="ba-card"><h4>' + (r.cn || r.nickname) + ' 的投稿</h4><div class="ba-compare" onselectstart="return false">' + hintHTML + '<img class="ba-img" src="' + getImg(r) + '" alt="原图" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div></div>';
         }).reverse().join('');
         initBASliders();
         autoSlideHint();
@@ -597,10 +600,8 @@
         var desc = document.getElementById('rescueDesc').value.trim();
 
         var id = Date.now();
-        // 原图单独存储，避免大图导致 JSON.stringify 崩溃
         localStorage.setItem('rescue_img_' + id, rescueFile);
 
-        // 生成缩略图用于列表显示
         var canvas = document.createElement('canvas');
         var ctx = canvas.getContext('2d');
         var img = new Image();
@@ -610,16 +611,14 @@
             canvas.width = img.width * scale;
             canvas.height = img.height * scale;
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            var thumb = canvas.toDataURL('image/jpeg', 0.6);
-            localStorage.setItem('rescue_thumb_' + id, thumb);
+            localStorage.setItem('rescue_thumb_' + id, canvas.toDataURL('image/jpeg', 0.6));
 
             var rescue = {
                 id: id, authorId: uid, cn: cn,
                 nickname: localStorage.getItem('currentUserName') || cn,
                 desc: desc, contact: contact, fixed: null,
                 time: new Date().toISOString().split('T')[0],
-                monthKey: getMonthKey(),
-                _hasImage: true
+                monthKey: getMonthKey(), _hasImage: true
             };
             var rescues = getRescues();
             rescues.push(rescue);
@@ -687,7 +686,6 @@
         id: 1, authorId: 'sample', cn: '测试1', nickname: '测试1',
         avatar: '🌸',
         image: 'images/rescues/sample_before.jpg',
-        isDemo: true,
         desc: '想要更加梦幻的光影效果',
         contact: 'YFTX0616',
         fixed: 'images/rescues/sample_after.jpg',
@@ -710,7 +708,6 @@
         renderGallery();
         renderBA();
     }
-    })();
     </script>
 </body>
 </html>
