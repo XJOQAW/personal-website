@@ -70,8 +70,7 @@
         .limit-bar { text-align:center; font-size:13px; color:var(--text-secondary); margin:8px 0; }
         .limit-bar .used { color:var(--primary); font-weight:600; }
         .gallery-grid {
-            display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-            gap:14px;
+            display:flex; flex-direction:column; gap:0;
         }
         .gallery-item {
             background:var(--card); border-radius:12px; overflow:hidden;
@@ -278,7 +277,7 @@
     function renderGallery() {
         var grid = document.getElementById('galleryGrid');
         var uid = getUid();
-        var rescues = getRescues();
+        var rescues = getRescues().filter(function(r){ return !r.isDemo; });
         rescues.sort(function(a,b){ return b.id - a.id; });
         if (!uid) {
             grid.innerHTML = '<p class="account-empty">请先<a href="javascript:void(0)" onclick="var m=document.getElementById(\'loginModal\');m.style.opacity=\'1\';m.style.visibility=\'visible\';m.style.pointerEvents=\'auto\'" style="color:var(--primary);">登录</a>后查看投稿墙</p>';
@@ -292,7 +291,7 @@
             var statusText = r.fixed ? '已修复' : '待处理';
             var statusClass = r.fixed ? 'status-done' : 'status-pending';
             var delBtn = (uid && r.authorId === uid) ? '<button class="rescue-del-btn" data-id="' + r.id + '"><i class="fas fa-trash-alt"></i></button>' : '';
-            return '<div class="gallery-item" data-id="' + r.id + '">' + delBtn + '<div class="gallery-img"><img src="' + r.image + '" alt="投稿" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'<span style=font-size:32px;opacity:0.3>📷</span>\'"></div><div class="gallery-info"><strong>' + (r.cn || r.nickname || '匿名') + '</strong><p>' + (r.desc || '').substring(0, 30) + '</p><span class="gallery-status ' + statusClass + '">' + statusText + '</span></div></div>';
+            return '<div class="gallery-item" data-id="' + r.id + '" style="display:flex;align-items:flex-start;gap:12px;padding:14px;margin-bottom:12px;">' + delBtn + '<div class="gallery-img" style="width:100px;height:140px;flex-shrink:0;border-radius:8px;overflow:hidden;"><img src="' + r.image + '" alt="投稿" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'<span style=font-size:24px;opacity:0.3;display:flex;align-items:center;justify-content:center;height:100%;>📷</span>\'"></div><div style="flex:1;min-width:0;"><strong>' + (r.cn || r.nickname || '匿名') + '</strong><p style="font-size:13px;color:var(--text-secondary);margin:4px 0;">' + (r.desc || '无描述') + '</p><p style="font-size:11px;color:var(--text-secondary);">' + r.time + '</p><span class="gallery-status ' + statusClass + '">' + statusText + '</span></div></div>';
         }).join('');
 
         document.querySelectorAll('.gallery-item').forEach(function(item) {
@@ -534,6 +533,7 @@
             cn: '世界线',
             nickname: '世界线',
             image: 'images/rescues/sample_before.jpg',
+            isDemo: true,
             desc: '想要更加梦幻的光影效果',
             contact: 'YFTX0616',
             fixed: 'images/rescues/sample_after.jpg',
