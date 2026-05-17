@@ -72,16 +72,17 @@ function renderReviewsList(reviews, sortType) {
 }
 
 function renderAllReviews(sortType) {
+    // 先立即渲染本地数据
+    var local = getReviews();
+    renderMainReviews(local);
+    renderReviewsList(local, sortType || 'latest');
+    // 再从 Gist 加载云端数据覆盖
     gistRead('reviews.json', function(remoteReviews) {
-        if (remoteReviews && remoteReviews.length > 0) {
+        if (remoteReviews && remoteReviews.length > local.length) {
             saveReviews(remoteReviews);
             renderMainReviews(remoteReviews);
             renderReviewsList(remoteReviews, sortType || 'latest');
-            return;
         }
-        var reviews = getReviews();
-        renderMainReviews(reviews);
-        renderReviewsList(reviews, sortType || 'latest');
     });
 }
 
