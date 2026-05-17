@@ -4,7 +4,7 @@ var REVIEWS_KEY = 'siteReviews';
 var REPLIES_KEY = 'siteReplies';
 var LIKED_KEY = 'likedReviews';
 var GIST_ID = 'b97a92321d279d5b38750669bf6ae4a8';
-if (typeof GIST_TOKEN === 'undefined') var GIST_TOKEN = 'ghp_' + 'xbywxxcw5xsRJqj0tIoPv7NR50AVWd2TG545';
+if (typeof GIST_TOKEN === 'undefined') var GIST_TOKEN = 'ghp_' + '8E0gQ88j8Wa9cWa9TRxZcMjADM1PJH1lZWyP';
 var GIST_RAW = 'https://gist.githubusercontent.com/raw/' + GIST_ID;
 var GIST_API = 'https://api.github.com/gists/' + GIST_ID;
 
