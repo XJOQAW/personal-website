@@ -316,7 +316,7 @@
         var grid = document.getElementById('galleryGrid');
         if (!grid) return;
         var uid = getUid();
-        var rescues = getRescues().filter(function(r){ return !r.isDemo; });
+        var rescues = getRescues();
         rescues.sort(function(a,b){ return b.id - a.id; });
         if (!uid) {
             grid.innerHTML = '<p class="account-empty">请先<a href="javascript:void(0)" onclick="var m=document.getElementById(\'loginModal\');m.style.opacity=\'1\';m.style.visibility=\'visible\';m.style.pointerEvents=\'auto\'" style="color:var(--primary);">登录</a>后查看投稿墙</p>';
@@ -668,7 +668,6 @@
         id: 1, authorId: 'sample', cn: '测试1', nickname: '测试1',
         avatar: '🌸',
         image: 'images/rescues/sample_before.jpg',
-        isDemo: true,
         desc: '想要更加梦幻的光影效果',
         contact: 'YFTX0616',
         fixed: 'images/rescues/sample_after.jpg',
