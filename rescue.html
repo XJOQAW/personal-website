@@ -592,7 +592,9 @@
         }
     });
 
+    console.log('attaching submit listener...');
     document.getElementById('rescueSubmit').addEventListener('click', function() {
+        console.log('submit clicked');
         var uid = getUid();
         if (!uid) { showNotification('请先登录', 'error'); return; }
         if (getMonthUsage() >= MONTH_LIMIT) { showNotification('本月投稿次数已用完', 'error'); return; }
