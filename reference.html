@@ -421,7 +421,18 @@
             var name = input.value.trim();
             if (!name) return;
             var uid = getCurrentUserForWish();
-            var data = { name: name, time: new Date().toISOString().split('T')[0], votes: 0, authorId: uid };
+            // 未登录每天限2条
+            var today = new Date().toISOString().split('T')[0];
+            var dailyKey = 'wishDaily_' + uid;
+            var daily = JSON.parse(localStorage.getItem(dailyKey) || '{"date":"","count":0}');
+            if (daily.date !== today) daily = {date: today, count: 0};
+            if (!localStorage.getItem('currentUser') && daily.count >= 2) {
+                showNotification && showNotification('未登录用户每天限2条许愿', 'error');
+                return;
+            }
+            daily.count++;
+            localStorage.setItem(dailyKey, JSON.stringify(daily));
+            var data = { name: name, time: today, votes: 0, authorId: uid };
             workerWishPost(data, function(r) {
                 if (r && r.id) {
                     var wishes = getWishes();
