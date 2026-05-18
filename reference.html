@@ -356,8 +356,15 @@
             fetch(WISH_API + '/' + id + '/vote', {method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({delta:delta})}).catch(function(){});
         }
         function getCurrentUserForWish() {
-            if (typeof getCurrentUserId !== 'undefined') return getCurrentUserId();
-            return localStorage.getItem('currentUser') || null;
+            if (typeof getCurrentUserId !== 'undefined') {
+                var uid = getCurrentUserId();
+                if (uid) return uid;
+            }
+            var local = localStorage.getItem('currentUser');
+            if (local) return local;
+            var anon = sessionStorage.getItem('wishAnonId');
+            if (!anon) { anon = 'anon_' + Date.now(); sessionStorage.setItem('wishAnonId', anon); }
+            return anon;
         }
         function renderWishes() {
             var list = document.getElementById('wishList');
