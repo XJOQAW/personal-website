@@ -338,22 +338,23 @@
             document.addEventListener('click', function(e) { if (!searchInput.contains(e.target) && !suggestBox.contains(e.target)) suggestBox.classList.remove('active'); });
         }
 
-        // ===== 许愿池（云端同步） =====
-        var WISH_KEY = 'siteWishes';
+        // ===== 许愿池（Worker同步） =====
+        var WISH_KEY = 'siteWishes', WISH_API = 'https://yifang-comments.ytongxing00.workers.dev/api/wishes';
         function getWishes() {
             try { return JSON.parse(localStorage.getItem(WISH_KEY) || '[]'); } catch(e) { return []; }
         }
         function saveWishes(wishes) {
             localStorage.setItem(WISH_KEY, JSON.stringify(wishes));
-            if (typeof gistWrite !== 'undefined') {
-                gistWrite({ 'wishes.json': { content: JSON.stringify(wishes) } });
-            }
         }
-        function getCurrentUserForWish() {
-            if (typeof getCurrentUserId !== 'undefined') return getCurrentUserId();
-            return localStorage.getItem('currentUser') || null;
+        function workerWishPost(data, cb) {
+            fetch(WISH_API, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json()}).then(cb).catch(function(){});
         }
-        function renderWishes() {
+        function workerWishDelete(id, authorId, cb) {
+            fetch(WISH_API + '/' + id + '?authorId=' + encodeURIComponent(authorId), {method:'DELETE'}).then(function(r){return r.json()}).then(cb).catch(function(){});
+        }
+        function workerWishVote(id, delta) {
+            fetch(WISH_API + '/' + id + '/vote', {method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({delta:delta})}).catch(function(){});
+        }
             var list = document.getElementById('wishList');
             var wishes = getWishes();
             var currentId = getCurrentUserForWish();
@@ -369,7 +370,7 @@
                     var idx = parseInt(this.getAttribute('data-idx'));
                     var wishes = getWishes();
                     wishes.sort(function(a,b){ return b.votes - a.votes; });
-                    if (wishes[idx]) { wishes[idx].votes = (wishes[idx].votes || 0) + 1; }
+                    if (wishes[idx]) { wishes[idx].votes = (wishes[idx].votes || 0) + 1; workerWishVote(wishes[idx].id, 1); }
                     var all = getWishes();
                     for (var j = 0; j < all.length; j++) {
                         if (all[j].name === wishes[idx].name && all[j].time === wishes[idx].time && all[j].authorId === wishes[idx].authorId) {
@@ -399,27 +400,22 @@
             var d = document.createElement('div'); d.textContent = s; return d.innerHTML;
         }
         // 初始化：从 Gist 加载
-        if (typeof gistRead !== 'undefined') {
-            gistRead('wishes.json', function(remoteWishes) {
-                if (remoteWishes && remoteWishes.length > 0) {
-                    saveWishes(remoteWishes);
-                    renderWishes();
-                } else {
-                    renderWishes();
-                }
-            });
-        } else {
-            renderWishes();
-        }
+        fetch(WISH_API).then(function(r){return r.json()}).then(function(remote){if(remote&&remote.length>0)saveWishes(remote);renderWishes()}).catch(function(){renderWishes()});
         document.getElementById('wishSubmit').addEventListener('click', function() {
             var input = document.getElementById('wishInput');
             var name = input.value.trim();
             if (!name) return;
-            var wishes = getWishes();
-            wishes.push({ name: name, time: new Date().toISOString().split('T')[0], votes: 0, authorId: getCurrentUserForWish() });
-            saveWishes(wishes);
-            input.value = '';
-            renderWishes();
+            var uid = getCurrentUserForWish();
+            var data = { name: name, time: new Date().toISOString().split('T')[0], votes: 0, authorId: uid };
+            workerWishPost(data, function(r) {
+                if (r && r.id) {
+                    var wishes = getWishes();
+                    wishes.push(r);
+                    saveWishes(wishes);
+                    input.value = '';
+                    renderWishes();
+                }
+            });
         });
         document.getElementById('wishInput').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') document.getElementById('wishSubmit').click();

@@ -98,6 +98,35 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers });
       }
 
+      // ===== 许愿池 =====
+      if (path === '/api/wishes' && method === 'GET') {
+        const { results } = await env.DB.prepare('SELECT * FROM wishes ORDER BY votes DESC').all();
+        return new Response(JSON.stringify(results), { headers });
+      }
+      if (path === '/api/wishes' && method === 'POST') {
+        const body = await request.json();
+        const { name, time, votes, authorId } = body;
+        if (!name || !authorId) return new Response(JSON.stringify({ error: '缺少必填' }), { status: 400, headers });
+        const result = await env.DB.prepare('INSERT INTO wishes (name, time, votes, authorId) VALUES (?,?,?,?)').bind(name, time, votes||0, authorId).run();
+        const wish = await env.DB.prepare('SELECT * FROM wishes WHERE id = ?').bind(result.meta.last_row_id).first();
+        return new Response(JSON.stringify(wish), { headers, status: 201 });
+      }
+      if (path.startsWith('/api/wishes/') && method === 'DELETE') {
+        const id = path.split('/')[3];
+        const authorId = url.searchParams.get('authorId');
+        const w = await env.DB.prepare('SELECT authorId FROM wishes WHERE id = ?').bind(id).first();
+        if (!w) return new Response(JSON.stringify({ error: '不存在' }), { status: 404, headers });
+        if (w.authorId !== authorId) return new Response(JSON.stringify({ error: '无权限' }), { status: 403, headers });
+        await env.DB.prepare('DELETE FROM wishes WHERE id = ?').bind(id).run();
+        return new Response(JSON.stringify({ success: true }), { headers });
+      }
+      if (path.startsWith('/api/wishes/') && path.endsWith('/vote') && method === 'PATCH') {
+        const id = path.split('/')[3];
+        const body = await request.json();
+        await env.DB.prepare('UPDATE wishes SET votes = MAX(0, votes + ?) WHERE id = ?').bind(body.delta||1, id).run();
+        return new Response(JSON.stringify({ success: true }), { headers });
+      }
+
       return new Response(JSON.stringify({ error: 'Not found' }), { status: 404, headers });
 
     } catch (e) {
