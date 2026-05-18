@@ -355,6 +355,11 @@
         function workerWishVote(id, delta) {
             fetch(WISH_API + '/' + id + '/vote', {method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({delta:delta})}).catch(function(){});
         }
+        function getCurrentUserForWish() {
+            if (typeof getCurrentUserId !== 'undefined') return getCurrentUserId();
+            return localStorage.getItem('currentUser') || null;
+        }
+        function renderWishes() {
             var list = document.getElementById('wishList');
             var wishes = getWishes();
             var currentId = getCurrentUserForWish();
