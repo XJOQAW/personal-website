@@ -394,8 +394,11 @@
                     var wishes = getWishes();
                     wishes.sort(function(a,b){ return b.votes - a.votes; });
                     if (confirm('确定要删除这条许愿吗？')) {
+                        var delId = wishes[idx].id;
+                        var delAuth = wishes[idx].authorId;
                         wishes.splice(idx, 1);
                         saveWishes(wishes);
+                        workerWishDelete(delId, delAuth, function(){});
                         renderWishes();
                     }
                 });
