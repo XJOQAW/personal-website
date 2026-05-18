@@ -350,7 +350,7 @@
             fetch(WISH_API, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json()}).then(cb).catch(function(){});
         }
         function workerWishDelete(id, authorId, cb) {
-            fetch(WISH_API + '/' + id + '?authorId=' + encodeURIComponent(authorId), {method:'DELETE'}).then(function(r){return r.json()}).then(cb).catch(function(){});
+            fetch(WISH_API + '/' + id + '?authorId=' + encodeURIComponent(authorId), {method:'DELETE'}).then(function(r){return r.json()}).then(function(d){if(cb)cb(d);console.log('wish del:',d)}).catch(function(e){console.error('wish del fail:',e)});
         }
         function workerWishVote(id, delta) {
             fetch(WISH_API + '/' + id + '/vote', {method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({delta:delta})}).catch(function(){});
