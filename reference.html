@@ -330,12 +330,20 @@
                     var item = document.createElement('div');
                     item.className = 'search-suggest-item';
                     item.textContent = n;
-                    item.addEventListener('click', function() { searchInput.value = n; suggestBox.classList.remove('active'); });
+                    item.addEventListener('click', function() { searchInput.value = n; suggestBox.classList.remove('active'); filterByChar(n); });
                     suggestBox.appendChild(item);
                 });
                 suggestBox.classList.add('active');
             });
             document.addEventListener('click', function(e) { if (!searchInput.contains(e.target) && !suggestBox.contains(e.target)) suggestBox.classList.remove('active'); });
+        }
+        function filterByChar(name) {
+            document.querySelectorAll('.char-group').forEach(function(g) {
+                var cards = g.querySelectorAll('.char-name');
+                var found = false;
+                cards.forEach(function(c) { if (c.textContent.indexOf(name) !== -1) { found = true; c.closest('.char-card-link').style.display = ''; } else { c.closest('.char-card-link').style.display = 'none'; } });
+                g.style.display = found ? 'block' : 'none';
+            });
         }
 
         // ===== 许愿池（Worker同步） =====
