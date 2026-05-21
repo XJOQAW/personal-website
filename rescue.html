@@ -621,44 +621,44 @@
         var desc = document.getElementById('rescueDesc').value.trim();
 
         var id = Date.now();
-        try { localStorage.setItem('rescue_img_' + id, rescueFile); } catch(e) {}
-        // 提先生成元数据并保存（不等缩略图）
-        var rescue = {
-            id: id, authorId: uid, cn: cn,
-            nickname: localStorage.getItem('currentUserName') || cn,
-            desc: desc, contact: contact, fixed: null,
-            time: new Date().toISOString().split('T')[0],
-            monthKey: getMonthKey(), _hasImage: true
-        };
-        var rescues = getRescues();
-        rescues.push(rescue);
-        saveRescues(rescues);
-        // 清除表单
-        rescueFile = null;
-        document.getElementById('rescueFileInput').value = '';
-        document.getElementById('rescuePreview').style.display = 'none';
-        document.getElementById('rescueDesc').value = '';
-        document.getElementById('rescueCN').value = '';
-        document.getElementById('rescueContact').value = '';
-        updateUI();
-        renderGallery();
-        showNotification('投稿成功！请耐心等待返图', 'success');
-        // 后台尝试生成缩略图
-        try {
-            var canvas = document.createElement('canvas');
-            var ctx = canvas.getContext('2d');
-            var img = new Image();
-            img.onload = function() {
-                var maxW = 400;
-                var scale = Math.min(1, maxW / img.width);
-                canvas.width = img.width * scale;
-                canvas.height = img.height * scale;
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                localStorage.setItem('rescue_thumb_' + id, canvas.toDataURL('image/jpeg', 0.6));
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        var img = new Image();
+        var done = false;
+        function doSave(thumbData) {
+            if (done) return; done = true;
+            if (thumbData) try { localStorage.setItem('rescue_thumb_' + id, thumbData); } catch(e) {}
+            var rescue = {
+                id: id, authorId: uid, cn: cn,
+                nickname: localStorage.getItem('currentUserName') || cn,
+                desc: desc, contact: contact, fixed: null,
+                time: new Date().toISOString().split('T')[0],
+                monthKey: getMonthKey(), _hasImage: !!thumbData
             };
-            img.src = rescueFile;
-        } catch(ex) {}
-    };
+            var rescues = getRescues();
+            rescues.push(rescue);
+            saveRescues(rescues);
+            rescueFile = null;
+            document.getElementById('rescueFileInput').value = '';
+            document.getElementById('rescuePreview').style.display = 'none';
+            document.getElementById('rescueDesc').value = '';
+            document.getElementById('rescueCN').value = '';
+            document.getElementById('rescueContact').value = '';
+            updateUI();
+            renderGallery();
+            showNotification('投稿成功！请耐心等待返图', 'success');
+        }
+        img.onload = function() {
+            var maxW = 600;
+            var scale = Math.min(1, maxW / img.width);
+            canvas.width = img.width * scale;
+            canvas.height = img.height * scale;
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            doSave(canvas.toDataURL('image/jpeg', 0.5));
+        };
+        img.onerror = function() { doSave(null); };
+        setTimeout(function() { doSave(null); }, 8000);
+        img.src = rescueFile;
 
     function submitGalleryComment(e, id) {
         e.preventDefault();
