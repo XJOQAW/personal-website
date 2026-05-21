@@ -290,18 +290,39 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
     <script src="script.js?v=39"></script>
     <script>
+    console.log('RESCUE SCRIPT v99');
     var RESCUE_KEY = 'siteRescues';
     var MONTH_LIMIT = 5;
 
-    function getRescues() {
-        try { return JSON.parse(localStorage.getItem(RESCUE_KEY) || '[]'); } catch(e) { return []; }
-    }
     function saveRescues(r) {
-        localStorage.setItem(RESCUE_KEY, JSON.stringify(r));
-        if (typeof gistWrite !== 'undefined') gistWrite({ 'rescues.json': { content: JSON.stringify(r) } });
+        try {
+            localStorage.setItem(RESCUE_KEY, JSON.stringify(r));
+        } catch(e) {
+            // JSON失败则逐条存储
+            var ids = [];
+            for (var i = 0; i < r.length; i++) {
+                ids.push(r[i].id);
+                try { localStorage.setItem('rescue_obj_' + r[i].id, JSON.stringify(r[i])); } catch(e2) {}
+            }
+            localStorage.setItem(RESCUE_KEY + '_ids', JSON.stringify(ids));
+        }
+    }
+    function getRescues() {
+        try {
+            var data = localStorage.getItem(RESCUE_KEY);
+            if (data) return JSON.parse(data);
+            // 从逐条存储恢复
+            var ids = JSON.parse(localStorage.getItem(RESCUE_KEY + '_ids') || '[]');
+            var result = [];
+            for (var i = 0; i < ids.length; i++) {
+                var item = localStorage.getItem('rescue_obj_' + ids[i]);
+                if (item) result.push(JSON.parse(item));
+            }
+            return result;
+        } catch(e) { return []; }
     }
     function getImg(r) {
-        if (r._hasImage) return localStorage.getItem('rescue_thumb_' + r.id) || '';
+        if (r._hasImage) return localStorage.getItem('rescue_thumb_' + r.id) || localStorage.getItem('rescue_img_' + r.id) || '';
         return r.image || '';
     }
 
@@ -577,6 +598,17 @@
         }
     });
 
+    window.testRescue = function() {
+        var uid = getUid();
+        if (!uid) { alert('未登录'); return; }
+        var rescue = {id: Date.now(), authorId: uid, cn: '测试', nickname: '测试', desc: '', contact: 'test', fixed: null, time: new Date().toISOString().split('T')[0], monthKey: getMonthKey(), _hasImage: false, image: 'images/rescues/sample_before.jpg'};
+        var rescues = getRescues();
+        rescues.push(rescue);
+        saveRescues(rescues);
+        renderGallery();
+        alert('添加完成，共' + rescues.length + '条');
+    };
+
     window.submitRescue = function() {
         var uid = getUid();
         if (!uid) { showNotification('请先登录', 'error'); return; }
@@ -591,39 +623,42 @@
         var id = Date.now();
         localStorage.setItem('rescue_img_' + id, rescueFile);
 
-        var canvas = document.createElement('canvas');
-        var ctx = canvas.getContext('2d');
-        var img = new Image();
-        img.onload = function() {
-            var maxW = 400;
-            var scale = Math.min(1, maxW / img.width);
-            canvas.width = img.width * scale;
-            canvas.height = img.height * scale;
-            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            localStorage.setItem('rescue_thumb_' + id, canvas.toDataURL('image/jpeg', 0.6));
-
-            var rescue = {
-                id: id, authorId: uid, cn: cn,
-                nickname: localStorage.getItem('currentUserName') || cn,
-                desc: desc, contact: contact, fixed: null,
-                time: new Date().toISOString().split('T')[0],
-                monthKey: getMonthKey(), _hasImage: true
-            };
-            var rescues = getRescues();
-            rescues.push(rescue);
-            saveRescues(rescues);
-
-            rescueFile = null;
-            document.getElementById('rescueFileInput').value = '';
-            document.getElementById('rescuePreview').style.display = 'none';
-            document.getElementById('rescueDesc').value = '';
-            document.getElementById('rescueCN').value = '';
-            document.getElementById('rescueContact').value = '';
-            updateUI();
-            renderGallery();
-            showNotification('投稿成功！请耐心等待返图', 'success');
+        // 提先生成元数据并保存（不等缩略图）
+        var rescue = {
+            id: id, authorId: uid, cn: cn,
+            nickname: localStorage.getItem('currentUserName') || cn,
+            desc: desc, contact: contact, fixed: null,
+            time: new Date().toISOString().split('T')[0],
+            monthKey: getMonthKey(), _hasImage: true
         };
-        img.src = rescueFile;
+        var rescues = getRescues();
+        rescues.push(rescue);
+        saveRescues(rescues);
+        // 清除表单
+        rescueFile = null;
+        document.getElementById('rescueFileInput').value = '';
+        document.getElementById('rescuePreview').style.display = 'none';
+        document.getElementById('rescueDesc').value = '';
+        document.getElementById('rescueCN').value = '';
+        document.getElementById('rescueContact').value = '';
+        updateUI();
+        renderGallery();
+        showNotification('投稿成功！请耐心等待返图', 'success');
+        // 后台尝试生成缩略图
+        try {
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            var img = new Image();
+            img.onload = function() {
+                var maxW = 400;
+                var scale = Math.min(1, maxW / img.width);
+                canvas.width = img.width * scale;
+                canvas.height = img.height * scale;
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                localStorage.setItem('rescue_thumb_' + id, canvas.toDataURL('image/jpeg', 0.6));
+            };
+            img.src = rescueFile;
+        } catch(ex) {}
     };
 
     function submitGalleryComment(e, id) {
