@@ -236,8 +236,8 @@
                         <input type="text" id="rescueCN" placeholder="你的CN（必填）">
                         <textarea id="rescueDesc" placeholder="描述一下这张照片哪里需要修（选填）..."></textarea>
                         <input type="text" id="rescueContact" placeholder="联系方式 QQ/微信（必填，方便接收修好的图）">
-                        <input type="text" id="rescueBaidu" placeholder="百度网盘链接（必填，存放原图）">
                         <button class="btn btn-primary btn-full" id="rescueSubmit" onclick="window.submitRescue()">提交投稿</button>
+                        <input type="text" id="rescueBaidu" placeholder="百度网盘链接（必填，存放原图）">
                     </div>
                     <p class="limit-bar">本月已投稿 <span class="used" id="monthUsed">0</span>/5 张</p>
                 </div>
@@ -289,24 +289,21 @@
 
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+    <script src="config.js"></script>
     <script src="script.js?v=39"></script>
     <script>
-    var RESCUE_KEY = 'siteRescues2';
-    // 清掉旧版本数据和可能占满空间的旧图片
-    try { localStorage.removeItem('siteRescues'); localStorage.removeItem('siteRescues_ids'); } catch(e) {}
-    var oldKeys = [];
-    for (var k in localStorage) { if (k.indexOf('rescue_img_')===0 || k.indexOf('rescue_thumb_')===0) oldKeys.push(k); }
-    for (var i=0; i<oldKeys.length; i++) { try { localStorage.removeItem(oldKeys[i]); } catch(e){} }
+    var RESCUE_KEY = 'siteRescues';
     var MONTH_LIMIT = 5;
 
-    function saveRescues(r) {
-        localStorage.setItem(RESCUE_KEY, JSON.stringify(r));
-    }
     function getRescues() {
         try { return JSON.parse(localStorage.getItem(RESCUE_KEY) || '[]'); } catch(e) { return []; }
     }
+    function saveRescues(r) {
+        localStorage.setItem(RESCUE_KEY, JSON.stringify(r));
+        if (typeof gistWrite !== 'undefined') gistWrite({ 'rescues.json': { content: JSON.stringify(r) } });
+    }
     function getImg(r) {
-        if (r._hasImage) return localStorage.getItem('rescue_thumb_' + r.id) || localStorage.getItem('rescue_img_' + r.id) || '';
+        if (r._hasImage) return localStorage.getItem('rescue_thumb_' + r.id) || '';
         return r.image || '';
     }
 
@@ -488,10 +485,20 @@
     function updateUI() {
         var uid = getUid();
         var used = getMonthUsage();
+        var formArea = document.getElementById('uploadFormArea');
         var loginTip = document.getElementById('uploadLoginTip');
         var galleryTip = document.getElementById('galleryLoginTip');
         var submitBtn = document.getElementById('rescueSubmit');
         var usedEl = document.getElementById('monthUsed');
+        if (!uid) {
+            if (formArea) formArea.style.display = 'none';
+            if (loginTip) loginTip.style.display = 'block';
+            if (galleryTip) galleryTip.innerHTML = '请先<a href="javascript:void(0)" onclick="var m=document.getElementById(\'loginModal\');m.style.opacity=\'1\';m.style.visibility=\'visible\';m.style.pointerEvents=\'auto\'" style="color:var(--primary);">登录</a>查看投稿墙';
+            return;
+        }
+        if (formArea) formArea.style.display = 'block';
+        if (loginTip) loginTip.style.display = 'none';
+        if (galleryTip) galleryTip.innerHTML = '';
         if (usedEl) usedEl.textContent = used;
         if (submitBtn) {
             submitBtn.disabled = used >= MONTH_LIMIT;
@@ -583,17 +590,6 @@
         }
     });
 
-    window.testRescue = function() {
-        var uid = getUid();
-        if (!uid) { alert('未登录'); return; }
-        var rescue = {id: Date.now(), authorId: uid, cn: '测试', nickname: '测试', desc: '', contact: 'test', fixed: null, time: new Date().toISOString().split('T')[0], monthKey: getMonthKey(), _hasImage: false, image: 'images/rescues/sample_before.jpg'};
-        var rescues = getRescues();
-        rescues.push(rescue);
-        saveRescues(rescues);
-        renderGallery();
-        alert('添加完成，共' + rescues.length + '条');
-    };
-
     window.submitRescue = function() {
         var uid = getUid();
         if (!uid) { showNotification('请先登录', 'error'); return; }
@@ -608,9 +604,8 @@
         var desc = document.getElementById('rescueDesc').value.trim();
 
         var id = Date.now();
-        var canvas = document.createElement('canvas');
-        var ctx = canvas.getContext('2d');
-        var img = new Image();
+        try { localStorage.setItem('rescue_img_' + id, rescueFile); } catch(e) {}
+
         var done = false;
         function doSave(thumbData) {
             if (done) return; done = true;
@@ -636,6 +631,9 @@
             renderGallery();
             showNotification('投稿成功！请耐心等待返图', 'success');
         }
+        var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        var img = new Image();
         img.onload = function() {
             var maxW = 600;
             var scale = Math.min(1, maxW / img.width);
@@ -647,6 +645,7 @@
         img.onerror = function() { doSave(null); };
         setTimeout(function() { doSave(null); }, 8000);
         img.src = rescueFile;
+    };
 
     function submitGalleryComment(e, id) {
         e.preventDefault();
