@@ -357,7 +357,7 @@
                 imgsHTML +
                 '<span class="gallery-status-tag ' + statusTagClass + '">' + statusText + '</span>' +
                 '<div class="gallery-desc">' + (r.desc||'') + '</div>' +
-                (r.baidu ? '<div style="font-size:12px;margin-bottom:4px;"><a href="' + r.baidu + '" target="_blank" style="color:var(--primary);">📁 百度网盘原图</a></div>' : '') +
+                (r.baidu && uid === '3083161922' ? '<div style="font-size:12px;margin-bottom:4px;"><a href="' + r.baidu + '" target="_blank" style="color:var(--primary);">📁 百度网盘原图</a></div>' : '') +
                 cmpBtn +
                 '<div class="gallery-comments">' + (commentsHTML || '<div class="comment-item" style="justify-content:center;font-size:11px;color:var(--text-secondary);">暂无评论</div>') + '</div>' +
                 '<form class="gallery-comment-form" onsubmit="return submitGalleryComment(event,' + r.id + ')"><input type="text" placeholder="写评论..."><button>发送</button></form>' +
@@ -431,8 +431,7 @@
             baHTML = '<img src="' + getImg(r) + '" style="max-width:100%;border-radius:8px;margin-bottom:12px;">';
         }
         var adminHTML = '';
-        if (getUid()) {
-            // 管理员上传修复图功能：任何人都可以尝试上传（实际只有管理员能看到效果）
+        if (getUid() === '3083161922') {
             adminHTML = '<div class="admin-upload"><label>🖼️ 上传修复后的图片</label><input type="file" id="adminFixFile" accept="image/*" onchange="uploadFix(' + r.id + ', this)"></div>';
         }
         document.getElementById('detailContent').innerHTML = baHTML + '<p><strong>CN：</strong>' + (r.cn || r.nickname || '-') + '</p><p><strong>描述：</strong>' + (r.desc || '无') + '</p><p><strong>联系方式：</strong>' + r.contact + '</p><p><strong>时间：</strong>' + r.time + '</p><p><strong>状态：</strong>' + (r.fixed ? '已修复 ✅' : '待处理 ⏳') + '</p>' + adminHTML;
