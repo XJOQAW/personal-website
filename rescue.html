@@ -443,6 +443,7 @@
 
     function uploadFix(id, input) {
         if (!input.files[0]) return;
+        showNotification('正在处理修复图...', 'success');
         var reader = new FileReader();
         reader.onload = function(e) {
             var canvas = document.createElement('canvas');
@@ -464,8 +465,10 @@
                 renderBA();
                 showDetail(id);
             };
+            img.onerror = function() { showNotification('图片加载失败', 'error'); };
             img.src = e.target.result;
         };
+        reader.onerror = function() { showNotification('文件读取失败', 'error'); };
         reader.readAsDataURL(input.files[0]);
     }
     window.uploadFix = uploadFix;
