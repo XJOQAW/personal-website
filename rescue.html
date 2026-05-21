@@ -292,8 +292,11 @@
     <script src="script.js?v=39"></script>
     <script>
     var RESCUE_KEY = 'siteRescues2';
-    // 清掉旧版本数据
+    // 清掉旧版本数据和可能占满空间的旧图片
     try { localStorage.removeItem('siteRescues'); localStorage.removeItem('siteRescues_ids'); } catch(e) {}
+    var oldKeys = [];
+    for (var k in localStorage) { if (k.indexOf('rescue_img_')===0 || k.indexOf('rescue_thumb_')===0) oldKeys.push(k); }
+    for (var i=0; i<oldKeys.length; i++) { try { localStorage.removeItem(oldKeys[i]); } catch(e){} }
     var MONTH_LIMIT = 5;
 
     function saveRescues(r) {
