@@ -621,8 +621,7 @@
         var desc = document.getElementById('rescueDesc').value.trim();
 
         var id = Date.now();
-        localStorage.setItem('rescue_img_' + id, rescueFile);
-
+        try { localStorage.setItem('rescue_img_' + id, rescueFile); } catch(e) {}
         // 提先生成元数据并保存（不等缩略图）
         var rescue = {
             id: id, authorId: uid, cn: cn,
