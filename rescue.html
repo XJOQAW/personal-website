@@ -635,7 +635,7 @@
         var ctx = canvas.getContext('2d');
         var img = new Image();
         img.onload = function() {
-            var maxW = 1000;
+            var maxW = 2000;
             var scale = Math.min(1, maxW / img.width);
             canvas.width = img.width * scale;
             canvas.height = img.height * scale;
