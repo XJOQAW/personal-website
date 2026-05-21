@@ -236,6 +236,7 @@
                         <input type="text" id="rescueCN" placeholder="你的CN（必填）">
                         <textarea id="rescueDesc" placeholder="描述一下这张照片哪里需要修（选填）..."></textarea>
                         <input type="text" id="rescueContact" placeholder="联系方式 QQ/微信（必填，方便接收修好的图）">
+                        <input type="text" id="rescueBaidu" placeholder="百度网盘链接（必填，存放原图）">
                         <button class="btn btn-primary btn-full" id="rescueSubmit" onclick="window.submitRescue()">提交投稿</button>
                     </div>
                     <p class="limit-bar">本月已投稿 <span class="used" id="monthUsed">0</span>/5 张</p>
@@ -376,6 +377,7 @@
                 imgsHTML +
                 '<span class="gallery-status-tag ' + statusTagClass + '">' + statusText + '</span>' +
                 '<div class="gallery-desc">' + (r.desc||'') + '</div>' +
+                (r.baidu ? '<div style="font-size:12px;margin-bottom:4px;"><a href="' + r.baidu + '" target="_blank" style="color:var(--primary);">📁 百度网盘原图</a></div>' : '') +
                 cmpBtn +
                 '<div class="gallery-comments">' + (commentsHTML || '<div class="comment-item" style="justify-content:center;font-size:11px;color:var(--text-secondary);">暂无评论</div>') + '</div>' +
                 '<form class="gallery-comment-form" onsubmit="return submitGalleryComment(event,' + r.id + ')"><input type="text" placeholder="写评论..."><button>发送</button></form>' +
@@ -616,8 +618,10 @@
         if (!rescueFile) { showNotification('请上传图片', 'error'); return; }
         var cn = document.getElementById('rescueCN').value.trim();
         var contact = document.getElementById('rescueContact').value.trim();
+        var baidu = document.getElementById('rescueBaidu').value.trim();
         if (!cn) { showNotification('请填写CN', 'error'); return; }
         if (!contact) { showNotification('请留下联系方式', 'error'); return; }
+        if (!baidu) { showNotification('请填写百度网盘链接', 'error'); return; }
         var desc = document.getElementById('rescueDesc').value.trim();
 
         var id = Date.now();
@@ -631,7 +635,7 @@
             var rescue = {
                 id: id, authorId: uid, cn: cn,
                 nickname: localStorage.getItem('currentUserName') || cn,
-                desc: desc, contact: contact, fixed: null,
+                desc: desc, contact: contact, baidu: baidu, fixed: null,
                 time: new Date().toISOString().split('T')[0],
                 monthKey: getMonthKey(), _hasImage: !!thumbData
             };
@@ -644,6 +648,7 @@
             document.getElementById('rescueDesc').value = '';
             document.getElementById('rescueCN').value = '';
             document.getElementById('rescueContact').value = '';
+            document.getElementById('rescueBaidu').value = '';
             updateUI();
             renderGallery();
             showNotification('投稿成功！请耐心等待返图', 'success');
