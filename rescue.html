@@ -358,6 +358,7 @@
                 '<span class="gallery-status-tag ' + statusTagClass + '">' + statusText + '</span>' +
                 '<div class="gallery-desc">' + (r.desc||'') + '</div>' +
                 (r.baidu && uid === '3083161922' ? '<div style="font-size:12px;margin-bottom:4px;"><a href="' + r.baidu + '" target="_blank" style="color:var(--primary);">📁 百度网盘原图</a></div>' : '') +
+                (uid === '3083161922' ? '<div style="margin-bottom:4px;"><input type="file" accept="image/*" onchange="window.uploadFixCard(' + r.id + ', this)" style="font-size:12px;"></div>' : '') +
                 cmpBtn +
                 '<div class="gallery-comments">' + (commentsHTML || '<div class="comment-item" style="justify-content:center;font-size:11px;color:var(--text-secondary);">暂无评论</div>') + '</div>' +
                 '<form class="gallery-comment-form" onsubmit="return submitGalleryComment(event,' + r.id + ')"><input type="text" placeholder="写评论..."><button>发送</button></form>' +
@@ -454,12 +455,12 @@
             saveRescues(rescues);
             renderGallery();
             renderBA();
-            showDetail(id);
             showNotification('修复图已上传！', 'success');
         };
         reader.readAsDataURL(input.files[0]);
     }
     window.uploadFix = uploadFix;
+    window.uploadFixCard = uploadFix;
 
     function initDetailSlider() {
         document.querySelectorAll('.detail-ba-wrap').forEach(function(cmp) {
