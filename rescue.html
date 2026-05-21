@@ -291,8 +291,9 @@
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
     <script src="script.js?v=39"></script>
     <script>
-    console.log('RESCUE SCRIPT v99');
-    var RESCUE_KEY = 'siteRescues';
+    var RESCUE_KEY = 'siteRescues2';
+    // 清掉旧版本数据
+    try { localStorage.removeItem('siteRescues'); localStorage.removeItem('siteRescues_ids'); } catch(e) {}
     var MONTH_LIMIT = 5;
 
     function saveRescues(r) {
