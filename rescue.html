@@ -374,13 +374,15 @@
                 // 点击图片区域只显示图片
                 if (e.target.closest('.thumb')) {
                     var thumbImg = e.target.closest('.thumb').querySelector('img');
-                    if (!thumbImg) return;
-                    document.getElementById('detailTitle').textContent = (r.cn || r.nickname) + ' 的原图';
-                    document.getElementById('detailContent').innerHTML = '<img src="' + thumbImg.src + '" style="max-width:100%;border-radius:8px;">';
-                } else {
-                    document.getElementById('detailTitle').textContent = (r.cn || r.nickname) + ' 的投稿';
-                    document.getElementById('detailContent').innerHTML = '<img src="' + getImg(r) + '" style="max-width:100%;border-radius:8px;margin-bottom:10px;"><p><strong>CN：</strong>' + (r.cn || '-') + '</p><p><strong>描述：</strong>' + (r.desc || '无') + '</p><p><strong>时间：</strong>' + r.time + '</p>';
+                    if (thumbImg) {
+                        document.getElementById('detailTitle').textContent = (r.cn || r.nickname) + ' 的原图';
+                        document.getElementById('detailContent').innerHTML = '<img src="' + thumbImg.src + '" style="max-width:100%;border-radius:8px;">';
+                        document.getElementById('rescueDetailModal').classList.add('active');
+                        return;
+                    }
                 }
+                document.getElementById('detailTitle').textContent = (r.cn || r.nickname) + ' 的投稿';
+                document.getElementById('detailContent').innerHTML = '<img src="' + getImg(r) + '" style="max-width:100%;border-radius:8px;margin-bottom:10px;"><p><strong>CN：</strong>' + (r.cn || '-') + '</p><p><strong>描述：</strong>' + (r.desc || '无') + '</p><p><strong>时间：</strong>' + r.time + '</p>';
                 document.getElementById('rescueDetailModal').classList.add('active');
             });
         });
