@@ -635,12 +635,12 @@
         var ctx = canvas.getContext('2d');
         var img = new Image();
         img.onload = function() {
-            var maxW = 600;
+            var maxW = 800;
             var scale = Math.min(1, maxW / img.width);
             canvas.width = img.width * scale;
             canvas.height = img.height * scale;
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-            doSave(canvas.toDataURL('image/jpeg', 0.5));
+            doSave(canvas.toDataURL('image/jpeg', 0.8));
         };
         img.onerror = function() { doSave(null); };
         setTimeout(function() { doSave(null); }, 8000);
