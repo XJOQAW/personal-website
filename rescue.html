@@ -436,10 +436,7 @@
             baHTML = '<img src="' + getImg(r) + '" style="max-width:100%;border-radius:8px;margin-bottom:12px;">';
         }
         var adminHTML = '';
-        console.log('当前用户ID:', getUid());
-        if (getUid() === '3083161922') {
-            adminHTML = '<div class="admin-upload"><label>🖼️ 上传修复后的图片</label><input type="file" id="adminFixFile" accept="image/*" onchange="uploadFix(' + r.id + ', this)"></div>';
-        }
+        // 修复图上传已移到卡片上
         document.getElementById('detailContent').innerHTML = baHTML + '<p><strong>CN：</strong>' + (r.cn || r.nickname || '-') + '</p><p><strong>描述：</strong>' + (r.desc || '无') + '</p><p><strong>联系方式：</strong>' + r.contact + '</p><p><strong>时间：</strong>' + r.time + '</p><p><strong>状态：</strong>' + (r.fixed ? '已修复 ✅' : '待处理 ⏳') + '</p>' + adminHTML;
         document.getElementById('rescueDetailModal').classList.add('active');
     }
@@ -448,14 +445,26 @@
         if (!input.files[0]) return;
         var reader = new FileReader();
         reader.onload = function(e) {
-            var rescues = getRescues();
-            for (var i = 0; i < rescues.length; i++) {
-                if (rescues[i].id === id) { rescues[i].fixed = e.target.result; break; }
-            }
-            saveRescues(rescues);
-            renderGallery();
-            renderBA();
-            showNotification('修复图已上传！', 'success');
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+            var img = new Image();
+            img.onload = function() {
+                var maxW = 1200;
+                var scale = Math.min(1, maxW / img.width);
+                canvas.width = img.width * scale;
+                canvas.height = img.height * scale;
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                var fixData = canvas.toDataURL('image/jpeg', 0.85);
+                var rescues = getRescues();
+                for (var i = 0; i < rescues.length; i++) {
+                    if (rescues[i].id === id) { rescues[i].fixed = fixData; break; }
+                }
+                saveRescues(rescues);
+                renderGallery();
+                renderBA();
+                showDetail(id);
+            };
+            img.src = e.target.result;
         };
         reader.readAsDataURL(input.files[0]);
     }
