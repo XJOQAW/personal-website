@@ -431,6 +431,7 @@
             baHTML = '<img src="' + getImg(r) + '" style="max-width:100%;border-radius:8px;margin-bottom:12px;">';
         }
         var adminHTML = '';
+        console.log('当前用户ID:', getUid());
         if (getUid() === '3083161922') {
             adminHTML = '<div class="admin-upload"><label>🖼️ 上传修复后的图片</label><input type="file" id="adminFixFile" accept="image/*" onchange="uploadFix(' + r.id + ', this)"></div>';
         }
