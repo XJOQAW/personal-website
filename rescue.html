@@ -296,31 +296,10 @@
     var MONTH_LIMIT = 5;
 
     function saveRescues(r) {
-        try {
-            localStorage.setItem(RESCUE_KEY, JSON.stringify(r));
-        } catch(e) {
-            // JSON失败则逐条存储
-            var ids = [];
-            for (var i = 0; i < r.length; i++) {
-                ids.push(r[i].id);
-                try { localStorage.setItem('rescue_obj_' + r[i].id, JSON.stringify(r[i])); } catch(e2) {}
-            }
-            localStorage.setItem(RESCUE_KEY + '_ids', JSON.stringify(ids));
-        }
+        localStorage.setItem(RESCUE_KEY, JSON.stringify(r));
     }
     function getRescues() {
-        try {
-            var data = localStorage.getItem(RESCUE_KEY);
-            if (data) return JSON.parse(data);
-            // 从逐条存储恢复
-            var ids = JSON.parse(localStorage.getItem(RESCUE_KEY + '_ids') || '[]');
-            var result = [];
-            for (var i = 0; i < ids.length; i++) {
-                var item = localStorage.getItem('rescue_obj_' + ids[i]);
-                if (item) result.push(JSON.parse(item));
-            }
-            return result;
-        } catch(e) { return []; }
+        try { return JSON.parse(localStorage.getItem(RESCUE_KEY) || '[]'); } catch(e) { return []; }
     }
     function getImg(r) {
         if (r._hasImage) return localStorage.getItem('rescue_thumb_' + r.id) || localStorage.getItem('rescue_img_' + r.id) || '';
