@@ -354,7 +354,7 @@
         }
 
         // ===== 许愿池（Worker同步） =====
-        var WISH_KEY = 'siteWishes', WISH_API = 'https://yifang-comments.ytongxing00.workers.dev/api/wishes';
+        var WISH_KEY = 'siteWishes', WISH_API = WORKER_API + '/api/wishes';
         function getWishes() {
             try { return JSON.parse(localStorage.getItem(WISH_KEY) || '[]'); } catch(e) { return []; }
         }
