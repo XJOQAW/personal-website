@@ -385,8 +385,9 @@
             wishes.sort(function(a,b){ return b.votes - a.votes; });
             list.innerHTML = wishes.map(function(w, i) {
                 var delBtn = (currentId && w.authorId === currentId) ? '<button class="wish-del-btn" data-idx="' + i + '"><i class="fas fa-times"></i></button>' : '';
-                var avaTxt = (w.authorName || w.authorId || '?').charAt(0).toUpperCase();
-                return '<div class="wish-item"><span class="wish-avatar">' + avaTxt + '</span><div class="wish-content"><strong>' + escHTML(w.name) + '</strong><span class="wish-by">' + escHTML(w.authorName || '匿名') + ' · ' + w.time + '</span></div><button class="wish-vote" data-idx="' + i + '">👍 ' + (w.votes || 0) + '</button>' + delBtn + '</div>';
+                var avatarLetter = (w.authorName || w.authorId || '?').charAt(0).toUpperCase();
+                var authorName = escHTML(w.authorName || '匿名');
+                return '<div class="wish-item"><div class="wish-user"><img class="wish-avatar-img" src="' + WORKER_API + '/api/auth/avatar?account=' + (w.authorId||'') + '" onerror="this.style.display=' + "'none'" + ';this.nextElementSibling.style.display=' + "'flex'" + '"><span class="wish-avatar-txt" style="display:none">' + avatarLetter + '</span><span class="wish-name">' + authorName + '</span></div><div class="wish-body"><span class="wish-text">' + escHTML(w.name) + '</span><span class="wish-time">' + w.time + '</span></div><button class="wish-vote" data-idx="' + i + '">👍 ' + (w.votes || 0) + '</button>' + delBtn + '</div>';
             }).join('') || '<p style="text-align:center;color:var(--text-secondary);font-size:12px;padding:20px 0;">还没有人许愿，快来第一个！</p>';
             // 投票
             document.querySelectorAll('.wish-vote').forEach(function(btn) {
