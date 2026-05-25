@@ -1,6 +1,5 @@
 // ===== 一方通行 核心共享模块 =====
-var WORKER_API = 'http://8.137.188.207:3000';
-// 后续如需HTTPS: 配置nginx反向代理后改为 https://yifangtx.xyz
+var WORKER_API = 'https://yifangtx.xyz';
 
 function esc(s) {
     var d = document.createElement('div'); d.textContent = s; return d.innerHTML;

@@ -139,10 +139,7 @@ function attachLikeHandlers() {
             var countEl = this.querySelector('span');
             var count = parseInt(countEl.textContent);
             if (likedItems.indexOf(id) !== -1) {
-                likedItems = likedItems.filter(function(i) { return i !== id; });
-                countEl.textContent = count - 1;
-                this.classList.remove('liked');
-                updateReviewLikes(id, -1);
+                showNotification('已经点过赞了~', 'error');
             } else {
                 likedItems.push(id);
                 countEl.textContent = count + 1;
