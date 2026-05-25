@@ -6,12 +6,7 @@ function esc(s) {
 }
 
 function getCurrentUserId() {
-    var localUser = localStorage.getItem('currentUser');
-    if (localUser) return localUser;
-    if (typeof firebase !== 'undefined' && firebase.apps.length && firebase.auth().currentUser) {
-        return firebase.auth().currentUser.email || firebase.auth().currentUser.uid;
-    }
-    return null;
+    return localStorage.getItem('currentUser') || null;
 }
 
 function showNotification(message, type) {

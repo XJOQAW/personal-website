@@ -262,6 +262,32 @@ http.createServer(function(req, res) {
             return;
         }
 
+        if (p === '/api/auth/avatar' && req.method === 'GET') {
+            var avAcc = u.searchParams.get('account');
+            var avPath = '/var/www/images/avatars/' + (avAcc || 'default') + '.png';
+            try {
+                var buf = fs.readFileSync(avPath);
+                res.writeHead(200, { 'Content-Type': 'image/png', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 'max-age=3600' });
+                res.end(buf);
+            } catch(e) {
+                res.writeHead(404, { 'Access-Control-Allow-Origin': '*' });
+                res.end();
+            }
+            return;
+        }
+
+        if (p === '/api/auth/avatar' && req.method === 'POST') {
+            readBody(req, function(body) {
+                if (!body || !body.account || !body.data) return err(res, '缺少必填');
+                var d = path.dirname('/var/www/images/avatars/');
+                if (!fs.existsSync(d)) fs.mkdirSync(d, { recursive: true });
+                var base64 = body.data.replace(/^data:image\/\w+;base64,/, '');
+                fs.writeFileSync('/var/www/images/avatars/' + body.account + '.png', Buffer.from(base64, 'base64'));
+                ok(res, { success: true });
+            });
+            return;
+        }
+
         res.writeHead(404);
         res.end(JSON.stringify({ error: 'Not found' }));
 
