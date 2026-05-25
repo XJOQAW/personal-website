@@ -1100,7 +1100,7 @@ img { max-width:100%; display:block; }
     border:1px solid var(--border); border-right:none;
     display:flex; flex-direction:column; overflow:hidden;
 }
-.wish-pool-body { overflow-y:auto; flex:1; padding:10px 14px; max-height:60vh; }
+.wish-pool-body { overflow-y:auto; flex:1; padding:10px 14px; max-height:300px; min-height:100px; }
 .wish-pool.collapsed .wish-pool-body { display:none; }
 .wish-pool.collapsed .wish-pool-header { border-radius:11px 0 0 11px; }
 .wish-pool-resize-left {
