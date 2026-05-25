@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <title>废片拯救计划 - 一方通行</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css?v=39">
@@ -289,6 +292,9 @@
 
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+    <script src="core.js"></script>
+    <script src="auth.js"></script>
+    <script src="reviews.js"></script>
     <script src="script.js?v=39"></script>
     <script>
     var RESCUE_KEY = 'siteRescues';
@@ -341,9 +347,9 @@
             var statusText = r.fixed ? '已修复' : '待处理';
             var statusTagClass = r.fixed ? 'done' : 'pending';
 
-            var imgsHTML = '<div class="gallery-imgs"><div class="thumb"><img src="' + getImg(r) + '"><span class="thumb-label" style="background:rgba(0,0,0,0.6);">原图</span></div>';
+            var imgsHTML = '<div class="gallery-imgs"><div class="thumb"><img src="' + getImg(r) + '" loading="lazy"><span class="thumb-label" style="background:rgba(0,0,0,0.6);">原图</span></div>';
             if (r.fixed) {
-                imgsHTML += '<div class="thumb"><img src="' + r.fixed + '"><span class="thumb-label" style="background:rgba(46,125,50,0.8);">成图</span></div>';
+                imgsHTML += '<div class="thumb"><img src="' + r.fixed + '" loading="lazy"><span class="thumb-label" style="background:rgba(46,125,50,0.8);">成图</span></div>';
             } else {
                 imgsHTML += '<div class="thumb" style="display:flex;align-items:center;justify-content:center;background:var(--bg-alt);"><span style="color:var(--text-secondary);font-size:14px;">正在拯救中...</span></div>';
             }
@@ -353,7 +359,7 @@
 
             var commentsHTML = (r.comments || []).map(function(cm, ci) {
                 var cmDel = (uid && cm.authorId === uid) ? '<button class="gallery-comment-del" data-rid="' + r.id + '" data-cidx="' + ci + '">×</button>' : '';
-                return '<div class="comment-item"><span class="comment-avatar">' + (cm.avatar || '👤') + '</span><div class="comment-body"><strong>' + cm.name + '</strong><span class="cm-time">' + (cm.time||'') + '</span><p>' + cm.text + '</p></div>' + cmDel + '</div>';
+                return '<div class="comment-item"><span class="comment-avatar">' + (cm.avatar || '👤') + '</span><div class="comment-body"><strong>' + esc(cm.name) + '</strong><span class="cm-time">' + (cm.time||'') + '</span><p>' + esc(cm.text) + '</p></div>' + cmDel + '</div>';
             }).join('');
 
             return '<div class="gallery-item" data-id="' + r.id + '">' + delBtn +
