@@ -3,11 +3,11 @@
 
 export default {
   async fetch(request, env, ctx) {
-    const url = new URL(request.url);
-    const path = url.pathname;
-    const method = request.method;
+    var url = new URL(request.url);
+    var path = url.pathname;
+    var method = request.method;
 
-    const headers = {
+    var headers = {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, DELETE, PATCH, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
@@ -42,7 +42,6 @@ export default {
         return new Response(JSON.stringify(review), { headers, status: 201 });
       }
 
-      // 删除评论
       if (path.startsWith('/api/reviews/') && method === 'DELETE') {
         const id = path.split('/')[3];
         const authorId = url.searchParams.get('authorId');
@@ -54,7 +53,6 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers });
       }
 
-      // 点赞/取消点赞
       if (path.startsWith('/api/reviews/') && path.endsWith('/like') && method === 'PATCH') {
         const id = path.split('/')[3];
         const body = await request.json();
@@ -87,7 +85,6 @@ export default {
         return new Response(JSON.stringify(reply), { headers, status: 201 });
       }
 
-      // 删除回复
       if (path.startsWith('/api/replies/') && method === 'DELETE') {
         const id = path.split('/')[3];
         const authorId = url.searchParams.get('authorId');

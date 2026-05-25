@@ -5,6 +5,7 @@ var REPLIES_KEY = 'siteReplies';
 var LIKED_KEY = 'likedReviews';
 var WORKER_API = 'https://yifang-comments.ytongxing00.workers.dev';
 
+
 function getReviews() {
     try { return JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]'); } catch(e) { return []; }
 }
@@ -1521,7 +1522,6 @@ function doRegister(e) {
             })
             .catch(function(err) {
                 if (err.code === 'auth/network-request-failed') {
-                    // Firebase不可用，注册到本地
                     registerLocal(name, acc, pwd);
                 } else {
                     showNotification(err.code === 'auth/email-already-in-use' ? '该账号已被注册' : err.message, 'error');

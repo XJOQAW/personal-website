@@ -26,6 +26,12 @@ CREATE TABLE IF NOT EXISTS replies (
 
 CREATE INDEX IF NOT EXISTS idx_replies_review ON replies(reviewId);
 
+CREATE TABLE IF NOT EXISTS sms_codes (
+    phone TEXT PRIMARY KEY,
+    code TEXT NOT NULL,
+    expires INTEGER NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS rescues (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     userId TEXT NOT NULL UNIQUE,
