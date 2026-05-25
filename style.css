@@ -1094,12 +1094,14 @@ img { max-width:100%; display:block; }
 /* ===== 许愿池 ===== */
 .wish-pool {
     position:fixed; right:0; top:50%; transform:translateY(-50%);
-    width:260px; background:var(--card); border-radius:12px 0 0 12px;
+    width:260px; min-width:220px; min-height:200px;
+    background:var(--card); border-radius:12px 0 0 12px;
     box-shadow:0 4px 24px rgba(0,0,0,0.1); z-index:900;
-    transition:all 0.3s; border:1px solid var(--border); border-right:none;
+    transition:right 0.3s; border:1px solid var(--border); border-right:none;
+    overflow:auto; resize:both;
 }
 [data-theme="dark"] .wish-pool { box-shadow:0 4px 24px rgba(0,0,0,0.4); }
-.wish-pool.collapsed { right:-240px; }
+.wish-pool.collapsed { right:-300px; }
 .wish-pool-header {
     display:flex; align-items:center; justify-content:space-between;
     padding:10px 14px; cursor:pointer; user-select:none;

@@ -389,18 +389,29 @@ function initApp() {
         var savedAvatar = localStorage.getItem('userAvatar');
         var currentUserForAvatar = localStorage.getItem('currentUser') || '';
 
-        if (savedAvatarImg) {
-            avatarEl.innerHTML = '<img src="' + savedAvatarImg + '">';
-            if (navAvatar) navAvatar.innerHTML = '<img src="' + savedAvatarImg + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
-        } else if (currentUserForAvatar) {
-            var svrAvatar = WORKER_API + '/api/auth/avatar?account=' + currentUserForAvatar + '&t=' + Date.now();
-            avatarEl.innerHTML = '<img src="' + svrAvatar + '">';
-            if (navAvatar) navAvatar.innerHTML = '<img src="' + svrAvatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
-        } else if (savedAvatar) {
-            avatarEl.textContent = savedAvatar;
-            if (navAvatar) navAvatar.textContent = savedAvatar;
+        var svrAvatar = currentUserForAvatar ? (WORKER_API + '/api/auth/avatar?account=' + currentUserForAvatar + '&t=' + Date.now()) : '';
+        if (currentUserForAvatar && svrAvatar) {
+            var img = new Image();
+            img.onload = function() {
+                avatarEl.innerHTML = '<img src="' + svrAvatar + '">';
+                if (navAvatar) navAvatar.innerHTML = '<img src="' + svrAvatar + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+            };
+            img.onerror = function() { showLocalAvatar(); };
+            img.src = svrAvatar;
         } else {
-            avatarEl.textContent = currentName.charAt(0).toUpperCase();
+            showLocalAvatar();
+        }
+
+        function showLocalAvatar() {
+            if (savedAvatarImg) {
+                avatarEl.innerHTML = '<img src="' + savedAvatarImg + '">';
+                if (navAvatar) navAvatar.innerHTML = '<img src="' + savedAvatarImg + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+            } else if (savedAvatar) {
+                avatarEl.textContent = savedAvatar;
+                if (navAvatar) navAvatar.textContent = savedAvatar;
+            } else {
+                avatarEl.textContent = currentName.charAt(0).toUpperCase();
+            }
         }
         // 加载点赞记录
         var likedItems = JSON.parse(localStorage.getItem('likedReviews') || '[]');
@@ -560,11 +571,20 @@ function initApp() {
         });
     }
 
-    // 加载保存的头像
+    // 加载保存的头像（优先服务器）
     var savedAvatar = localStorage.getItem('userAvatar');
     var savedAvatarImg = localStorage.getItem('userAvatarImg');
     var navAvatar = document.getElementById('userAvatar');
-    if (savedAvatarImg && navAvatar) {
+    var currentUserForNav = localStorage.getItem('currentUser') || '';
+    if (currentUserForNav && navAvatar) {
+        var navImg = new Image();
+        navImg.onload = function() { navAvatar.innerHTML = '<img src="' + navImg.src + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">'; };
+        navImg.onerror = function() {
+            if (savedAvatarImg) navAvatar.innerHTML = '<img src="' + savedAvatarImg + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+            else if (savedAvatar) navAvatar.textContent = savedAvatar;
+        };
+        navImg.src = WORKER_API + '/api/auth/avatar?account=' + currentUserForNav + '&t=' + Date.now();
+    } else if (savedAvatarImg && navAvatar) {
         navAvatar.innerHTML = '<img src="' + savedAvatarImg + '" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
     } else if (savedAvatar && navAvatar) {
         navAvatar.textContent = savedAvatar;
