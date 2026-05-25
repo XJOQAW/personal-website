@@ -1103,11 +1103,16 @@ img { max-width:100%; display:block; }
 .wish-pool-body { overflow-y:auto; flex:1; padding:10px 14px; max-height:60vh; }
 .wish-pool.collapsed .wish-pool-body { display:none; }
 .wish-pool.collapsed .wish-pool-header { border-radius:11px 0 0 11px; }
-.wish-pool-resize {
+.wish-pool-resize-left {
     position:absolute; left:0; top:0; bottom:0; width:6px; cursor:ew-resize;
-    z-index:10; background:transparent;
+    z-index:10; background:transparent; border-radius:12px 0 0 12px;
 }
-.wish-pool-resize:hover, .wish-pool-resize.dragging { background:var(--primary); }
+.wish-pool-resize-left:hover { background:var(--primary); }
+.wish-pool-resize-bottom {
+    position:absolute; left:0; right:0; bottom:0; height:6px; cursor:ns-resize;
+    z-index:10; background:transparent; border-radius:0 0 0 12px;
+}
+.wish-pool-resize-bottom:hover { background:var(--primary); }
 .wish-pool-header {
     display:flex; align-items:center; justify-content:space-between;
     padding:10px 14px; cursor:pointer; user-select:none;

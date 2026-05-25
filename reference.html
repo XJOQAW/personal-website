@@ -62,7 +62,8 @@
 
     <!-- 许愿池 -->
     <div class="wish-pool" id="wishPool">
-        <div class="wish-pool-resize" id="wishResize"></div>
+        <div class="wish-pool-resize-left" id="wishResizeL"></div>
+        <div class="wish-pool-resize-bottom" id="wishResizeB"></div>
         <div class="wish-pool-header" id="wishPoolHeader">
             <span><i class="fas fa-star"></i> 许愿池</span>
             <button class="wish-pool-toggle" id="wishPoolToggle"><i class="fas fa-chevron-down"></i></button>
@@ -384,8 +385,9 @@
             wishes.sort(function(a,b){ return b.votes - a.votes; });
             list.innerHTML = wishes.map(function(w, i) {
                 var delBtn = (currentId && w.authorId === currentId) ? '<button class="wish-del-btn" data-idx="' + i + '"><i class="fas fa-times"></i></button>' : '';
-                var avatarTxt = (w.authorName || w.authorId || '?').charAt(0).toUpperCase();
-                return '<div class="wish-item"><span class="wish-avatar">' + avatarTxt + '</span><div class="wish-content"><strong>' + escHTML(w.name) + '</strong><span>' + w.time + '</span></div><button class="wish-vote" data-idx="' + i + '">👍 ' + (w.votes || 0) + '</button>' + delBtn + '</div>';
+                var avatarUrl = w.authorId ? (WORKER_API + '/api/auth/avatar?account=' + w.authorId + '&t=' + Date.now()) : '';
+                var avatarImg = avatarUrl ? '<img src="' + avatarUrl + '" onerror="this.parentElement.textContent=\'' + ((w.authorName || w.authorId || '?').charAt(0).toUpperCase()) + '\'">' : ((w.authorName || w.authorId || '?').charAt(0).toUpperCase());
+                return '<div class="wish-item"><span class="wish-avatar">' + avatarImg + '</span><div class="wish-content"><strong title="' + escHTML(w.authorName || '') + '">' + escHTML(w.authorName || '匿名') + '</strong><p>' + escHTML(w.name) + '</p><span>' + w.time + '</span></div><button class="wish-vote" data-idx="' + i + '">👍 ' + (w.votes || 0) + '</button>' + delBtn + '</div>';
             }).join('') || '<p style="text-align:center;color:var(--text-secondary);font-size:12px;padding:20px 0;">还没有人许愿，快来第一个！</p>';
             // 投票
             document.querySelectorAll('.wish-vote').forEach(function(btn) {
@@ -476,23 +478,31 @@
                 document.getElementById('wishPool').classList.toggle('collapsed');
             }
         });
-        // 拖拽调整宽度
-        var wishResize = document.getElementById('wishResize');
+        // 拖拽调整宽度（左边缘）
+        var wishResizeL = document.getElementById('wishResizeL');
+        var wishResizeB = document.getElementById('wishResizeB');
         var wishPool = document.getElementById('wishPool');
-        wishResize.addEventListener('mousedown', function(e) {
+        wishResizeL.addEventListener('mousedown', function(e) {
             e.preventDefault();
-            var startX = e.clientX;
-            var startW = wishPool.offsetWidth;
-            wishResize.classList.add('dragging');
+            var startX = e.clientX, startW = wishPool.offsetWidth;
             function onMove(ev) {
                 var newW = startW + startX - ev.clientX;
                 if (newW >= 220 && newW <= 500) wishPool.style.width = newW + 'px';
             }
-            function onUp() {
-                wishResize.classList.remove('dragging');
-                document.removeEventListener('mousemove', onMove);
-                document.removeEventListener('mouseup', onUp);
+            function onUp() { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); }
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        });
+        // 拖拽调整高度（底部）
+        wishResizeB.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            var startY = e.clientY, startH = wishPool.offsetHeight;
+            function onMove(ev) {
+                var body = document.getElementById('wishPoolBody');
+                var newH = startH + ev.clientY - startY;
+                if (newH >= 200 && newH <= 800) { body.style.maxHeight = (newH - 50) + 'px'; }
             }
+            function onUp() { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); }
             document.addEventListener('mousemove', onMove);
             document.addEventListener('mouseup', onUp);
         });
