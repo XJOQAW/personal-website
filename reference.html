@@ -62,6 +62,7 @@
 
     <!-- 许愿池 -->
     <div class="wish-pool" id="wishPool">
+        <div class="wish-pool-resize" id="wishResize"></div>
         <div class="wish-pool-header" id="wishPoolHeader">
             <span><i class="fas fa-star"></i> 许愿池</span>
             <button class="wish-pool-toggle" id="wishPoolToggle"><i class="fas fa-chevron-down"></i></button>
@@ -470,8 +471,30 @@
             this.style.height = 'auto';
             this.style.height = this.scrollHeight + 'px';
         });
-        document.getElementById('wishPoolHeader').addEventListener('click', function() {
-            document.getElementById('wishPool').classList.toggle('collapsed');
+        document.getElementById('wishPoolHeader').addEventListener('click', function(e) {
+            if (e.target.id === 'wishPoolHeader' || e.target.id === 'wishPoolToggle') {
+                document.getElementById('wishPool').classList.toggle('collapsed');
+            }
+        });
+        // 拖拽调整宽度
+        var wishResize = document.getElementById('wishResize');
+        var wishPool = document.getElementById('wishPool');
+        wishResize.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            var startX = e.clientX;
+            var startW = wishPool.offsetWidth;
+            wishResize.classList.add('dragging');
+            function onMove(ev) {
+                var newW = startW + startX - ev.clientX;
+                if (newW >= 220 && newW <= 500) wishPool.style.width = newW + 'px';
+            }
+            function onUp() {
+                wishResize.classList.remove('dragging');
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+            }
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
         });
     });
     </script>
