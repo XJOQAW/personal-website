@@ -289,7 +289,6 @@
 
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
-    <script src="config.js"></script>
     <script src="script.js?v=39"></script>
     <script>
     var RESCUE_KEY = 'siteRescues';
@@ -300,7 +299,12 @@
     }
     function saveRescues(r) {
         localStorage.setItem(RESCUE_KEY, JSON.stringify(r));
-        if (typeof gistWrite !== 'undefined') gistWrite({ 'rescues.json': { content: JSON.stringify(r) } });
+        if (typeof WORKER_API !== 'undefined') {
+            var uid = getUid();
+            if (uid) {
+                fetch(WORKER_API + '/api/rescues/sync', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: uid, rescues: r }) }).catch(function(){});
+            }
+        }
     }
     function getImg(r) {
         if (r._hasImage) return localStorage.getItem('rescue_thumb_' + r.id) || '';
@@ -722,13 +726,17 @@
     });
     saveRescues(rescues);
 
-    // 立即渲染，不等待Gist
+    // 立即渲染，不等待服务器
     initRender(null);
-    // Gist有数据时再次渲染
-    if (typeof gistRead !== 'undefined') {
-        gistRead('rescues.json', function(remote) {
-            if (remote && remote.length > getRescues().length) { saveRescues(remote); initRender(remote); }
-        });
+    // 从Worker同步数据
+    if (typeof WORKER_API !== 'undefined') {
+        var uid = getUid();
+        if (uid) {
+            fetch(WORKER_API + '/api/rescues/sync?userId=' + encodeURIComponent(uid)).then(function(res){ return res.json(); }).then(function(data) {
+                var remote = data.rescues;
+                if (remote && remote.length > getRescues().length) { saveRescues(remote); initRender(remote); }
+            }).catch(function(){});
+        }
     }
 
     function initRender(remote) {

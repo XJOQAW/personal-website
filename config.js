@@ -1,1 +1,2 @@
-var GIST_TOKEN = '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';
+var GIST_TOKEN = '';
+// GitHub令牌已迁移至Cloudflare Worker服务端处理，不再暴露在客户端

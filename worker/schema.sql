@@ -1,4 +1,4 @@
--- D1 数据库表结构：评论 + 回复
+-- D1 数据库表结构：评论 + 回复 + 救援 + 许愿
 
 CREATE TABLE IF NOT EXISTS reviews (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,3 +25,17 @@ CREATE TABLE IF NOT EXISTS replies (
 );
 
 CREATE INDEX IF NOT EXISTS idx_replies_review ON replies(reviewId);
+
+CREATE TABLE IF NOT EXISTS rescues (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    userId TEXT NOT NULL UNIQUE,
+    data TEXT NOT NULL DEFAULT '[]'
+);
+
+CREATE TABLE IF NOT EXISTS wishes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    time TEXT NOT NULL,
+    votes INTEGER NOT NULL DEFAULT 0,
+    authorId TEXT NOT NULL
+);

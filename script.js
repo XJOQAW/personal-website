@@ -3,11 +3,7 @@
 var REVIEWS_KEY = 'siteReviews';
 var REPLIES_KEY = 'siteReplies';
 var LIKED_KEY = 'likedReviews';
-var GIST_ID = 'b97a92321d279d5b38750669bf6ae4a8';
-if (typeof GIST_TOKEN === 'undefined') var GIST_TOKEN = '';
-var GIST_RAW = 'https://gist.githubusercontent.com/raw/' + GIST_ID;
 var WORKER_API = 'https://yifang-comments.ytongxing00.workers.dev';
-var GIST_API = 'https://api.github.com/gists/' + GIST_ID;
 
 function getReviews() {
     try { return JSON.parse(localStorage.getItem(REVIEWS_KEY) || '[]'); } catch(e) { return []; }
@@ -25,12 +21,14 @@ function esc(s) {
     var d = document.createElement('div'); d.textContent = s; return d.innerHTML;
 }
 
-// ===== GitHub Gist API 辅助 =====
-function gistRead(file, callback) {
-    fetch(GIST_RAW + '/' + file).then(function(r) { return r.json(); }).then(callback).catch(function(){});
-}
-function gistWrite(files) {
-    fetch(GIST_API, { method: 'PATCH', headers: { 'Authorization': 'Bearer ' + GIST_TOKEN, 'Content-Type': 'application/json' }, body: JSON.stringify({ files: files }) }).catch(function(){});
+// ===== Worker API 数据同步辅助 =====
+function workerSyncReplies(reviewId, replyData, action) {
+    var uid = getCurrentUserId();
+    if (!uid) return;
+    var apiPath = WORKER_API + '/api/reviews/' + reviewId + '/replies';
+    if (action === 'add') {
+        fetch(apiPath, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(replyData) }).catch(function(){});
+    }
 }
 
 function renderMainReviews(reviews) {
@@ -133,7 +131,7 @@ function addReply(reviewId, replyData) {
     replyData.reviewId = reviewId;
     all.push(replyData);
     saveReplies(all);
-    gistWrite({ 'replies.json': { content: JSON.stringify(all) } });
+    workerSyncReplies(reviewId, replyData, 'add');
     return replyData;
 }
 
@@ -141,7 +139,6 @@ function deleteReplyById(replyId) {
     var all = getReplies();
     all = all.filter(function(r) { return r.id != replyId; });
     saveReplies(all);
-    gistWrite({ 'replies.json': { content: JSON.stringify(all) } });
 }
 
 function getCurrentUserId() {
@@ -159,11 +156,9 @@ function deleteReview(id) {
     reviews = reviews.filter(function(r) { return r.id != id; });
     saveReviews(reviews);
     fetch(WORKER_API + '/api/reviews/' + id + '?authorId=' + encodeURIComponent(getCurrentUserId()), {method:'DELETE'}).catch(function(){});
-    // 同时删除该评论的回复
     var allReplies = getReplies();
     allReplies = allReplies.filter(function(r) { return r.reviewId != id; });
     saveReplies(allReplies);
-    gistWrite({ 'replies.json': { content: JSON.stringify(allReplies) } });
     var reviewsNow = getReviews();
     renderMainReviews(reviewsNow);
     renderReviewsList(reviewsNow, 'latest');
@@ -211,13 +206,15 @@ function attachReplyHandlers() {
 }
 
 function renderReplySection(reviewId, container) {
-    gistRead('replies.json', function(remoteReplies) {
+    var renderReplies = function(remoteReplies) {
+        var localReplies = getRepliesForReview(reviewId);
         var replies;
-        if (remoteReplies && remoteReplies.length > 0) {
-            saveReplies(remoteReplies);
-            replies = remoteReplies.filter(function(r) { return r.reviewId == reviewId; });
+        if (localReplies && localReplies.length > 0) {
+            replies = localReplies;
+        } else if (remoteReplies && remoteReplies.length > 0) {
+            replies = remoteReplies;
         } else {
-            replies = getRepliesForReview(reviewId);
+            replies = [];
         }
         var currentId = getCurrentUserId();
         container.innerHTML = '<div class="reply-list">' +
@@ -231,7 +228,11 @@ function renderReplySection(reviewId, container) {
             '<button type="submit" class="reply-submit-btn"><i class="fas fa-paper-plane"></i> 回复</button>' +
             '</form>';
         attachReplyDeleteButtons(container);
-    });
+    };
+    fetch(WORKER_API + '/api/reviews/' + reviewId + '/replies')
+        .then(function(r) { return r.json(); })
+        .then(renderReplies)
+        .catch(function() { renderReplies(null); });
 }
 
 function attachReplyDeleteButtons(container) {

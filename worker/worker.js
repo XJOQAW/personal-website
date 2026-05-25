@@ -98,6 +98,25 @@ export default {
         return new Response(JSON.stringify({ success: true }), { headers });
       }
 
+      // ===== 救援/投稿 =====
+      if (path === '/api/rescues/sync' && method === 'GET') {
+        const userId = url.searchParams.get('userId');
+        if (!userId) return new Response(JSON.stringify({ error: '缺少userId' }), { status: 400, headers });
+        const row = await env.DB.prepare('SELECT data FROM rescues WHERE userId = ?').bind(userId).first();
+        if (!row) return new Response(JSON.stringify({ rescues: [] }), { headers });
+        return new Response(JSON.stringify({ rescues: JSON.parse(row.data) }), { headers });
+      }
+
+      if (path === '/api/rescues/sync' && method === 'POST') {
+        const body = await request.json();
+        const { userId, rescues } = body;
+        if (!userId || !rescues) return new Response(JSON.stringify({ error: '缺少必填' }), { status: 400, headers });
+        await env.DB.prepare(
+          'INSERT OR REPLACE INTO rescues (userId, data) VALUES (?, ?)'
+        ).bind(userId, JSON.stringify(rescues)).run();
+        return new Response(JSON.stringify({ success: true }), { headers, status: 201 });
+      }
+
       // ===== 许愿池 =====
       if (path === '/api/wishes' && method === 'GET') {
         const { results } = await env.DB.prepare('SELECT * FROM wishes ORDER BY votes DESC').all();
