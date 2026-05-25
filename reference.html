@@ -69,7 +69,7 @@
         <div class="wish-pool-body" id="wishPoolBody">
             <p class="wish-pool-desc">想看哪个角色的动作参考？</p>
             <div class="wish-pool-form">
-                <input type="text" id="wishInput" placeholder="输入角色名称" autocomplete="off">
+                <textarea id="wishInput" rows="1" placeholder="输入角色名称" autocomplete="off"></textarea>
                 <button id="wishSubmit"><i class="fas fa-paper-plane"></i></button>
             </div>
             <div class="wish-pool-list" id="wishList"></div>
@@ -383,7 +383,7 @@
             wishes.sort(function(a,b){ return b.votes - a.votes; });
             list.innerHTML = wishes.map(function(w, i) {
                 var delBtn = (currentId && w.authorId === currentId) ? '<button class="wish-del-btn" data-idx="' + i + '"><i class="fas fa-times"></i></button>' : '';
-                var avatarTxt = (typeof getCurrentUserId !== 'undefined' && getCurrentUserId()) ? (w.authorId ? w.authorId.slice(0,2).toUpperCase() : '?') : '?';
+                var avatarTxt = (w.authorName || w.authorId || '?').charAt(0).toUpperCase();
                 return '<div class="wish-item"><span class="wish-avatar">' + avatarTxt + '</span><div class="wish-content"><strong>' + escHTML(w.name) + '</strong><span>' + w.time + '</span></div><button class="wish-vote" data-idx="' + i + '">👍 ' + (w.votes || 0) + '</button>' + delBtn + '</div>';
             }).join('') || '<p style="text-align:center;color:var(--text-secondary);font-size:12px;padding:20px 0;">还没有人许愿，快来第一个！</p>';
             // 投票
@@ -452,7 +452,7 @@
             }
             daily.count++;
             localStorage.setItem(dailyKey, JSON.stringify(daily));
-            var data = { name: name, time: today, votes: 0, authorId: uid };
+            var data = { name: name, time: today, votes: 0, authorId: uid, authorName: localStorage.getItem('currentUserName') || '匿名' };
             workerWishPost(data, function(r) {
                 if (r && r.id) {
                     var wishes = getWishes();
@@ -464,7 +464,11 @@
             });
         });
         document.getElementById('wishInput').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') document.getElementById('wishSubmit').click();
+            if (e.key === 'Enter') { e.preventDefault(); document.getElementById('wishSubmit').click(); }
+        });
+        document.getElementById('wishInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
         });
         document.getElementById('wishPoolHeader').addEventListener('click', function() {
             document.getElementById('wishPool').classList.toggle('collapsed');
