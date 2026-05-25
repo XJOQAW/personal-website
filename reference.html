@@ -392,11 +392,21 @@
                     var idx = parseInt(this.getAttribute('data-idx'));
                     var wishes = getWishes();
                     wishes.sort(function(a,b){ return b.votes - a.votes; });
-                    if (wishes[idx]) { wishes[idx].votes = (wishes[idx].votes || 0) + 1; workerWishVote(wishes[idx].id, 1); }
+                    var wish = wishes[idx];
+                    if (!wish) return;
+                    var voted = JSON.parse(localStorage.getItem('wishVoted') || '[]');
+                    if (voted.indexOf(wish.id) !== -1 || voted.indexOf(wish.name) !== -1) {
+                        showNotification && showNotification('已经投过票了~', 'error');
+                        return;
+                    }
+                    voted.push(wish.id);
+                    localStorage.setItem('wishVoted', JSON.stringify(voted));
+                    wish.votes = (wish.votes || 0) + 1;
+                    workerWishVote(wish.id, 1);
                     var all = getWishes();
                     for (var j = 0; j < all.length; j++) {
-                        if (all[j].name === wishes[idx].name && all[j].time === wishes[idx].time && all[j].authorId === wishes[idx].authorId) {
-                            all[j].votes = wishes[idx].votes;
+                        if (all[j].name === wish.name && all[j].time === wish.time && all[j].authorId === wish.authorId) {
+                            all[j].votes = wish.votes;
                             break;
                         }
                     }
