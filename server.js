@@ -3,8 +3,13 @@
 var http = require('http');
 var fs = require('fs');
 var path = require('path');
+var crypto = require('crypto');
 var PORT = 3000;
 var DATA = '/var/www/api/data.json';
+
+function hashPwd(pwd) {
+    return crypto.createHash('sha256').update(pwd + 'yifang_salt').digest('hex');
+}
 
 function load() {
     try { return JSON.parse(fs.readFileSync(DATA, 'utf8')); } catch(e) {
@@ -210,6 +215,47 @@ http.createServer(function(req, res) {
                 var wv = (db.wishes || []).filter(function(x) { return x.id == vwid; })[0];
                 if (!wv) return err(res, '不存在', 404);
                 wv.votes = Math.max(0, (wv.votes || 0) + (body.delta || 1));
+                save(db);
+                ok(res, { success: true });
+            });
+            return;
+        }
+
+        // ===== 账号系统 =====
+        if (p === '/api/auth/register' && req.method === 'POST') {
+            readBody(req, function(body) {
+                if (!body || !body.name || !body.account || !body.password) return err(res, '缺少必填');
+                var db = load();
+                if (!db.users) db.users = {};
+                if (db.users[body.account]) return err(res, '该账号已被注册');
+                db.users[body.account] = { name: body.name, password: hashPwd(body.password) };
+                save(db);
+                ok(res, { account: body.account, name: body.name });
+            });
+            return;
+        }
+
+        if (p === '/api/auth/login' && req.method === 'POST') {
+            readBody(req, function(body) {
+                if (!body || !body.account || !body.password) return err(res, '缺少账号或密码');
+                var db = load();
+                var u = (db.users || {})[body.account];
+                if (!u) return err(res, '账号不存在');
+                if (u.password !== hashPwd(body.password)) return err(res, '密码错误');
+                ok(res, { account: body.account, name: u.name });
+            });
+            return;
+        }
+
+        if (p === '/api/auth/changepwd' && req.method === 'POST') {
+            readBody(req, function(body) {
+                if (!body || !body.account || !body.oldPassword || !body.newPassword) return err(res, '缺少必填');
+                var db = load();
+                var u = (db.users || {})[body.account];
+                if (!u) return err(res, '账号不存在');
+                if (u.password !== hashPwd(body.oldPassword)) return err(res, '原密码错误');
+                if (body.newPassword.length < 6) return err(res, '新密码至少6位');
+                u.password = hashPwd(body.newPassword);
                 save(db);
                 ok(res, { success: true });
             });

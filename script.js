@@ -349,59 +349,6 @@ function initApp() {
         });
     });
 
-    // Firebase登录（安全处理）
-    var auth = null;
-    try {
-        if (typeof firebase !== 'undefined') {
-            firebase.initializeApp({
-                apiKey: "AIzaSyA1pqvmi6UR4LkX0vqz6C6GdgMKUY4ox8w",
-                authDomain: "yifang-website.firebaseapp.com",
-                projectId: "yifang-website",
-                storageBucket: "yifang-website.firebasestorage.app",
-                messagingSenderId: "127736935080",
-                appId: "1:127736935080:web:dae94ee9e4145bf51a889d"
-            });
-            auth = firebase.auth();
-        }
-    } catch(e) { console.log('Firebase未加载'); }
-
-    if (auth) {
-        document.getElementById('googleLoginBtn').addEventListener('click', function() {
-            auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
-                .then(function(result) {
-                    var email = result.user.email;
-                    var name = result.user.displayName || email.split('@')[0];
-                    var acc = email.split('@')[0];
-                    localStorage.setItem('currentUser', acc);
-                    localStorage.setItem('currentUserName', name);
-                    closeLogin();
-                    showNotification('Google登录成功！', 'success');setTimeout(function(){location.reload()},300)
-                })
-                .catch(function(err) { showNotification('登录失败：' + err.message, 'error'); });
-        });
-
-        auth.onAuthStateChanged(function(user) {
-            var authSection = document.getElementById('authSection');
-            var userSection = document.getElementById('userSection');
-            var isMobile = window.innerWidth <= 768;
-            if (user) {
-                if (authSection) authSection.style.display = 'none';
-                if (userSection) userSection.style.display = 'flex';
-                var userName = document.getElementById('userName');
-                if (userName) userName.textContent = user.displayName || user.email.split('@')[0];
-                if (!localStorage.getItem('currentUser')) {
-                    localStorage.setItem('currentUser', user.email.split('@')[0]);
-                    localStorage.setItem('currentUserName', user.displayName || user.email.split('@')[0]);
-                }
-            } else {
-                if (authSection) authSection.style.display = isMobile ? 'none' : 'flex';
-                if (userSection) userSection.style.display = 'none';
-            }
-        });
-
-        // 注册后自动登录状态已由Firebase处理
-    }
-
     // ===== 账号模态框 =====
     var accountModal = document.getElementById('accountModal');
     var accountClose = document.getElementById('accountClose');
@@ -421,12 +368,10 @@ function initApp() {
     var logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function() {
-            if (auth) {
-                auth.signOut().then(function() {
-                    showNotification('已退出登录', 'success');
-                    setTimeout(function() { location.reload(); }, 300);
-                });
-            }
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('currentUserName');
+            showNotification('已退出登录', 'success');
+            setTimeout(function() { location.reload(); }, 300);
         });
     }
     if (accountClose) accountClose.addEventListener('click', closeAccount);
@@ -434,17 +379,12 @@ function initApp() {
 
     // 更新账号信息
     function updateAccountInfo() {
-        var user = auth ? auth.currentUser : null;
         var avatarEl = document.getElementById('accountAvatar');
         var navAvatar = document.getElementById('userAvatar');
+        var currentName = localStorage.getItem('currentUserName') || '用户';
+        var currentUser = localStorage.getItem('currentUser') || '';
+        document.getElementById('accountName').textContent = currentName;
         
-        if (user) {
-            document.getElementById('accountName').textContent = user.displayName || user.email.split('@')[0];
-            document.getElementById('accountEmail').textContent = user.email.includes('@yifang.user') ? '自定义账号' : user.email;
-            document.getElementById('profileName').value = user.displayName || '';
-        }
-        
-        // 优先从localStorage加载头像
         var savedAvatarImg = localStorage.getItem('userAvatarImg');
         var savedAvatar = localStorage.getItem('userAvatar');
         
@@ -454,11 +394,8 @@ function initApp() {
         } else if (savedAvatar) {
             avatarEl.textContent = savedAvatar;
             if (navAvatar) navAvatar.textContent = savedAvatar;
-        } else if (user && user.photoURL) {
-            avatarEl.innerHTML = '<img src="' + user.photoURL + '">';
         } else {
-            var initial = user ? (user.displayName || 'U').charAt(0).toUpperCase() : 'U';
-            avatarEl.textContent = initial;
+            avatarEl.textContent = currentName.charAt(0).toUpperCase();
         }
         // 加载点赞记录
         var likedItems = JSON.parse(localStorage.getItem('likedReviews') || '[]');
@@ -538,14 +475,11 @@ function initApp() {
             e.preventDefault();
             var name = document.getElementById('profileName').value;
             var bio = document.getElementById('profileBio').value;
-            if (auth && auth.currentUser) {
-                auth.currentUser.updateProfile({ displayName: name }).then(function() {
-                    document.getElementById('userName').textContent = name;
-                    document.getElementById('accountName').textContent = name;
-                    showNotification('资料保存成功！', 'success');
-                });
-            }
+            localStorage.setItem('currentUserName', name);
             localStorage.setItem('userBio', bio);
+            document.getElementById('userName').textContent = name;
+            document.getElementById('accountName').textContent = name;
+            showNotification('资料保存成功！', 'success');
         });
     }
 
@@ -566,15 +500,23 @@ function initApp() {
     if (passwordForm) {
         passwordForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            var oldPwd = document.getElementById('oldPassword').value;
             var newPwd = document.getElementById('newPassword').value;
             var confirmPwd = document.getElementById('confirmNewPassword').value;
             if (newPwd !== confirmPwd) { showNotification('两次密码不一致', 'error'); return; }
-            if (auth && auth.currentUser) {
-                auth.currentUser.updatePassword(newPwd).then(function() {
+            var acc = localStorage.getItem('currentUser') || '';
+            fetch(WORKER_API + '/api/auth/changepwd', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ account: acc, oldPassword: oldPwd, newPassword: newPwd })
+            }).then(function(r) { return r.json(); }).then(function(data) {
+                if (data.success) {
                     showNotification('密码修改成功！', 'success');
                     passwordModal.classList.remove('active');
-                }).catch(function(err) { showNotification('修改失败：' + err.message, 'error'); });
-            }
+                } else {
+                    showNotification(data.error || '修改失败', 'error');
+                }
+            }).catch(function() { showNotification('网络错误', 'error'); });
         });
     }
 
@@ -597,13 +539,11 @@ function initApp() {
     var settingsLogout = document.getElementById('settingsLogout');
     if (settingsLogout) {
         settingsLogout.addEventListener('click', function() {
-            if (auth) {
-                auth.signOut().then(function() {
-                    closeAccount();
-                    showNotification('已退出登录', 'success');
-                    setTimeout(function() { location.reload(); }, 300);
-                });
-            }
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('currentUserName');
+            closeAccount();
+            showNotification('已退出登录', 'success');
+            setTimeout(function() { location.reload(); }, 300);
         });
     }
 

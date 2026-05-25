@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="preconnect" href="https://www.gstatic.com">
     <link rel="preconnect" href="https://cdn.jsdelivr.net">
     <title>动作参考 - 一方通行</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -84,8 +83,6 @@
     <div class="modal" id="accountModal"><div class="modal-box account-modal"><button class="modal-close" onclick="document.getElementById('accountModal').classList.remove('active')">&times;</button><div class="account-header"><div class="account-avatar-wrap"><div class="account-avatar" id="accountAvatar">U</div><button class="avatar-edit-btn" id="avatarEditBtn"><i class="fas fa-camera"></i></button></div><h3 id="accountName">用户</h3></div><div class="account-tabs"><button class="account-tab active" data-tab="profile"><i class="fas fa-user"></i> 资料</button><button class="account-tab" data-tab="settings"><i class="fas fa-cog"></i> 设置</button></div><div class="account-panel active" id="panel-profile"><form id="profileForm" class="account-form"><div class="form-group"><label>昵称</label><input type="text" id="profileName"></div><div class="form-group"><label>头像预设</label><div class="avatar-presets"><div class="avatar-option" data-avatar="👩">👩</div><div class="avatar-option" data-avatar="👨">👨</div><div class="avatar-option" data-avatar="🧑">🧑</div><div class="avatar-option" data-avatar="🎀">🎀</div><div class="avatar-option" data-avatar="🌸">🌸</div><div class="avatar-option" data-avatar="⭐">⭐</div><div class="avatar-option" data-avatar="🎭">🎭</div><div class="avatar-option" data-avatar="📸">📸</div></div></div><button type="submit" class="btn btn-primary btn-full">保存修改</button></form></div><div class="account-panel" id="panel-settings"><div class="settings-item"><span>深色模式</span><button class="settings-toggle" id="settingsDarkMode"><i class="fas fa-moon"></i></button></div><div class="settings-item"><span>退出登录</span><button class="btn btn-outline" style="padding:6px 16px;font-size:13px;" onclick="if(typeof firebase!=='undefined'&&firebase.apps.length)firebase.auth().signOut();localStorage.removeItem('currentUser');document.getElementById('authSection').style.display='flex';document.getElementById('userSection').style.display='none';setTimeout(function(){location.reload()},300)">退出</button></div></div></div></div>
     <input type="file" id="avatarUpload" accept="image/*" style="display:none">
 
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
     <script src="app.js"></script>
     <script src="script.js?v=38"></script>
     <script>

@@ -24,56 +24,31 @@ function showNotification(message, type) {
     setTimeout(function() { if (notification.parentNode) notification.remove(); }, 3000);
 }
 
-// ===== 一方通行 登录/注册模块 =====
-async function hashPassword(pwd) {
-    var encoder = new TextEncoder();
-    var data = encoder.encode(pwd + 'yifang_salt_2026');
-    var hash = await crypto.subtle.digest('SHA-256', data);
-    return Array.from(new Uint8Array(hash)).map(function(b) { return ('0' + b.toString(16)).slice(-2); }).join('');
-}
-
+// ===== 一方通行 登录/注册模块（服务器账号系统） =====
 function doLogin(e) {
     e.preventDefault();
     var acc = document.getElementById('loginAccount').value.trim();
     var pwd = document.getElementById('loginPassword').value;
     if (!acc || !pwd) { showNotification('请输入账号和密码', 'error'); return; }
 
-    if (typeof firebase !== 'undefined' && firebase.apps.length) {
-        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-            .then(function() {
-                return firebase.auth().signInWithEmailAndPassword(acc + '@yifang.user', pwd);
-            })
-            .then(function() {
-                localStorage.setItem('currentUser', acc);
-                localStorage.setItem('currentUserName', acc);
-                var m = document.getElementById('loginModal');
-                m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
-                showNotification('登录成功！', 'success');setTimeout(function(){location.reload()},300)
-            })
-            .catch(function(err) {
-                if (err.code === 'auth/network-request-failed') {
-                    loginLocal(acc, pwd);
-                } else {
-                    var msg = err.code === 'auth/user-not-found' ? '账号不存在' : err.code === 'auth/wrong-password' ? '密码错误' : err.message;
-                    showNotification(msg, 'error');
-                }
-            });
-    } else {
-        loginLocal(acc, pwd);
-    }
-}
-
-function loginLocal(acc, pwd) {
-    hashPassword(pwd).then(function(hashed) {
-        var users = JSON.parse(localStorage.getItem('localUsers') || '{}');
-        if (!users[acc]) { showNotification('账号不存在，请先注册', 'error'); return; }
-        if (users[acc].password !== hashed) { showNotification('密码错误', 'error'); return; }
-        localStorage.setItem('currentUser', acc);
-        localStorage.setItem('currentUserName', users[acc].name);
-        var m = document.getElementById('loginModal');
-        m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
-        updateLocalAuthUI();
-        showNotification('登录成功！（本地模式）', 'success');setTimeout(function(){location.reload()},300)
+    fetch(WORKER_API + '/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account: acc, password: pwd })
+    }).then(function(r) { return r.json(); }).then(function(data) {
+        if (data.account) {
+            localStorage.setItem('currentUser', data.account);
+            localStorage.setItem('currentUserName', data.name);
+            var m = document.getElementById('loginModal');
+            if (m) { m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none'; }
+            updateLocalAuthUI();
+            showNotification('登录成功！', 'success');
+            setTimeout(function() { location.reload(); }, 300);
+        } else {
+            showNotification(data.error || '登录失败', 'error');
+        }
+    }).catch(function() {
+        showNotification('网络错误，请稍后重试', 'error');
     });
 }
 window.doLogin = doLogin;
@@ -88,42 +63,24 @@ function doRegister(e) {
     if (pwd !== cfm) { showNotification('两次密码不一致', 'error'); return; }
     if (pwd.length < 6) { showNotification('密码至少6位', 'error'); return; }
 
-    var users = JSON.parse(localStorage.getItem('localUsers') || '{}');
-    if (users[acc]) { showNotification('该账号已被注册', 'error'); return; }
-
-    if (typeof firebase !== 'undefined' && firebase.apps.length) {
-        firebase.auth().createUserWithEmailAndPassword(acc + '@yifang.user', pwd)
-            .then(function(result) { return result.user.updateProfile({ displayName: name }); })
-            .then(function() {
-                localStorage.setItem('currentUser', acc);
-                localStorage.setItem('currentUserName', name);
-                var m = document.getElementById('loginModal');
-                m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
-                showNotification('注册成功！', 'success');setTimeout(function(){location.reload()},300)
-            })
-            .catch(function(err) {
-                if (err.code === 'auth/network-request-failed') {
-                    registerLocal(name, acc, pwd);
-                } else {
-                    showNotification(err.code === 'auth/email-already-in-use' ? '该账号已被注册' : err.message, 'error');
-                }
-            });
-    } else {
-        registerLocal(name, acc, pwd);
-    }
-}
-
-function registerLocal(name, acc, pwd) {
-    hashPassword(pwd).then(function(hashed) {
-        var users = JSON.parse(localStorage.getItem('localUsers') || '{}');
-        users[acc] = { name: name, password: hashed };
-        localStorage.setItem('localUsers', JSON.stringify(users));
-        localStorage.setItem('currentUser', acc);
-        localStorage.setItem('currentUserName', name);
-        var m = document.getElementById('loginModal');
-        m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none';
-        updateLocalAuthUI();
-        showNotification('注册成功！（本地模式）', 'success');setTimeout(function(){location.reload()},300)
+    fetch(WORKER_API + '/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, account: acc, password: pwd })
+    }).then(function(r) { return r.json(); }).then(function(data) {
+        if (data.account) {
+            localStorage.setItem('currentUser', data.account);
+            localStorage.setItem('currentUserName', data.name);
+            var m = document.getElementById('loginModal');
+            if (m) { m.style.opacity = '0'; m.style.visibility = 'hidden'; m.style.pointerEvents = 'none'; }
+            updateLocalAuthUI();
+            showNotification('注册成功！', 'success');
+            setTimeout(function() { location.reload(); }, 300);
+        } else {
+            showNotification(data.error || '注册失败', 'error');
+        }
+    }).catch(function() {
+        showNotification('网络错误，请稍后重试', 'error');
     });
 }
 window.doRegister = doRegister;
