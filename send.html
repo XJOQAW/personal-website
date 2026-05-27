@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <title>动作参考 - 一方通行</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=38">
+</head>
+<body>
+    <nav class="nav visible" id="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">一方通行</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">首页</a>
+                <a href="index.html#services" class="nav-link">服务</a>
+                <a href="portfolio.html" class="nav-link">作品</a>
+                <a href="reference.html" class="nav-link active">动作参考</a>
+                <a href="rescue.html" class="nav-link">废片拯救</a>
+                <a href="index.html#pricing" class="nav-link">价格</a>
+                <a href="index.html#contact" class="nav-link">联系</a>
+            </div>
+            <div class="nav-actions">
+                <button class="nav-theme" id="themeBtn"><i class="fas fa-moon"></i></button>
+                <div class="auth-section" id="authSection"><button class="nav-login" id="loginBtn" onclick="document.getElementById('loginModal').style.opacity='1';document.getElementById('loginModal').style.visibility='visible';document.getElementById('loginModal').style.pointerEvents='auto'">登录</button></div>
+                <div class="user-section" id="userSection" style="display:none;">
+                    <div class="user-info" id="userInfoBtn" onclick="document.getElementById('accountModal').classList.add('active')"><div class="user-avatar" id="userAvatar">👤</div><span class="user-name" id="userName">用户</span></div>
+                    <button class="nav-logout" id="logoutBtn" onclick="if(typeof firebase!=='undefined'&&firebase.apps.length)firebase.auth().signOut();localStorage.removeItem('currentUser');localStorage.removeItem('currentUserName');document.getElementById('authSection').style.display='flex';document.getElementById('userSection').style.display='none';setTimeout(function(){location.reload()},300)"><i class="fas fa-sign-out-alt"></i></button>
+                </div>
+            </div>
+            <button class="nav-hamburger" id="hamburgerBtn"><span></span><span></span><span></span></button>
+        </div>
+    </nav>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">首页</a><a href="index.html#services">服务</a><a href="portfolio.html">作品</a>        <a href="reference.html">动作参考</a><a href="rescue.html">废片拯救</a><a href="index.html#pricing">价格</a><a href="index.html#contact">联系</a>
+    </div>
+
+    <main style="padding-top:80px">
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> 返回首页</a>
+        <section class="section">
+            <div class="container">
+                <div class="section-header"><span class="section-tag">动作参考</span><h2>搜索角色动作参考</h2><p>选择游戏/番剧，或直接搜索角色名称</p></div>
+                <div class="search-box">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="referenceSearch" class="search-input" placeholder="搜索您需要参考的角色" autocomplete="off">
+                    <div class="search-suggestions" id="searchSuggestions"></div>
+                </div>
+                <div class="ref-nav">
+                    <div class="ref-nav-row"><span class="ref-nav-label">二游</span><div class="ref-nav-tags" id="tagsEryou"></div></div>
+                    <div class="ref-nav-row"><span class="ref-nav-label">单机</span><div class="ref-nav-tags" id="tagsDanji"></div></div>
+                    <div class="ref-nav-row"><span class="ref-nav-label">网游</span><div class="ref-nav-tags" id="tagsWangyou"></div></div>
+                    <div class="ref-nav-row"><span class="ref-nav-label">手游</span><div class="ref-nav-tags" id="tagsShouyou"></div></div>
+                    <div class="ref-nav-row"><span class="ref-nav-label">番剧</span><div class="ref-nav-cats" id="animeCats"></div></div>
+                    <div class="ref-anime-panel" id="animePanel" style="display:none;"><div class="ref-nav-tags" id="animeSubTags"></div></div>
+                </div>
+                <div class="chars-section" id="charsSection"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 许愿池 -->
+    <div class="wish-pool" id="wishPool">
+        <div class="wish-pool-resize-left" id="wishResizeL"></div>
+        <div class="wish-pool-resize-bottom" id="wishResizeB"></div>
+        <div class="wish-pool-header" id="wishPoolHeader">
+            <span><i class="fas fa-star"></i> 许愿池</span>
+            <button class="wish-pool-toggle" id="wishPoolToggle"><i class="fas fa-chevron-down"></i></button>
+        </div>
+        <div class="wish-pool-body" id="wishPoolBody">
+            <p class="wish-pool-desc">想看哪个角色的动作参考？</p>
+            <div class="wish-pool-form">
+                <textarea id="wishInput" rows="1" placeholder="输入角色名称" autocomplete="off"></textarea>
+                <button id="wishSubmit"><i class="fas fa-paper-plane"></i></button>
+            </div>
+            <div class="wish-pool-list" id="wishList"></div>
+        </div>
+    </div>
+
+    <footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>一方通行</h3><p>用严谨丈量创作</p></div></div><div class="footer-bottom"><p>© 2026 一方通行</p></div></div></footer>
+
+    <div class="modal" id="loginModal"><div class="modal-box"><button class="modal-close" onclick="document.getElementById('loginModal').style.opacity='0';document.getElementById('loginModal').style.visibility='hidden';document.getElementById('loginModal').style.pointerEvents='none'">&times;</button><h2 id="loginTitle">登录</h2><div class="login-tabs"><button class="login-tab active" data-tab="login">登录</button><button class="login-tab" data-tab="register">注册</button></div><form class="login-form" id="loginForm" onsubmit="doLogin(event)"><div class="input-group"><i class="fas fa-user"></i><input type="text" id="loginAccount" placeholder="账号" required></div><div class="input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="密码" required></div><button type="submit" class="btn btn-primary btn-full">登录</button></form><form class="login-form" id="registerForm" style="display:none" onsubmit="doRegister(event)"><div class="input-group"><i class="fas fa-user"></i><input type="text" id="registerName" placeholder="用户名" required></div><div class="input-group"><i class="fas fa-at"></i><input type="text" id="registerAccount" placeholder="自定义账号" required></div><div class="input-group"><i class="fas fa-lock"></i><input type="password" id="registerPassword" placeholder="密码" required></div><div class="input-group"><i class="fas fa-lock"></i><input type="password" id="registerConfirm" placeholder="确认密码" required></div><button type="submit" class="btn btn-primary btn-full">注册</button></form><div class="login-divider"><span>或者</span></div><button class="btn btn-google" id="googleLoginBtn"><i class="fab fa-google"></i> Google登录</button></div></div>
+
+    <div class="modal" id="accountModal"><div class="modal-box account-modal"><button class="modal-close" onclick="document.getElementById('accountModal').classList.remove('active')">&times;</button><div class="account-header"><div class="account-avatar-wrap"><div class="account-avatar" id="accountAvatar">U</div><button class="avatar-edit-btn" id="avatarEditBtn" onclick="document.getElementById('avatarUpload').click()"><i class="fas fa-camera"></i></button></div><h3 id="accountName">用户</h3></div><div class="account-tabs"><button class="account-tab active" data-tab="profile"><i class="fas fa-user"></i> 资料</button><button class="account-tab" data-tab="settings"><i class="fas fa-cog"></i> 设置</button></div><div class="account-panel active" id="panel-profile"><form id="profileForm" class="account-form"><div class="form-group"><label>昵称</label><input type="text" id="profileName"></div><div class="form-group"><label>头像预设</label><div class="avatar-presets"><div class="avatar-option" data-avatar="👩">👩</div><div class="avatar-option" data-avatar="👨">👨</div><div class="avatar-option" data-avatar="🧑">🧑</div><div class="avatar-option" data-avatar="🎀">🎀</div><div class="avatar-option" data-avatar="🌸">🌸</div><div class="avatar-option" data-avatar="⭐">⭐</div><div class="avatar-option" data-avatar="🎭">🎭</div><div class="avatar-option" data-avatar="📸">📸</div></div></div><button type="submit" class="btn btn-primary btn-full">保存修改</button></form></div><div class="account-panel" id="panel-settings"><div class="settings-item"><span>深色模式</span><button class="settings-toggle" id="settingsDarkMode"><i class="fas fa-moon"></i></button></div><div class="settings-item"><span>退出登录</span><button class="btn btn-outline" style="padding:6px 16px;font-size:13px;" onclick="if(typeof firebase!=='undefined'&&firebase.apps.length)firebase.auth().signOut();localStorage.removeItem('currentUser');document.getElementById('authSection').style.display='flex';document.getElementById('userSection').style.display='none';setTimeout(function(){location.reload()},300)">退出</button></div></div></div></div>
+    <input type="file" id="avatarUpload" accept="image/*" style="display:none" onchange="var f=this.files[0];if(!f)return;var rd=new FileReader();rd.onload=function(e){var d=e.target.result;document.getElementById('accountAvatar').innerHTML='<img src='+d+'>';localStorage.setItem('userAvatarImg',d);var u=localStorage.getItem('currentUser')||'';if(u)fetch(WORKER_API+'/api/auth/avatar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({account:u,data:d})});var n=document.getElementById('userAvatar');if(n)n.innerHTML='<img src='+d+' style=width:100%;height:100%;border-radius:50%;object-fit:cover>';};rd.readAsDataURL(f);">
+
+    <script src="app.js?v=1"></script>
+    <script src="script.js?v=44"></script>
+    <script>
+    // 动作参考数据
+    var refData = {
+        二游: [
+            {name:'原神',chars:['胡桃','雷电将军','钟离','甘雨','芙宁娜','神里绫华','那维莱特','纳西妲','刻晴','八重神子','温迪','优菈','宵宫','夜兰','达达利亚','琴','七七','可莉','万叶','珊瑚宫心海','荒泷一斗','赛诺','艾尔海森','迪希雅','提纳里','妮露','阿贝多','莫娜','申鹤','白术','迪卢克','魈','流浪者','凝光','菲谢尔','芭芭拉','香菱','班尼特','行秋','重云','砂糖','北斗','诺艾尔','迪奥娜','早柚','九条裟罗','五郎','云堇','久岐忍','鹿野院平藏','菲米尼','琳妮特','夏洛蒂','嘉明','夏沃蕾','千织','绮良良','卡维','珐露珊','莱依拉','瑶瑶','米卡','多莉','柯莱','托马','辛焱','烟绯','坎蒂丝','艾梅莉埃','基尼奇','玛拉妮','希诺宁','恰斯卡','茜特菈莉','林尼','娜维娅','阿蕾奇诺','克洛琳德','希格雯','闲云','梦见月瑞希','瓦雷莎','欧洛伦','伊安珊','塔利雅','蓝砚','丝柯克','丽莎','伊法','伊涅芙','凯亚','卡齐娜','叶洛亚','哥伦比娅·希珀塞莱尼娅','奈芙尔','安柏','尼克','杜林','法尔伽','爱可菲','爱诺','玛薇卡','神里绫人','罗莎莉亚','莉奈娅','莱欧斯利','菈乌玛','菲林斯','赛索斯','雅珂达','雷泽']},
+            {name:'崩坏：星穹铁道',chars:['银狼','镜流','景元','刃','符玄','知更鸟','姬子','卡芙卡','丹恒','三月七','瓦尔特','布洛妮娅','希儿','罗刹','砂金','黑塔','开拓者','白露','彦卿','素裳','艾丝妲','停云','桑博','佩拉','卢卡','驭空','花火','黑天鹅','米沙','加拉赫','流萤','波提欧','翡翠','云璃','椒丘','飞霄','灵砂','乱破','星期日','阿格莱雅','缇宝','那刻夏','风堇','藿藿','银枝','阮梅','真理医生','黄泉']},
+            {name:'鸣潮',chars:['漂泊者','秧秧','维里奈','卡卡罗','吟霖','炽霞','安可','秋水','莫特菲','丹瑾','桃祈','凌阳','忌炎','鉴心','今汐','长离','折枝','相里要','守岸人','椿','散华','白芷','渊武','灯灯','釉瑚','珂莱塔','洛可可','菲比','布兰特','坎特蕾拉','莫宁','夏空','露帕','尤诺','赞妮','艾弥斯','奥古斯塔','绯雪','弗洛洛','卡提西亚','琳奈','陆.赫斯','千xiao','西格莉卡e','卜灵','嘉贝莉娜','仇远']},
+            {name:'绝区零',chars:['艾莲','妮可','安比','猫又','比利','格莉丝','珂蕾妲','安东','11号','青衣','苍角','莱卡恩','朱鸢','简','赛斯','凯撒','柏妮思','月城柳','星见雅','耀嘉音','浅羽悠真','伊芙琳','扳机','波可娜','薇薇安']},
+            {name:'明日方舟',chars:['阿米娅','能天使','银灰','斯卡蒂','陈','德克萨斯','史尔特尔','凯尔希','拉普兰德','W','年','令','夕','山','棘刺','泥岩','傀影','铃兰','安洁莉娜','伊芙利特','推进之王','赫拉格','黑','莫斯提马','风笛','苇草','缪尔赛思','锏','塑心','佩佩','忍冬']},
+            {name:'明日方舟：终末地',chars:['佩丽卡','陈千语','狼卫','余烬','大山','莱万汀','艾维文娜','安洁莉娜','安塞尔','霜星','雪雉','菲尼克斯','伊冯']},
+            {name:'蔚蓝档案',chars:['白子','星野','爱丽丝','日奈','优香','玛丽','若藻','鹤城','茜香','花子','芹香','小春','纱织','泉','一之濑明日奈']},
+            {name:'碧蓝航线',chars:['企业','贝尔法斯特','绫波','爱宕','欧根亲王','俾斯麦','独角兽','埃吉尔','克利夫兰','海伦娜','圣地亚哥','萨拉托加','列克星敦','赤城','加贺','大凤','信浓','岛风','恶毒白兔']},
+            {name:'少女前线',chars:['M4A1','AK-12','AN-94','Kar98k','HK416','WA2000','UMP45','春田','M16A1','SOPMOD II','RO635','G11','RFB','MDR']},
+            {name:'胜利女神：妮姬',chars:['拉毗','阿尼斯','玛莉安','白雪公主','红莲','桃乐丝','爱丽丝','丽塔','德雷克','海伦','鲁德米拉','梅登','诺亚','哈兰','吉萝婷','索林','米哈拉','尼恩','佩珀','普丽瓦蒂','牡丹','布丽德','娜嘉','伊莎贝尔','布兰儿']},
+            {name:'重返未来：1999',chars:['十四行诗','星锑','兔毛手袋','远旅','气球派对','苹果','未锈凯','斯奈德','坦南特','冬','X','柏林以东','温妮弗雷德','百夫长','泥鯭的士','挖掘艺术','雾行者','铅玻璃']},
+            {name:'无期迷途',chars:['海拉','卓娅','白逸','兰利','艾瑞尔','赫卡蒂','科希','诺克斯','卡米利安','维多利亚','切尔西','温蒂','泰特拉','九十九']},
+            {name:'阴阳师',chars:['大岳丸','鬼切','茨木童子','酒吞童子','大天狗','妖刀姬','不知火','玉藻前','黑童子','白童子','一目连','荒','彼岸花','面灵气','鬼童丸','铃鹿御前','千姬','帝释天','阿修罗']}
+        ],
+        单机: [
+            {name:'艾尔登法环',chars:['玛莉卡','拉妮','梅琳娜','玛莲妮亚','维克','米凯拉','菈雅','托雷特','布莱泽','罗杰尔','菲雅','D','铁匠修古','葛瑞克','拉达冈','满月女王蕾娜菈','玛尔基特','葛孚雷','百智爵士','涅斐丽','梵雷','尤拉','瑟濂','亚历山大战士壶']},
+            {name:'黑暗之魂3',chars:['防火女','索拉尔','洋葱骑士','咒术老师','卡塔利纳','灰心哥','薄暮之国的希里斯','安里','霍拉斯','薪王','舞娘','法兰不死队','巨人尤姆','黑龙米狄尔','盖尔']},
+            {name:'只狼',chars:['狼','苇名弦一郎','永真','苇名一心','佛雕师','蝶','枭','九郎','剑圣','樱龙','破戒僧','狮子猿','鬼刑部']},
+            {name:'鬼泣',chars:['但丁','维吉尔','尼禄','翠西','蕾蒂','V','莫里森','姬莉叶','斯巴达','蒙德斯','妮可','帕蒂']},
+            {name:'尼尔：机械纪元',chars:['2B','9S','A2','指挥官','帕斯卡尔','亚当','夏娃','迪瓦拉','波波露','迪波露','艾米尔','机械生命体']},
+            {name:'女神异闻录5',chars:['Joker','高卷杏','新岛真','芳泽霞','坂本龙司','喜多川祐介','佐仓双叶','奥村春','明智吾郎','丸喜','拉雯妲','吉泽霞']},
+            {name:'最终幻想7',chars:['蒂法','克劳德','爱丽丝','萨菲罗斯','扎克斯','巴雷特','尤菲','文森特','西德','赤红XIII','雷诺','路德','曾','杰诺瓦']},
+            {name:'生化危机',chars:['里昂','艾达·王','克里斯','克莱尔','吉尔','威斯克','瑞贝卡','海伦娜','伊森','米娅','公爵','谢娃','皮尔斯','杰克']}
+        ],
+        网游: [
+            {name:'英雄联盟',chars:['金克丝','阿狸','亚索','拉克丝','伊泽瑞尔','艾希','卡特琳娜','锐雯','刀妹','盲僧','劫','薇恩','卡莎','赛娜','佐伊','凯隐','格温','永恩','佛耶戈','阿卡丽','琴女','风女','女枪','蔚','凯特琳','蕾欧娜','皎月','剑姬','提莫','安妮','诺手','盖伦','锤石','杰斯','卡牌','卢锡安','娜美','璐璐','石头人','发条','斯莫德','安蓓萨','奥罗拉','梅尔','阿木木','机器人','泰坦','千珏','奥恩','妮蔻','亚托克斯','塞纳','女警','蜘蛛女皇','辛德拉','阿兹尔']},
+            {name:'永劫无间',chars:['宁红夜','季沧海','迦南','崔三娘','土御门胡桃','天海','妖刀','武田信忠','无尘','玉玲珑','哈迪','沈妙','殷紫萍','季莹莹','张起灵','席拉','刘炼']},
+            {name:'守望先锋',chars:['D.Va','源氏','黑百合','天使','猎空','小美','法老之鹰','麦克雷','半藏','安娜','布里吉塔','艾什','索杰恩','死神','禅雅塔','路霸','狂鼠','莫伊拉','西格玛','回声','雾子','拉玛刹','伊拉锐','生命之梭','毛加','朱诺','骇灾']}
+        ],
+        手游: [
+            {name:'王者荣耀',chars:['貂蝉','李白','王昭君','孙悟空','西施','公孙离','韩信','诸葛亮','露娜','花木兰','百里守约','镜','云缨','大乔','小乔','孙尚香','虞姬','武则天']},
+            {name:'第五人格',chars:['园丁','杰克','先知','红蝶','医生','机械师','空军','祭司','调香师','佣兵','冒险家','咒术师']}
+        ],
+        番剧: {
+            '战斗/热血':[
+                {name:'咒术回战',chars:['五条悟','虎杖悠仁','伏黑惠','钉崎野蔷薇','两面宿傩','狗卷棘','禅院真希','熊猫','乙骨忧太','夏油杰','禅院甚尔','胀相']},
+                {name:'鬼灭之刃',chars:['灶门炭治郎','灶门祢豆子','我妻善逸','嘴平伊之助','富冈义勇','蝴蝶忍','炼狱杏寿郎','宇髄天元','时透无一郎','甘露寺蜜璃','伊黑小芭内','不死川实弥','半天狗','猗窝座']},
+                {name:'进击的巨人',chars:['利威尔','艾伦','三笠','阿尔敏','韩吉','埃尔文','让','萨莎','柯尼','希斯特利亚','尤弥尔','莱纳','贝尔托特','阿妮']},
+                {name:'电锯人',chars:['玛奇玛','电次','帕瓦','早川秋','姬野','蕾塞','光熙','岸边']},
+                {name:'死神',chars:['黑崎一护','朽木露琪亚','日番谷冬狮郎','朽木白哉','浦原喜助','井上织姬','朽木露琪亚','阿散井恋次','更木剑八','卯之花烈','蓝染惣右介','市丸银','乌尔奇奥拉','葛力姆乔']},
+                {name:'海贼王',chars:['路飞','索隆','山治','娜美','罗','女帝','乔巴','罗宾','弗兰奇','布鲁克','甚平','艾斯','萨博','多弗朗明哥','红发香克斯']},
+                {name:'火影忍者',chars:['漩涡鸣人','宇智波佐助','旗木卡卡西','宇智波鼬','日向雏田','春野樱','自来也','大蛇丸','纲手','波风水门','宇智波斑','千手柱间','我爱罗','鹿丸','宁次']},
+                {name:'龙珠',chars:['孙悟空','贝吉塔','悟饭','弗利萨','人造人18号','人造人17号','特兰克斯','比克','克林','龟仙人','比鲁斯','维斯','希特','吉连']},
+                {name:'JOJO的奇妙冒险',chars:['空条承太郎','DIO','乔鲁诺','布加拉提','岸边露伴','乔纳森','西撒','花京院典明','波鲁那雷夫','吉良吉影','纳兰迦','阿帕基']},
+                {name:'一拳超人',chars:['埼玉','杰诺斯','龙卷','吹雪','饿狼','King','邦古','原子武士','金属骑士','无证骑士']},
+                {name:'葬送的芙莉莲',chars:['芙莉莲','菲伦','辛美尔','休塔尔克','艾冉','赞则','威尔','尤贝尔']},
+                {name:'家庭教师',chars:['沢田纲吉','云雀恭弥','六道骸','狱寺隼人','山本武','蓝波','库洛姆','迪诺','白兰','XANXUS']}
+            ],
+            '恋爱/青春':[
+                {name:'更衣人偶坠入爱河',chars:['喜多川海梦','五条新菜','珠珠','乃羽','水乃']},
+                {name:'堀与宫村',chars:['堀京子','宫村伊澄','石川透','仙石翔','吉川由纪']},
+                {name:'五等分的新娘',chars:['中野三玖','中野二乃','中野一花','中野四叶','中野五月','上杉风太郎']},
+                {name:'辉夜大小姐',chars:['四宫辉夜','白银御行','藤原千花','石上优','伊井野弥子','早坂爱']},
+                {name:'青春猪头少年',chars:['樱岛麻衣','梓川咲太','古贺朋绘','丰滨和花','双叶理央']}
+            ],
+            '异世界/奇幻':[
+                {name:'Re:从零开始',chars:['蕾姆','拉姆','爱蜜莉雅','菜月昴','碧翠丝','罗兹瓦尔','帕克','艾姬多娜']},
+                {name:'转生史莱姆',chars:['利姆鲁','米莉姆','朱菜','紫苑','苍影','红丸','哥布塔','迪亚波罗斯']},
+                {name:'无职转生',chars:['洛琪希','艾莉丝','希露菲','鲁迪乌斯','保罗','塞尼斯','瑞杰尔德','奥尔斯蒂德']},
+                {name:'为美好世界献上祝福',chars:['惠惠','阿库娅','达克妮斯','佐藤和真','悠悠','爱丽丝','巴尼尔']},
+                {name:'盾之勇者',chars:['岩谷尚文','拉芙塔莉雅','菲洛','梅尔蒂','琉璃','莉希亚']},
+                {name:'OVERLORD',chars:['安兹','雅儿贝德','夏提雅','迪米乌哥斯','科塞特斯','塞巴斯','马雷','亚乌拉']}
+            ],
+            '科幻/机甲':[
+                {name:'EVA',chars:['绫波丽','明日香','渚薰','碇真嗣','真希波','葛城美里','绫波系列']},
+                {name:'反叛的鲁路修',chars:['鲁路修','C.C.','朱雀','卡莲','娜娜莉','米蕾','玛丽安娜','皇帝']},
+                {name:'命运石之门',chars:['牧濑红莉栖','冈部伦太郎','椎名真由理','桥田至','阿万音铃羽','比屋定真帆']},
+                {name:'赛博朋克',chars:['露西','大卫','瑞贝卡','曼恩','朵莉欧','琦薇']}
+            ],
+            '日常/搞笑':[
+                {name:'间谍过家家',chars:['阿尼亚','约尔','黄昏','邦德','尤里','贝基','弗兰基']},
+                {name:'孤独摇滚',chars:['后藤一里','喜多郁代','伊地知虹夏','山田凉','广井菊里','PA美']},
+                {name:'小林家的龙女仆',chars:['托尔','康娜','小林','法夫纳','露科亚','艾露玛']}
+            ],
+            '悬疑/推理':[
+                {name:'文豪野犬',chars:['太宰治','中岛敦','芥川龙之介','中原中也','江户川乱步','国木田独步','织田作之助','福泽谕吉','陀思妥耶夫斯基']},
+                {name:'死亡笔记',chars:['L','夜神月','弥海砂','琉克','雷姆','尼亚','梅洛']},
+                {name:'夏日重现',chars:['网代慎平','小舟潮','南方日鹤','菱形朱鹭子','根津银次郎']},
+                {name:'黑执事',chars:['夏尔','塞巴斯蒂安','梅林','巴尔德','菲尼','田中','刘','格雷尔','伊丽莎白','安洁拉','死神']}
+            ]
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // 已上传参考图的角色列表（游戏名|角色名），避免移动端加载不存在的图片
+        // 已上传参考图的角色列表 - 自动检测 thumb.png
+        var knownThumbs = (function() {
+            var wuwa = ['莫宁','洛可可','夏空','坎特蕾拉','露帕','尤诺','赞妮','卡卡罗','菲比','布兰特','艾弥斯','奥古斯塔','绯雪','弗洛洛','卡提西亚','琳奈','陆.赫斯','千xiao','西格莉卡e','安可','白芷','卜灵','椿','长离','炽霞','丹瑾','灯灯','嘉贝莉娜','鉴心','今汐','忌炎','凌阳','莫特菲','秋水','仇远','散华','守岸人','桃祈','维里奈','相里要','秧秧','吟霖','釉瑚','渊武','折枝','珂莱塔'];
+            var genshin = ['胡桃','雷电将军','钟离','甘雨','芙宁娜','神里绫华','那维莱特','纳西妲','刻晴','八重神子','温迪','优菈','宵宫','夜兰','达达利亚','琴','七七','可莉','万叶','珊瑚宫心海','荒泷一斗','赛诺','艾尔海森','迪希雅','提纳里','妮露','阿贝多','莫娜','申鹤','白术','迪卢克','魈','凝光','菲谢尔','芭芭拉','香菱','行秋','重云','砂糖','北斗','诺艾尔','迪奥娜','早柚','九条裟罗','五郎','云堇','久岐忍','菲米尼','琳妮特','夏洛蒂','嘉明','夏沃蕾','千织','绮良良','卡维','莱依拉','瑶瑶','米卡','多莉','柯莱','辛焱','烟绯','坎蒂丝','艾梅莉埃','基尼奇','玛拉妮','希诺宁','恰斯卡','茜特菈莉','林尼','娜维娅','阿蕾奇诺','克洛琳德','希格雯','闲云','瓦雷莎','欧洛伦','伊安珊','蓝砚','丝柯克','丽莎','伊法','伊涅芙','凯亚','卡齐娜','叶洛亚','哥伦比娅·希珀塞莱尼娅','奈芙尔','安柏','尼克','杜林','法尔伽','爱可菲','爱诺','玛薇卡','神里绫人','罗莎莉亚','莉奈娅','莱欧斯利','菈乌玛','菲林斯','赛索斯','雅珂达','雷泽'];
+            var list = ['蔚蓝档案|一之濑明日奈', '碧蓝航线|恶毒白兔', '明日方舟_终末地|伊冯'];
+            for (var i = 0; i < wuwa.length; i++) list.push('鸣潮|' + wuwa[i]);
+            for (var j = 0; j < genshin.length; j++) list.push('原神|' + genshin[j]);
+            return list;
+        })();
+
+        // 生成标签
+        function makeTags(containerId, items, isAnime) {
+            var el = document.getElementById(containerId);
+            if (!el) return;
+            items.forEach(function(item, i) {
+                var btn = document.createElement('button');
+                btn.className = isAnime ? 'ref-cat' : 'ref-tag';
+                btn.setAttribute(isAnime ? 'data-cat' : 'data-game', typeof item === 'string' ? item : item.name);
+                btn.textContent = typeof item === 'string' ? item : item.name;
+                el.appendChild(btn);
+            });
+        }
+        makeTags('tagsEryou', refData['二游']);
+        makeTags('tagsDanji', refData['单机']);
+        makeTags('tagsWangyou', refData['网游']);
+        makeTags('tagsShouyou', refData['手游']);
+        var animeCats = Object.keys(refData['番剧']);
+        makeTags('animeCats', animeCats, true);
+
+        // 默认显示全部角色
+        var allGames = [];
+        Object.keys(refData).forEach(function(k) {
+            if (k === '番剧') {
+                Object.keys(refData[k]).forEach(function(cat) {
+                    refData[k][cat].forEach(function(g) { allGames.push(g); });
+                });
+            } else {
+                refData[k].forEach(function(g) { allGames.push(g); });
+            }
+        });
+        var section = document.getElementById('charsSection');
+        allGames.forEach(function(game) { appendCharGroup(game, section); });
+
+        function appendCharGroup(game, container) {
+            var group = document.createElement('div');
+            group.className = 'char-group';
+            group.setAttribute('data-game', game.name);
+            var hotChars = game.chars;
+            var alphaChars = game.chars.slice().sort(function(a, b) {
+                return a.localeCompare(b, 'zh-CN');
+            });
+            var html = '<h3 class="char-group-title">' + game.name + '</h3>';
+            html += '<div class="char-sort-tabs"><button class="char-sort-tab active" data-sort="hot">热门排行</button><button class="char-sort-tab" data-sort="alpha">名字排序</button></div>';
+            html += '<div class="char-grid char-grid-hot">';
+            hotChars.forEach(function(c, i) {
+                var gameKey = game.name.replace(/[:：]/g, '_') + '|' + c;
+                var thumb = 'https://yifangtx.xyz/images/characters/' + game.name.replace(/[:：]/g, '_') + '/' + c + '/thumb.png';
+                if (knownThumbs.indexOf(gameKey) !== -1) {
+                    html += '<a href="character.html?name=' + encodeURIComponent(c) + '&game=' + encodeURIComponent(game.name) + '" class="char-card-link"><div class="char-card"><div class="char-img"><img src="' + thumb + '" alt="' + c + '" onerror="this.style.display=\'none\'" loading="lazy"><span class="char-rank">NO.' + (i+1) + '</span></div><p class="char-name">' + c + '</p></div></a>';
+                } else {
+                    html += '<a href="character.html?name=' + encodeURIComponent(c) + '&game=' + encodeURIComponent(game.name) + '" class="char-card-link"><div class="char-card"><div class="char-img"><span class="char-rank">NO.' + (i+1) + '</span></div><p class="char-name">' + c + '</p></div></a>';
+                }
+            });
+            html += '</div>';
+            html += '<div class="char-grid char-grid-alpha" style="display:none;">';
+            alphaChars.forEach(function(c, i) {
+                var gameKey = game.name.replace(/[:：]/g, '_') + '|' + c;
+                var thumb = 'https://yifangtx.xyz/images/characters/' + game.name.replace(/[:：]/g, '_') + '/' + c + '/thumb.png';
+                if (knownThumbs.indexOf(gameKey) !== -1) {
+                    html += '<a href="character.html?name=' + encodeURIComponent(c) + '&game=' + encodeURIComponent(game.name) + '" class="char-card-link"><div class="char-card"><div class="char-img"><img src="' + thumb + '" alt="' + c + '" onerror="this.style.display=\'none\'" loading="lazy"><span class="char-rank alpha">' + c.charAt(0) + '</span></div><p class="char-name">' + c + '</p></div></a>';
+                } else {
+                    html += '<a href="character.html?name=' + encodeURIComponent(c) + '&game=' + encodeURIComponent(game.name) + '" class="char-card-link"><div class="char-card"><div class="char-img"><span class="char-rank alpha">' + c.charAt(0) + '</span></div><p class="char-name">' + c + '</p></div></a>';
+                }
+            });
+            html += '</div>';
+            group.innerHTML = html;
+            // 排序切换
+            group.querySelector('.char-sort-tabs').addEventListener('click', function(e) {
+                if (e.target.classList.contains('char-sort-tab')) {
+                    var tabs = this.querySelectorAll('.char-sort-tab');
+                    tabs.forEach(function(t) { t.classList.remove('active'); });
+                    e.target.classList.add('active');
+                    var sort = e.target.getAttribute('data-sort');
+                    group.querySelector('.char-grid-hot').style.display = sort === 'hot' ? 'grid' : 'none';
+                    group.querySelector('.char-grid-alpha').style.display = sort === 'alpha' ? 'grid' : 'none';
+                }
+            });
+            container.appendChild(group);
+        }
+
+        // 标签点击 - 只显示点击的那个
+        document.addEventListener('click', function(e) {
+            var target = e.target;
+            if (target.classList.contains('ref-tag') || target.classList.contains('ref-cat')) {
+                var name = target.textContent.trim();
+                document.getElementById('referenceSearch').value = name;
+                // 隐藏全部
+                document.querySelectorAll('.char-group').forEach(function(g) { g.style.display = 'none'; });
+                // 只显示匹配的
+                var shown = false;
+                document.querySelectorAll('.char-group').forEach(function(g) {
+                    var gName = g.getAttribute('data-game');
+                    if (gName && (gName === name || name === gName.substring(0, name.length))) {
+                        g.style.display = 'block';
+                        shown = true;
+                    }
+                });
+                if (!shown) {
+                    // 没找到，显示全部
+                    document.querySelectorAll('.char-group').forEach(function(g) { g.style.display = 'block'; });
+                }
+            }
+        });
+
+        // 番剧分类
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('ref-cat')) {
+                var cat = e.target.textContent.trim();
+                var panel = document.getElementById('animePanel');
+                var subTags = document.getElementById('animeSubTags');
+                panel.style.display = 'block';
+                subTags.innerHTML = '';
+                var animes = refData['番剧'][cat];
+                if (animes) {
+                    animes.forEach(function(a) {
+                        var btn = document.createElement('button');
+                        btn.className = 'ref-tag';
+                        btn.setAttribute('data-game', a.name);
+                        btn.textContent = a.name;
+                        subTags.appendChild(btn);
+                    });
+                }
+            }
+        });
+
+        // 搜索建议
+        var searchInput = document.getElementById('referenceSearch');
+        var suggestBox = document.getElementById('searchSuggestions');
+        var allCharNames = [];
+        Object.keys(refData).forEach(function(k) {
+            if (k === '番剧') {
+                Object.keys(refData[k]).forEach(function(cat) {
+                    refData[k][cat].forEach(function(g) { g.chars.forEach(function(c) { allCharNames.push(c); }); });
+                });
+            } else {
+                refData[k].forEach(function(g) { g.chars.forEach(function(c) { allCharNames.push(c); }); });
+            }
+        });
+        allCharNames = [...new Set(allCharNames)];
+        if (searchInput && suggestBox) {
+            searchInput.addEventListener('input', function() {
+                var val = this.value.trim().toLowerCase();
+                suggestBox.innerHTML = '';
+                if (!val) { suggestBox.classList.remove('active'); return; }
+                var matches = allCharNames.filter(function(n) { return n.toLowerCase().includes(val); });
+                if (!matches.length) { suggestBox.classList.remove('active'); return; }
+                matches.slice(0, 8).forEach(function(n) {
+                    var item = document.createElement('div');
+                    item.className = 'search-suggest-item';
+                    item.textContent = n;
+                    item.addEventListener('click', function() { searchInput.value = n; suggestBox.classList.remove('active'); filterByChar(n); });
+                    suggestBox.appendChild(item);
+                });
+                suggestBox.classList.add('active');
+            });
+            document.addEventListener('click', function(e) { if (!searchInput.contains(e.target) && !suggestBox.contains(e.target)) suggestBox.classList.remove('active'); });
+        }
+        function filterByChar(name) {
+            document.querySelectorAll('.char-group').forEach(function(g) {
+                var cards = g.querySelectorAll('.char-name');
+                var found = false;
+                cards.forEach(function(c) { if (c.textContent.indexOf(name) !== -1) { found = true; c.closest('.char-card-link').style.display = ''; } else { c.closest('.char-card-link').style.display = 'none'; } });
+                g.style.display = found ? 'block' : 'none';
+            });
+        }
+
+        // ===== 许愿池（Worker同步） =====
+        var WISH_KEY = 'siteWishes', WISH_API = WORKER_API + '/api/wishes';
+        function getWishes() {
+            try { return JSON.parse(localStorage.getItem(WISH_KEY) || '[]'); } catch(e) { return []; }
+        }
+        function saveWishes(wishes) {
+            localStorage.setItem(WISH_KEY, JSON.stringify(wishes));
+        }
+        function workerWishPost(data, cb) {
+            fetch(WISH_API, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).then(function(r){return r.json()}).then(cb).catch(function(){});
+        }
+        function workerWishDelete(id, authorId, cb) {
+            fetch(WISH_API + '/' + id + '?authorId=' + encodeURIComponent(authorId), {method:'DELETE'}).then(function(r){return r.json()}).then(cb).catch(function(){});
+        }
+        function workerWishVote(id, delta) {
+            fetch(WISH_API + '/' + id + '/vote', {method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({delta:delta})}).catch(function(){});
+        }
+        function getCurrentUserForWish() {
+            if (typeof getCurrentUserId !== 'undefined') {
+                var uid = getCurrentUserId();
+                if (uid) return uid;
+            }
+            var local = localStorage.getItem('currentUser');
+            if (local) return local;
+            var anon = sessionStorage.getItem('wishAnonId');
+            if (!anon) { anon = 'anon_' + Date.now(); sessionStorage.setItem('wishAnonId', anon); }
+            return anon;
+        }
+        function renderWishes() {
+            var list = document.getElementById('wishList');
+            var wishes = getWishes();
+            var currentId = getCurrentUserForWish();
+            wishes.sort(function(a,b){ return b.votes - a.votes; });
+            list.innerHTML = wishes.map(function(w, i) {
+                var delBtn = (currentId && w.authorId === currentId) ? '<button class="wish-del-btn" data-idx="' + i + '"><i class="fas fa-times"></i></button>' : '';
+                var avatarLetter = (w.authorName || w.authorId || '?').charAt(0).toUpperCase();
+                var authorName = escHTML(w.authorName || '匿名');
+                return '<div class="wish-item"><div class="wish-user"><img class="wish-avatar-img" src="' + WORKER_API + '/api/auth/avatar?account=' + (w.authorId||'') + '" onerror="this.style.display=' + "'none'" + ';this.nextElementSibling.style.display=' + "'flex'" + '"><span class="wish-avatar-txt" style="display:none">' + avatarLetter + '</span><span class="wish-name">' + authorName + '</span></div><div class="wish-body"><span class="wish-text">' + escHTML(w.name) + '</span><span class="wish-time">' + w.time + '</span></div><button class="wish-vote" data-idx="' + i + '">👍 ' + (w.votes || 0) + '</button>' + delBtn + '</div>';
+            }).join('') || '<p style="text-align:center;color:var(--text-secondary);font-size:12px;padding:20px 0;">还没有人许愿，快来第一个！</p>';
+            // 投票
+            document.querySelectorAll('.wish-vote').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var idx = parseInt(this.getAttribute('data-idx'));
+                    var wishes = getWishes();
+                    wishes.sort(function(a,b){ return b.votes - a.votes; });
+                    var wish = wishes[idx];
+                    if (!wish) return;
+                    var voted = JSON.parse(localStorage.getItem('wishVoted') || '[]');
+                    if (voted.indexOf(wish.id) !== -1 || voted.indexOf(wish.name) !== -1) {
+                        showNotification && showNotification('已经投过票了~', 'error');
+                        return;
+                    }
+                    voted.push(wish.id);
+                    localStorage.setItem('wishVoted', JSON.stringify(voted));
+                    wish.votes = (wish.votes || 0) + 1;
+                    workerWishVote(wish.id, 1);
+                    var all = getWishes();
+                    for (var j = 0; j < all.length; j++) {
+                        if (all[j].name === wish.name && all[j].time === wish.time && all[j].authorId === wish.authorId) {
+                            all[j].votes = wish.votes;
+                            break;
+                        }
+                    }
+                    saveWishes(all);
+                    renderWishes();
+                });
+            });
+            // 删除
+            document.querySelectorAll('.wish-del-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var idx = parseInt(this.getAttribute('data-idx'));
+                    var wishes = getWishes();
+                    wishes.sort(function(a,b){ return b.votes - a.votes; });
+                    if (confirm('确定要删除这条许愿吗？')) {
+                        var delId = wishes[idx].id;
+                        var delAuth = wishes[idx].authorId;
+                        wishes.splice(idx, 1);
+                        saveWishes(wishes);
+                        workerWishDelete(delId, delAuth, function(){});
+                        renderWishes();
+                    }
+                });
+            });
+        }
+        function escHTML(s) {
+            var d = document.createElement('div'); d.textContent = s; return d.innerHTML;
+        }
+        // 初始化：从 Gist 加载
+        fetch(WISH_API).then(function(r){return r.json()}).then(function(remote){saveWishes(remote||[]);renderWishes()}).catch(function(){renderWishes()});
+        document.getElementById('wishSubmit').addEventListener('click', function() {
+            var input = document.getElementById('wishInput');
+            var name = input.value.trim();
+            if (!name) return;
+            var uid = getCurrentUserForWish();
+            // 未登录每天限2条
+            var today = new Date().toISOString().split('T')[0];
+            var dailyKey = 'wishDaily_' + uid;
+            var daily = JSON.parse(localStorage.getItem(dailyKey) || '{"date":"","count":0}');
+            if (daily.date !== today) daily = {date: today, count: 0};
+            if (!localStorage.getItem('currentUser') && daily.count >= 2) {
+                showNotification && showNotification('未登录用户每天限2条许愿', 'error');
+                return;
+            }
+            daily.count++;
+            localStorage.setItem(dailyKey, JSON.stringify(daily));
+            var data = { name: name, time: today, votes: 0, authorId: uid, authorName: localStorage.getItem('currentUserName') || '匿名' };
+            workerWishPost(data, function(r) {
+                if (r && r.id) {
+                    var wishes = getWishes();
+                    wishes.push(r);
+                    saveWishes(wishes);
+                    input.value = '';
+                    renderWishes();
+                }
+            });
+        });
+        document.getElementById('wishInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') { e.preventDefault(); document.getElementById('wishSubmit').click(); }
+        });
+        document.getElementById('wishInput').addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+        document.getElementById('wishPoolHeader').addEventListener('click', function(e) {
+            if (e.target.id === 'wishPoolHeader' || e.target.id === 'wishPoolToggle') {
+                document.getElementById('wishPool').classList.toggle('collapsed');
+            }
+        });
+        // 添加水印
+        document.querySelectorAll('.char-img').forEach(function(el){el.insertAdjacentHTML('beforeend','<span class="char-watermark">一方通行 ©</span>')});
+        // 拖拽调整宽度（左边缘）
+        var wishResizeL = document.getElementById('wishResizeL');
+        var wishResizeB = document.getElementById('wishResizeB');
+        var wishPool = document.getElementById('wishPool');
+        wishResizeL.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            var startX = e.clientX, startW = wishPool.offsetWidth;
+            function onMove(ev) {
+                var newW = startW + startX - ev.clientX;
+                if (newW >= 220 && newW <= 500) wishPool.style.width = newW + 'px';
+            }
+            function onUp() { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); }
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        });
+        // 拖拽调整高度（底部）
+        wishResizeB.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            var body = document.getElementById('wishPoolBody');
+            var startY = e.clientY, startH = body.offsetHeight;
+            function onMove(ev) {
+                var newH = startH + ev.clientY - startY;
+                if (newH >= 100 && newH <= 600) body.style.maxHeight = body.style.height = newH + 'px';
+            }
+            function onUp() { document.removeEventListener('mousemove', onMove); document.removeEventListener('mouseup', onUp); }
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        });
+    });
+    </script>
+</body>
+</html>
+<!-- updated -->
