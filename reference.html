@@ -18,7 +18,7 @@
                 <a href="index.html#services" class="nav-link">服务</a>
                 <a href="portfolio.html" class="nav-link">作品</a>
                 <a href="reference.html" class="nav-link active">动作参考</a>
-                <a href="rescue.html" class="nav-link">废片拯救</a><a href="co-create.html" class="nav-link">共创合作</a>
+                <a href="rescue.html" class="nav-link">废片拯救</a>
                 <a href="index.html#pricing" class="nav-link">价格</a>
                 <a href="index.html#contact" class="nav-link">联系</a>
             </div>
@@ -34,7 +34,7 @@
         </div>
     </nav>
     <div class="mobile-menu" id="mobileMenu">
-        <a href="index.html">首页</a><a href="index.html#services">服务</a><a href="portfolio.html">作品</a>        <a href="reference.html">动作参考</a><a href="rescue.html">废片拯救</a><a href="co-create.html" class="nav-link">共创合作</a><a href="index.html#pricing">价格</a><a href="index.html#contact">联系</a>
+        <a href="index.html">首页</a><a href="index.html#services">服务</a><a href="portfolio.html">作品</a>        <a href="reference.html">动作参考</a><a href="rescue.html">废片拯救</a><a href="index.html#pricing">价格</a><a href="index.html#contact">联系</a>
     </div>
 
     <main style="padding-top:80px">
@@ -168,7 +168,8 @@
             '悬疑/推理':[
                 {name:'文豪野犬',chars:['太宰治','中岛敦','芥川龙之介','中原中也','江户川乱步','国木田独步','织田作之助','福泽谕吉','陀思妥耶夫斯基']},
                 {name:'死亡笔记',chars:['L','夜神月','弥海砂','琉克','雷姆','尼亚','梅洛']},
-                {name:'夏日重现',chars:['网代慎平','小舟潮','南方日鹤','菱形朱鹭子','根津银次郎']}
+                {name:'夏日重现',chars:['网代慎平','小舟潮','南方日鹤','菱形朱鹭子','根津银次郎']},
+                {name:'黑执事',chars:['夏尔','塞巴斯蒂安','梅林','巴尔德','菲尼','田中','刘','格雷尔','伊丽莎白','安洁拉','死神']}
             ]
         }
     };
@@ -479,6 +480,8 @@
                 document.getElementById('wishPool').classList.toggle('collapsed');
             }
         });
+        // 添加水印
+        document.querySelectorAll('.char-img').forEach(function(el){el.insertAdjacentHTML('beforeend','<span class="char-watermark">一方通行 ©</span>')});
         // 拖拽调整宽度（左边缘）
         var wishResizeL = document.getElementById('wishResizeL');
         var wishResizeB = document.getElementById('wishResizeB');
