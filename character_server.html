@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://www.gstatic.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <title>鍔ㄤ綔鍙傝€?- 涓€鏂归€氳</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css?v=39">
+    <style>
+        .char-header {
+            text-align:center; padding:60px 20px 30px;
+        }
+        .char-header .char-avatar {
+            width:100px; height:100px; border-radius:50%;
+            background:linear-gradient(135deg,var(--primary),var(--secondary));
+            display:flex; align-items:center; justify-content:center;
+            margin:0 auto 16px; font-size:40px; color:#fff;
+        }
+        .char-header h1 { font-size:clamp(28px,5vw,44px); font-weight:700; }
+        .char-header .char-source { color:var(--text-secondary); font-size:16px; }
+        .pose-grid {
+            display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+            gap:16px; padding:0 0 40px;
+        }
+        .pose-card {
+            background:var(--card); border-radius:14px; overflow:hidden;
+            box-shadow:0 2px 8px rgba(0,0,0,0.04); transition:all 0.3s;
+            cursor:pointer; aspect-ratio:3/4;
+        }
+        .pose-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,0.12); }
+        .pose-card .pose-img {
+            aspect-ratio:3/4; background:linear-gradient(135deg,var(--primary),var(--secondary));
+            display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden;
+        }
+        .char-view-toggle { position:absolute; top:16px; right:20px; display:flex; gap:6px; }
+        .view-btn { padding:5px 12px; border-radius:6px; border:1px solid var(--border); background:var(--bg); color:var(--text-secondary); font-size:12px; cursor:pointer; font-family:var(--font); transition:all .2s; }
+        .view-btn.active { background:var(--primary); color:#fff; border-color:var(--primary); }
+        .view-btn:hover { border-color:var(--primary); }
+        .char-header { position:relative; }
+        .pose-card .pose-img img {
+            width:100%; height:100%; object-fit:cover;
+            transition:transform 0.3s;
+        }
+        .pose-card:hover .pose-img img { transform:scale(1.05); }
+        .pose-card .pose-info { padding:12px; text-align:center; }
+        .pose-card .pose-info h4 { font-size:14px; margin-bottom:2px; }
+        .pose-card .pose-info p { font-size:12px; color:var(--text-secondary); }
+        .no-data {
+            text-align:center; padding:60px 20px; color:var(--text-secondary);
+        }
+        .no-data i { font-size:48px; display:block; margin-bottom:16px; opacity:0.3; }
+    </style>
+</head>
+<body>
+    <nav class="nav visible" id="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">涓€鏂归€氳</a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">棣栭〉</a>
+                <a href="portfolio.html" class="nav-link">浣滃搧</a>
+                <a href="reference.html" class="nav-link active">鍔ㄤ綔鍙傝€?/a>
+                <a href="index.html#pricing" class="nav-link">浠锋牸</a>
+                <a href="index.html#contact" class="nav-link">鑱旂郴</a>
+            </div>
+            <div class="nav-actions">
+                <button class="nav-theme" id="themeBtn"><i class="fas fa-moon"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <main style="padding-top:80px">
+        <a href="reference.html" class="back-btn"><i class="fas fa-arrow-left"></i> 杩斿洖鍔ㄤ綔鍙傝€?/a>
+        <section class="section" style="padding-top:20px;">
+            <div class="container" id="charContent"></div>
+        </section>
+    </main>
+
+    <footer class="footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><h3>涓€鏂归€氳</h3><p>鐢ㄤ弗璋ㄤ笀閲忓垱浣?/p></div></div><div class="footer-bottom"><p>漏 2026 涓€鏂归€氳</p></div></div></footer>
+
+    <script src="app.js?v=1"></script>
+    <script src="script.js?v=44"></script>
+    <script>
+    // 瑙掕壊鏁版嵁锛堜笌 reference.html 鍚屾锛?    var refData = {
+        浜屾父: [
+            {name:'鍘熺',chars:['鑳℃','闆风數灏嗗啗','閽熺','鐢橀洦','鑺欏畞濞?,'绁為噷缁崕','閭ｇ淮鑾辩壒','绾宠タ濡?,'鍒绘櫞','鍏噸绁炲瓙','娓╄开','浼樿張','瀹靛','澶滃叞','杈捐揪鍒╀簹','鐞?,'涓冧竷','鍙帀','涓囧彾','鐝婄憵瀹績娴?,'鑽掓撤涓€鏂?,'璧涜','鑹惧皵娴锋．','杩笇闆?,'鎻愮撼閲?,'濡湶','闃胯礉澶?,'鑾','鐢抽工','鐧芥湳','杩崲鍏?,'榄?,'娴佹氮鑰?,'鍑濆厜','鑿茶阿灏?,'鑺姯鎷?,'棣欒彵','鐝凹鐗?,'琛岀','閲嶄簯','鐮傜硸','鍖楁枟','璇鸿壘灏?,'杩ゥ濞?,'鏃╂煔','涔濇潯瑁熺綏','浜旈儙','浜戝爣','涔呭矏蹇?,'楣块噹闄㈠钩钘?,'鑿茬背灏?,'鐞冲Ξ鐗?,'澶忔礇钂?,'鍢夋槑','澶忔矁钑?,'鍗冪粐','缁壇鑹?,'鍗＄淮','鐝愰湶鐝?,'鑾变緷鎷?,'鐟剁懚','绫冲崱','澶氳帀','鏌幈','鎵橀┈','杈涚劚','鐑熺化','鍧庤拏涓?,'鑹炬鑾夊焹','鍩哄凹濂?,'鐜涙媺濡?,'甯岃瀹?,'鎭版柉鍗?,'鑼滅壒鑿堣帀','鏋楀凹','濞滅淮濞?,'闃胯暰濂囪','鍏嬫礇鐞冲痉','甯屾牸闆?,'闂蹭簯','姊﹁鏈堢憺甯?,'鐡﹂浄鑾?,'娆ф礇浼?,'浼婂畨鐝?,'濉斿埄闆?,'钃濈牃','涓濇煰鍏?,'涓借帋','浼婃硶','浼婃秴鑺?,'鍑簹','鍗￠綈濞?,'鍙舵礇浜?,'鍝ヤ鸡姣斿▍路甯岀弨濉炶幈灏煎▍','濂堣姍灏?,'瀹夋煆','灏煎厠','鏉滄灄','娉曞皵浼?,'鐖卞彲鑿?,'鐖辫','鐜涜枃鍗?,'绁為噷缁汉','缃楄帋鑾変簹','鑾夊濞?,'鑾辨鏂埄','鑿堜箤鐜?,'鑿叉灄鏂?,'璧涚储鏂?,'闆呯弬杈?,'闆锋辰']},
+            {name:'宕╁潖锛氭槦绌归搧閬?,chars:['閾剁嫾','闀滄祦','鏅厓','鍒?,'绗︾巹','鐭ユ洿楦?,'濮瓙','鍗¤姍鍗?,'涓规亽','涓夋湀涓?,'鐡﹀皵鐗?,'甯冩礇濡▍','甯屽効','缃楀埞','鐮傞噾','榛戝','寮€鎷撹€?,'鐧介湶','褰﹀嵖','绱犺３','鑹句笣濡?,'鍋滀簯','妗戝崥','浣╂媺','鍗㈠崱','椹┖','鑺辩伀','榛戝ぉ楣?,'绫虫矙','鍔犳媺璧?,'娴佽悿','娉㈡彁娆?,'缈＄繝','浜戠拑','妞掍笜','椋為渼','鐏电爞','涔辩牬','鏄熸湡鏃?,'闃挎牸鑾遍泤','缂囧疂','閭ｅ埢澶?,'椋庡爣','钘胯椏','閾舵灊','闃','鐪熺悊鍖荤敓','榛勬硥']},
+            {name:'缁濆尯闆?,chars:['鑹捐幉','濡彲','瀹夋瘮','鐚張','姣斿埄','鏍艰帀涓?,'鐝傝暰濡?,'瀹変笢','11鍙?,'闈掕。','鑻嶈','鑾卞崱鎭?,'鏈遍涪','绠€','璧涙柉','鍑拻','鏌忓Ξ鎬?,'鏈堝煄鏌?,'鏄熻闆?,'鑰€鍢夐煶','娴呯窘鎮犵湡','浼婅姍鐞?,'鎵虫満','娉㈠彲濞?,'钖囪枃瀹?]},
+            {name:'鏄庢棩鏂硅垷',chars:['闃跨背濞?,'鑳藉ぉ浣?,'閾剁伆','鏂崱钂?,'闄?,'寰峰厠钀ㄦ柉','鍙插皵鐗瑰皵','鍑皵甯?,'鎷夋櫘鍏板痉','W','骞?,'浠?,'澶?,'灞?,'妫樺埡','娉ュ博','鍌€褰?,'閾冨叞','瀹夋磥鑾夊','浼婅姍鍒╃壒','鎺ㄨ繘涔嬬帇','璧媺鏍?,'榛?,'鑾柉鎻愰┈','椋庣瑳','鑻囪崏','缂皵璧涙€?,'閿?,'濉戝績','浣╀僵','蹇嶅啲']},
+            {name:'鏄庢棩鏂硅垷锛氱粓鏈湴',chars:['浣╀附鍗?,'闄堝崈璇?,'鐙煎崼','浣欑儸','澶у北','鑾变竾姹€','鑹剧淮鏂囧','瀹夋磥鑾夊','瀹夊灏?,'闇滄槦','闆泬','鑿插凹鍏嬫柉','浼婂啹']},
+            {name:'钄氳摑妗ｆ',chars:['鐧藉瓙','鏄熼噹','鐖变附涓?,'鏃ュ','浼橀','鐜涗附','鑻ヨ椈','楣ゅ煄','鑼滈','鑺卞瓙','鑺归','灏忔槬','绾辩粐','娉?,'涓€涔嬫繎鏄庢棩濂?]},
+            {name:'纰ц摑鑸嚎',chars:['浼佷笟','璐濆皵娉曟柉鐗?,'缁尝','鐖卞畷','娆ф牴浜茬帇','淇炬柉楹?,'鐙鍏?,'鍩冨悏灏?,'鍏嬪埄澶叞','娴蜂鸡濞?,'鍦ｅ湴浜氬摜','钀ㄦ媺鎵樺姞','鍒楀厠鏄熸暒','璧ゅ煄','鍔犺春','澶у嚖','淇℃祿','宀涢','鎭舵瘨鐧藉厰']},
+            {name:'灏戝コ鍓嶇嚎',chars:['M4A1','AK-12','AN-94','Kar98k','HK416','WA2000','UMP45','鏄ョ敯','M16A1','SOPMOD II','RO635','G11','RFB','MDR']},
+            {name:'鑳滃埄濂崇锛氬Ξ濮?,chars:['鎷夋瘲','闃垮凹鏂?,'鐜涜帀瀹?,'鐧介洩鍏富','绾㈣幉','妗冧箰涓?,'鐖变附涓?,'涓藉','寰烽浄鍏?,'娴蜂鸡','椴佸痉绫虫媺','姊呯櫥','璇轰簹','鍝堝叞','鍚夎悵濠?,'绱㈡灄','绫冲搱鎷?,'灏兼仼','浣╃弨','鏅附鐡﹁拏','鐗′腹','甯冧附寰?,'濞滃槈','浼婅帋璐濆皵']},
+            {name:'閲嶈繑鏈潵锛?999',chars:['鍗佸洓琛岃瘲','鏄熼攽','鍏旀瘺鎵嬭','杩滄梾','姘旂悆娲惧','鑻规灉','鏈攬鍑?,'鏂寰?,'鍧﹀崡鐗?,'鍐?,'X','鏌忔灄浠ヤ笢','娓╁Ξ寮楅浄寰?,'鐧惧か闀?,'娉ラ鐨勫＋','鎸栨帢鑹烘湳','闆捐鑰?,'閾呯幓鐠?]},
+            {name:'鏃犳湡杩烽€?,chars:['娴锋媺','鍗撳▍','鐧介€?,'鍏板埄','鑹剧憺灏?,'璧崱钂?,'绉戝笇','璇哄厠鏂?,'鍗＄背鍒╁畨','缁村鍒╀簹','鍒囧皵瑗?,'娓╄拏','娉扮壒鎷?,'涔濆崄涔?]},
+            {name:'闃撮槼甯?,chars:['澶у渤涓?,'楝煎垏','鑼ㄦ湪绔ュ瓙','閰掑悶绔ュ瓙','澶уぉ鐙?,'濡栧垁濮?,'涓嶇煡鐏?,'鐜夎椈鍓?,'榛戠瀛?,'鐧界瀛?,'涓€鐩繛','鑽?,'褰煎哺鑺?,'闈㈢伒姘?,'楝肩涓?,'閾冮箍寰″墠','鍗冨К','甯濋噴澶?,'闃夸慨缃?]}
+        ],
+        鍗曟満: [
+            {name:'鑹惧皵鐧绘硶鐜?,chars:['鐜涜帀鍗?,'鎷夊Ξ','姊呯惓濞?,'鐜涜幉濡簹','缁村厠','绫冲嚡鎷?,'鑿堥泤','鎵橀浄鐗?,'甯冭幈娉?,'缃楁澃灏?,'鑿查泤','D','閾佸尃淇彜','钁涚憺鍏?,'鎷夎揪鍐?,'婊℃湀濂崇帇钑惧鑿?,'鐜涘皵鍩虹壒','钁涘瓪闆?,'鐧炬櫤鐖靛＋','娑呮枑涓?,'姊甸浄','灏ゆ媺','鐟熸總','浜氬巻灞卞ぇ鎴樺＋澹?]},
+            {name:'榛戞殫涔嬮瓊3',chars:['闃茬伀濂?,'绱㈡媺灏?,'娲嬭懕楠戝＋','鍜掓湳鑰佸笀','鍗″鍒╃撼','鐏板績鍝?,'钖勬毊涔嬪浗鐨勫笇閲屾柉','瀹夐噷','闇嶆媺鏂?,'钖帇','鑸炲','娉曞叞涓嶆闃?,'宸ㄤ汉灏ゅ','榛戦緳绫崇媱灏?,'鐩栧皵']},
+            {name:'鍙嫾',chars:['鐙?,'鑻囧悕寮︿竴閮?,'姘哥湡','鑻囧悕涓€蹇?,'浣涢洉甯?,'铦?,'鏋?,'涔濋儙','鍓戝湥','妯遍緳','鐮存垝鍍?,'鐙瓙鐚?,'楝煎垜閮?]},
+            {name:'楝兼常',chars:['浣嗕竵','缁村悏灏?,'灏肩','缈犺タ','钑捐拏','V','鑾噷妫?,'濮帀鍙?,'鏂反杈?,'钂欏痉鏂?,'濡彲','甯曡拏']},
+            {name:'灏煎皵锛氭満姊扮邯鍏?,chars:['2B','9S','A2','鎸囨尌瀹?,'甯曟柉鍗″皵','浜氬綋','澶忓▋','杩摝鎷?,'娉㈡尝闇?,'杩尝闇?,'鑹剧背灏?,'鏈烘鐢熷懡浣?]},
+            {name:'濂崇寮傞椈褰?',chars:['Joker','楂樺嵎鏉?,'鏂板矝鐪?,'鑺虫辰闇?,'鍧傛湰榫欏徃','鍠滃宸濈浠?,'浣愪粨鍙屽彾','濂ユ潙鏄?,'鏄庢櫤鍚鹃儙','涓稿枩','鎷夐洴濡?,'鍚夋辰闇?]},
+            {name:'鏈€缁堝够鎯?',chars:['钂傛硶','鍏嬪姵寰?,'鐖变附涓?,'钀ㄨ彶缃楁柉','鎵庡厠鏂?,'宸撮浄鐗?,'灏よ彶','鏂囨．鐗?,'瑗垮痉','璧ょ孩XIII','闆疯','璺痉','鏇?,'鏉拌鐡?]},
+            {name:'鐢熷寲鍗辨満',chars:['閲屾槀','鑹捐揪路鐜?,'鍏嬮噷鏂?,'鍏嬭幈灏?,'鍚夊皵','濞佹柉鍏?,'鐟炶礉鍗?,'娴蜂鸡濞?,'浼婃．','绫冲▍','鍏埖','璋㈠▋','鐨皵鏂?,'鏉板厠']}
+        ],
+        缃戞父: [
+            {name:'鑻遍泟鑱旂洘',chars:['閲戝厠涓?,'闃跨嫺','浜氱储','鎷夊厠涓?,'浼婃辰鐟炲皵','鑹惧笇','鍗＄壒鐞冲','閿愰洴','鍒€濡?,'鐩插儳','鍔?,'钖囨仼','鍗¤帋','璧涘','浣愪紛','鍑殣','鏍兼俯','姘告仼','浣涜€舵垐','闃垮崱涓?,'鐞村コ','椋庡コ','濂虫灙','钄?,'鍑壒鐞?,'钑炬濞?,'鐨庢湀','鍓戝К','鎻愯帿','瀹夊Ξ','璇烘墜','鐩栦鸡','閿ょ煶','鏉版柉','鍗＄墝','鍗㈤敗瀹?,'濞滅編','鐠愮拹','鐭冲ご浜?,'鍙戞潯','鏂帿寰?,'瀹夎摀钀?,'濂ョ綏鎷?,'姊呭皵','闃挎湪鏈?,'鏈哄櫒浜?,'娉板潶','鍗冪弿','濂ユ仼','濡敾','浜氭墭鍏嬫柉','濉炵撼','濂宠','铚樿洓濂崇殗','杈涘痉鎷?,'闃垮吂灏?]},
+            {name:'姘稿姭鏃犻棿',chars:['瀹佺孩澶?,'瀛ｆ钵娴?,'杩﹀崡','宕斾笁濞?,'鍦熷尽闂ㄨ儭妗?,'澶╂捣','濡栧垁','姝︾敯淇″繝','鏃犲皹','鐜夌幉鐝?,'鍝堣开','娌堝','娈风传钀?,'瀛ｈ幑鑾?,'寮犺捣鐏?,'甯媺','鍒樼偧']},
+            {name:'瀹堟湜鍏堥攱',chars:['D.Va','婧愭皬','榛戠櫨鍚?,'澶╀娇','鐚庣┖','灏忕編','娉曡€佷箣楣?,'楹﹀厠闆?,'鍗婅棌','瀹夊','甯冮噷鍚夊','鑹句粈','绱㈡澃鎭?,'姝荤','绂呴泤濉?,'璺湼','鐙傞紶','鑾紛鎷?,'瑗挎牸鐜?,'鍥炲０','闆惧瓙','鎷夌帥鍒?,'浼婃媺閿?,'鐢熷懡涔嬫','姣涘姞','鏈辫','楠囩伨']}
+        ],
+        鎵嬫父: [
+            {name:'鐜嬭€呰崳鑰€',chars:['璨傝潐','鏉庣櫧','鐜嬫槶鍚?,'瀛欐偀绌?,'瑗挎柦','鍏瓩绂?,'闊╀俊','璇歌憶浜?,'闇插','鑺辨湪鍏?,'鐧鹃噷瀹堢害','闀?,'浜戠绩','澶т箶','灏忎箶','瀛欏皻棣?,'铏炲К','姝﹀垯澶?]},
+            {name:'绗簲浜烘牸',chars:['鍥竵','鏉板厠','鍏堢煡','绾㈣澏','鍖荤敓','鏈烘甯?,'绌哄啗','绁徃','璋冮甯?,'浣ｅ叺','鍐掗櫓瀹?,'鍜掓湳甯?]}
+        ],
+        鐣墽: {
+            '鎴樻枟/鐑':[
+                {name:'鍜掓湳鍥炴垬',chars:['浜旀潯鎮?,'铏庢潠鎮犱粊','浼忛粦鎯?,'閽夊磶閲庤敺钖?,'涓ら潰瀹垮偐','鐙楀嵎妫?,'绂呴櫌鐪熷笇','鐔婄尗','涔欓蹇уお','澶忔补鏉?,'绂呴櫌鐢氬皵','鑳€鐩?]},
+                {name:'楝肩伃涔嬪垉',chars:['鐏堕棬鐐不閮?,'鐏堕棬绁㈣眴瀛?,'鎴戝鍠勯€?,'鍢村钩浼婁箣鍔?,'瀵屽唸涔夊媷','铦磋澏蹇?,'鐐肩嫳鏉忓閮?,'瀹囬珓澶╁厓','鏃堕€忔棤涓€閮?,'鐢橀湶瀵鸿湝鐠?,'浼婇粦灏忚姯鍐?,'涓嶆宸濆疄寮?,'鍗婂ぉ鐙?,'鐚楃獫搴?]},
+                {name:'杩涘嚮鐨勫法浜?,chars:['鍒╁▉灏?,'鑹句鸡','涓夌瑺','闃垮皵鏁?,'闊╁悏','鍩冨皵鏂?,'璁?,'钀ㄨ帋','鏌凹','甯屾柉鐗瑰埄浜?,'灏ゅ讥灏?,'鑾辩撼','璐濆皵鎵樼壒','闃垮Ξ']},
+                {name:'鐢甸敮浜?,chars:['鐜涘鐜?,'鐢垫','甯曠摝','鏃╁窛绉?,'濮噹','钑惧','鍏夌啓','宀歌竟']},
+                {name:'姝荤',chars:['榛戝磶涓€鎶?,'鏈芥湪闇茬惇浜?,'鏃ョ暘璋峰啲鐙儙','鏈芥湪鐧藉搲','娴﹀師鍠滃姪','浜曚笂缁囧К','鏈芥湪闇茬惇浜?,'闃挎暎浜曟亱娆?,'鏇存湪鍓戝叓','鍗箣鑺辩儓','钃濇煋鎯ｅ彸浠?,'甯備父閾?,'涔屽皵濂囧ゥ鎷?,'钁涘姏濮嗕箶']},
+                {name:'娴疯醇鐜?,chars:['璺','绱㈤殕','灞辨不','濞滅編','缃?,'濂冲笣','涔斿反','缃楀','寮楀叞濂?,'甯冮瞾鍏?,'鐢氬钩','鑹炬柉','钀ㄥ崥','澶氬紬鏈楁槑鍝?,'绾㈠彂棣欏厠鏂?]},
+                {name:'鐏奖蹇嶈€?,chars:['婕╂丁楦ｄ汉','瀹囨櫤娉綈鍔?,'鏃楁湪鍗″崱瑗?,'瀹囨櫤娉㈤棘','鏃ュ悜闆忕敯','鏄ラ噹妯?,'鑷潵涔?,'澶ц泧涓?,'绾叉墜','娉㈤姘撮棬','瀹囨櫤娉㈡枒','鍗冩墜鏌遍棿','鎴戠埍缃?,'楣夸父','瀹佹']},
+                {name:'榫欑彔',chars:['瀛欐偀绌?,'璐濆悏濉?,'鎮熼キ','寮楀埄钀?,'浜洪€犱汉18鍙?,'浜洪€犱汉17鍙?,'鐗瑰叞鍏嬫柉','姣斿厠','鍏嬫灄','榫熶粰浜?,'姣旈瞾鏂?,'缁存柉','甯岀壒','鍚夎繛']},
+                {name:'JOJO鐨勫濡欏啋闄?,chars:['绌烘潯鎵垮お閮?,'DIO','涔旈瞾璇?,'甯冨姞鎷夋彁','宀歌竟闇蹭即','涔旂撼妫?,'瑗挎拻','鑺变含闄㈠吀鏄?,'娉㈤瞾閭ｉ浄澶?,'鍚夎壇鍚夊奖','绾冲叞杩?,'闃垮笗鍩?]},
+                {name:'涓€鎷宠秴浜?,chars:['鍩肩帀','鏉拌鏂?,'榫欏嵎','鍚归洩','楗跨嫾','King','閭﹀彜','鍘熷瓙姝﹀＋','閲戝睘楠戝＋','鏃犺瘉楠戝＋']},
+                {name:'钁€佺殑鑺欒帀鑾?,chars:['鑺欒帀鑾?,'鑿蹭鸡','杈涚編灏?,'浼戝灏斿厠','鑹惧唹','璧炲垯','濞佸皵','灏よ礉灏?]},
+                {name:'瀹跺涵鏁欏笀',chars:['娌㈢敯绾插悏','浜戦泙鎭讥','鍏亾楠?,'鐙卞闅间汉','灞辨湰姝?,'钃濇尝','搴撴礇濮?,'杩','鐧藉叞','XANXUS']}
+            ],
+            '鎭嬬埍/闈掓槬':[
+                {name:'鏇磋。浜哄伓鍧犲叆鐖辨渤',chars:['鍠滃宸濇捣姊?,'浜旀潯鏂拌彍','鐝犵彔','涔冪窘','姘翠箖']},
+                {name:'鍫€涓庡鏉?,chars:['鍫€浜瓙','瀹潙浼婃緞','鐭冲窛閫?,'浠欑煶缈?,'鍚夊窛鐢辩邯']},
+                {name:'浜旂瓑鍒嗙殑鏂板',chars:['涓噹涓夌帠','涓噹浜屼箖','涓噹涓€鑺?,'涓噹鍥涘彾','涓噹浜旀湀','涓婃潐椋庡お閮?]},
+                {name:'杈夊澶у皬濮?,chars:['鍥涘杈夊','鐧介摱寰¤','钘ゅ師鍗冭姳','鐭充笂浼?,'浼婁簳閲庡讥瀛?,'鏃╁潅鐖?]},
+                {name:'闈掓槬鐚ご灏戝勾',chars:['妯卞矝楹昏。','姊撳窛鍜插お','鍙よ春鏈嬬粯','涓版花鍜岃姳','鍙屽彾鐞嗗ぎ']}
+            ],
+            '寮備笘鐣?濂囧够':[
+                {name:'Re:浠庨浂寮€濮?,chars:['钑惧','鎷夊','鐖辫湝鑾夐泤','鑿滄湀鏄?,'纰х繝涓?,'缃楀吂鐡﹀皵','甯曞厠','鑹惧К澶氬']},
+                {name:'杞敓鍙茶幈濮?,chars:['鍒╁椴?,'绫宠帀濮?,'鏈辫彍','绱嫅','鑻嶅奖','绾父','鍝ュ竷濉?,'杩簹娉㈢綏鏂?]},
+                {name:'鏃犺亴杞敓',chars:['娲涚惇甯?,'鑹捐帀涓?,'甯岄湶鑿?,'椴佽开涔屾柉','淇濈綏','濉炲凹鏂?,'鐟炴澃灏斿痉','濂ュ皵鏂拏寰?]},
+                {name:'涓虹編濂戒笘鐣岀尞涓婄绂?,chars:['鎯犳儬','闃垮簱濞?,'杈惧厠濡柉','浣愯棨鍜岀湡','鎮犳偁','鐖变附涓?,'宸村凹灏?]},
+                {name:'鐩句箣鍕囪€?,chars:['宀╄胺灏氭枃','鎷夎姍濉旇帀闆?,'鑿叉礇','姊呭皵钂?,'鐞夌拑','鑾夊笇浜?]},
+                {name:'OVERLORD',chars:['瀹夊吂','闆呭効璐濆痉','澶忔彁闆?,'杩背涔屽摜鏂?,'绉戝鐗规柉','濉炲反鏂?,'椹浄','浜氫箤鎷?]}
+            ],
+            '绉戝够/鏈虹敳':[
+                {name:'EVA',chars:['缁尝涓?,'鏄庢棩棣?,'娓氳柊','纰囩湡鍡?,'鐪熷笇娉?,'钁涘煄缇庨噷','缁尝绯诲垪']},
+                {name:'鍙嶅彌鐨勯瞾璺慨',chars:['椴佽矾淇?,'C.C.','鏈遍泙','鍗¤幉','濞滃鑾?,'绫宠暰','鐜涗附瀹夊','鐨囧笣']},
+                {name:'鍛借繍鐭充箣闂?,chars:['鐗ф繎绾㈣帀鏍?,'鍐堥儴浼﹀お閮?,'妞庡悕鐪熺敱鐞?,'妗ョ敯鑷?,'闃夸竾闊抽搩缇?,'姣斿眿瀹氱湡甯?]},
+                {name:'璧涘崥鏈嬪厠',chars:['闇茶タ','澶у崼','鐟炶礉鍗?,'鏇兼仼','鏈佃帀娆?,'鐞﹁枃']}
+            ],
+            '鏃ュ父/鎼炵瑧':[
+                {name:'闂磋皪杩囧瀹?,chars:['闃垮凹浜?,'绾﹀皵','榛勬槒','閭﹀痉','灏ら噷','璐濆熀','寮楀叞鍩?]},
+                {name:'瀛ょ嫭鎽囨粴',chars:['鍚庤棨涓€閲?,'鍠滃閮佷唬','浼婂湴鐭ヨ櫣澶?,'灞辩敯鍑?,'骞夸簳鑿婇噷','PA缇?]},
+                {name:'灏忔灄瀹剁殑榫欏コ浠?,chars:['鎵樺皵','搴峰','灏忔灄','娉曞か绾?,'闇茬浜?,'鑹鹃湶鐜?]}
+            ],
+            '鎮枒/鎺ㄧ悊':[
+                {name:'鏂囪豹閲庣姮',chars:['澶娌?,'涓矝鏁?,'鑺ュ窛榫欎箣浠?,'涓師涓篃','姹熸埛宸濅贡姝?,'鍥芥湪鐢扮嫭姝?,'缁囩敯浣滀箣鍔?,'绂忔辰璋曞悏','闄€鎬濆Ε鑰跺か鏂熀']},
+                {name:'姝讳骸绗旇',chars:['L','澶滅鏈?,'寮ユ捣鐮?,'鐞夊厠','闆峰','灏间簹','姊呮礇']},
+                {name:'澶忔棩閲嶇幇',chars:['缃戜唬鎱庡钩','灏忚垷娼?,'鍗楁柟鏃ラ工','鑿卞舰鏈遍弓瀛?,'鏍规触閾舵閮?]},
+                {name:'榛戞墽浜?,chars:['澶忓皵','濉炲反鏂拏瀹?,'姊呮灄','宸村皵寰?,'鑿插凹','鐢颁腑','鍒?,'鏍奸浄灏?,'浼婁附鑾庣櫧','瀹夋磥鎷?,'姝荤']}
+            ]
+        }
+    };
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var params = new URLSearchParams(window.location.search);
+        var charName = params.get('name');
+        var gameName = params.get('game');
+        document.title = (charName || '瑙掕壊') + ' 鍔ㄤ綔鍙傝€?- 涓€鏂归€氳';
+
+        // 鏌ユ壘瑙掕壊鎵€灞炰綔鍝?        var sourceName = gameName || '';
+        var allGames = [];
+        Object.keys(refData).forEach(function(k) {
+            if (k === '鐣墽') {
+                Object.keys(refData[k]).forEach(function(cat) {
+                    refData[k][cat].forEach(function(g) { allGames.push(g); });
+                });
+            } else {
+                refData[k].forEach(function(g) { allGames.push(g); });
+            }
+        });
+        // 灏濊瘯鎵惧埌瑙掕壊鐨勪綔鍝?        if (!gameName) {
+            allGames.forEach(function(g) {
+                if (g.chars.indexOf(charName) !== -1) sourceName = g.name;
+            });
+        }
+
+        var avatarEmojis = {
+            '鍘熺':'鈿旓笍','宕╁潖锛氭槦绌归搧閬?:'馃殏','宕╁潖3rd':'馃巰','楦ｆ疆':'馃寠','缁濆尯闆?:'鈿?,
+            '鏄庢棩鏂硅垷':'馃彞', '鏄庢棩鏂硅垷锛氱粓鏈湴':'馃寣', '钄氳摑妗ｆ':'馃摌','纰ц摑鑸嚎':'鈿?,'灏戝コ鍓嶇嚎':'馃敨','閲嶈繑鏈潵锛?999':'鈴?,
+            '鏃犳湡杩烽€?:'馃寵','闃撮槼甯?:'馃懝','鑳滃埄濂崇锛氬Ξ濮?:'馃敨','鑹惧皵鐧绘硶鐜?:'馃拲','榛戞殫涔嬮瓊3':'馃敟','鍙嫾':'馃棥锔?,
+            '楝兼常':'馃槇','灏煎皵锛氭満姊扮邯鍏?:'馃','濂崇寮傞椈褰?':'馃幁','鏈€缁堝够鎯?':'馃寣','鐢熷寲鍗辨満':'馃',
+            '鑻遍泟鑱旂洘':'馃弳','姘稿姭鏃犻棿':'馃悏','瀹堟湜鍏堥攱':'馃洝锔?,'鐜嬭€呰崳鑰€':'馃憫','绗簲浜烘牸':'馃暞锔?,
+            '鍜掓湳鍥炴垬':'鉁?,'楝肩伃涔嬪垉':'馃寠','杩涘嚮鐨勫法浜?:'馃П','鐢甸敮浜?:'鉀擄笍','姝荤':'馃拃',
+            '娴疯醇鐜?:'馃彺','鐏奖蹇嶈€?:'馃崶','榫欑彔':'馃悏','JOJO鐨勫濡欏啋闄?:'馃専','涓€鎷宠秴浜?:'馃憡',
+            '钁€佺殑鑺欒帀鑾?:'馃','瀹跺涵鏁欏笀':'馃敟','鏇磋。浜哄伓鍧犲叆鐖辨渤':'馃挄','鍫€涓庡鏉?:'馃彔',
+            '浜旂瓑鍒嗙殑鏂板':'馃拻','杈夊澶у皬濮?:'馃挊','闈掓槬鐚ご灏戝勾':'馃惏','Re:浠庨浂寮€濮?:'馃攣',
+            '杞敓鍙茶幈濮?:'馃挧','鏃犺亴杞敓':'馃摉','涓虹編濂戒笘鐣岀尞涓婄绂?:'馃挜','鐩句箣鍕囪€?:'馃洝锔?,
+            'OVERLORD':'馃拃','EVA':'馃','鍙嶅彌鐨勯瞾璺慨':'馃憗锔?,'鍛借繍鐭充箣闂?:'鈴?,'璧涘崥鏈嬪厠':'馃',
+            '闂磋皪杩囧瀹?:'馃','瀛ょ嫭鎽囨粴':'馃幐','灏忔灄瀹剁殑榫欏コ浠?:'馃悏','鏂囪豹閲庣姮':'馃摑',
+            '姝讳骸绗旇':'馃摀','澶忔棩閲嶇幇':'鈽€锔?
+        };
+        var avatarEmoji = avatarEmojis[sourceName] || '馃幀';
+
+        var gameForPath = sourceName.replace(/[:锛歖/g, '_');
+        var basePath = 'https://yifangtx.xyz/images/characters/' + gameForPath + '/' + charName + '/';
+        var maxImages = 12;
+        var posesTemplate = '';
+        for (var i = 1; i <= maxImages; i++) {
+            var imgPath = basePath + i + '.png';
+            var imgPathJpg = basePath + i + '.jpg';
+            posesTemplate += '<div class="pose-card" onclick="openLightbox(\'' + charName + '\',' + i + ',\'' + basePath + '\')"><div class="pose-img"><img src="' + imgPath + '" alt="' + charName + ' 鍔ㄤ綔鍙傝€?' + i + '" onerror="this.style.display=\'none\';this.parentElement.innerHTML=\'<span>NO.' + i + '</span>\'" loading="eager"></div><div class="pose-info"><h4>鍔ㄤ綔鍙傝€?#' + i + '</h4></div></div>';
+        }
+
+        document.getElementById('charContent').innerHTML =
+            '<div class="char-header">' +
+            '<div class="char-avatar">' + avatarEmoji + '</div>' +
+            '<div class="char-view-toggle">' +
+            '<button class="view-btn active" data-view="simple">绠€鐣?/button>' +
+            '<button class="view-btn" data-view="featured">绮鹃€?/button>' +
+            '</div>' +
+            '<h1>' + charName + '</h1>' +
+            '<p class="char-source">' + sourceName + '</p>' +
+            '</div>' +
+            '<div class="section-header"><span class="section-tag">鍔ㄤ綔鍙傝€?/span><h2>鍙傝€冨Э鍔?/h2><p>鐐瑰嚮鍥剧墖鏌ョ湅澶у浘</p></div>' +
+            '<div class="pose-grid">' + posesTemplate + '</div>' +
+            '<div class="no-data"><i class="fas fa-camera-retro"></i><p>鏇村鍙傝€冨姩浣滃嵆灏嗕笂绾?/p></div>' +
+            '<div class="modal" id="lightboxModal"><div class="modal-box" style="max-width:90vw;max-height:90vh;padding:8px;background:transparent;position:relative;"><button class="modal-close" onclick="document.getElementById(\'lightboxModal\').classList.remove(\'active\')" style="top:4px;right:4px;">&times;</button><img id="lightboxImg" src="" style="max-width:100%;max-height:85vh;border-radius:8px;display:block;"><span style="position:absolute;bottom:16px;right:20px;color:rgba(255,255,255,.6);font-size:18px;font-weight:700;letter-spacing:3px;pointer-events:none;text-shadow:0 2px 4px rgba(0,0,0,.5);">涓€鏂归€氳 漏</span><p id="lightboxCaption" style="text-align:center;color:#fff;margin-top:8px;font-size:14px;"></p></div></div>';
+    });
+    // 绠€鐣?绮鹃€夊垏鎹?    document.querySelectorAll('.view-btn').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.view-btn').forEach(function(x){x.classList.remove('active')});this.classList.add('active')})});
+
+    function openLightbox(charName, index, basePath) {
+        var img = document.getElementById('lightboxImg');
+        var cap = document.getElementById('lightboxCaption');
+        img.src = basePath + index + '.png';
+        cap.textContent = charName + ' - 鍔ㄤ綔鍙傝€?#' + index;
+        document.getElementById('lightboxModal').classList.add('active');
+    }
+    </script>
+</body>
+</html>

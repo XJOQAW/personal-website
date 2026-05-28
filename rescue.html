@@ -178,7 +178,7 @@
                 <a href="index.html" class="nav-link">首页</a>
                 <a href="portfolio.html" class="nav-link">作品</a>
                 <a href="reference.html" class="nav-link">动作参考</a>
-                <a href="rescue.html" class="nav-link active">废片拯救</a><a href="co-create.html" class="nav-link">共创合作</a>
+                <a href="rescue.html" class="nav-link active">废片拯救</a>
                 <a href="index.html#pricing" class="nav-link">价格</a>
                 <a href="index.html#contact" class="nav-link">联系</a>
             </div>
@@ -204,7 +204,7 @@
 
         <section class="rescue-hero">
             <h1>🎨 废片拯救计划 v3</h1>
-            <p>无偿修图 · 返图时间不限 · 每人每月限5张</p>
+            <p>无偿修图 · 返图时间不限 · 每人每月限3张</p>
         </section>
 
         <section class="section" style="padding-top:30px;">
@@ -241,7 +241,7 @@
                         <button class="btn btn-primary btn-full" id="rescueSubmit" onclick="window.submitRescue()">提交投稿</button>
                         <input type="text" id="rescueBaidu" placeholder="百度网盘链接（必填，存放原图）">
                     </div>
-                    <p class="limit-bar">本月已投稿 <span class="used" id="monthUsed">0</span>/5 张</p>
+                    <p class="limit-bar">本月已投稿 <span class="used" id="monthUsed">0</span>/3 张</p>
                 </div>
                 <p class="account-empty" id="uploadLoginTip" style="display:none;">请先<a href="javascript:void(0)" onclick="var m=document.getElementById('loginModal');m.style.opacity='1';m.style.visibility='visible';m.style.pointerEvents='auto'" style="color:var(--primary);">登录</a>后投稿</p>
             </div>
@@ -293,7 +293,7 @@
     <script src="script.js?v=44"></script>
     <script>
     var RESCUE_KEY = 'siteRescues';
-    var MONTH_LIMIT = 5;
+    var MONTH_LIMIT = 3;
 
     function getRescues() {
         try { return JSON.parse(localStorage.getItem(RESCUE_KEY) || '[]'); } catch(e) { return []; }
@@ -535,7 +535,7 @@
         if (fixed.length === 0) return;
         grid.innerHTML = fixed.map(function(r, idx) {
             var hintHTML = idx === 0 ? '<div class="ba-hint">← 滑动对比 →</div>' : '';
-            return '<div class="ba-card"><h4>' + (r.cn || r.nickname) + ' 的投稿</h4><div class="ba-compare" onselectstart="return false">' + hintHTML + '<img class="ba-img" src="' + getImg(r) + '" alt="原图" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div></div>';
+            return '<div class="ba-card"><h4>' + (r.cn || r.nickname) + '</h4><p class="ba-douyin">抖音号：' + esc(r.contact||'') + '</p><div class="ba-compare" onselectstart="return false">' + hintHTML + '<img class="ba-img" src="' + getImg(r) + '" alt="原图" draggable="false"><div class="ba-overlay"><img class="ba-img" src="' + r.fixed + '" alt="修复后" draggable="false"></div><div class="ba-handle"><i class="fas fa-arrows-left-right"></i></div></div></div>';
         }).reverse().join('');
         initBASliders();
         autoSlideHint();
@@ -717,11 +717,11 @@
         time: '2026-03-15', monthKey: '2026-3'
     });
     rescues.unshift({
-        id: 1, authorId: 'sample', cn: '测试1', nickname: '测试1',
+        id: 1, authorId: 'sample', cn: '抖音小意y呀呀呀', nickname: '抖音小意y呀呀呀',
         avatar: '🌸',
         image: 'https://yifangtx.xyz/images/rescues/sample_before.jpg',
         desc: '想要更加梦幻的光影效果',
-        contact: 'YFTX0616',
+        contact: 'WW2004188',
         fixed: 'https://yifangtx.xyz/images/rescues/sample_after.jpg',
         time: '2026-02-11', monthKey: '2026-2'
     });

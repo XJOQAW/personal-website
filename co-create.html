@@ -29,9 +29,15 @@
         .co-form .form-row input:focus, .co-form .form-row textarea:focus { outline:none; border-color:var(--primary); }
         .co-form textarea { width:100%; resize:vertical; min-height:80px; }
         .co-form .btn-full { width:100%; padding:12px; }
-        .co-form .upload-area { border:2px dashed var(--border); border-radius:8px; padding:16px; text-align:center; cursor:pointer; margin-bottom:12px; }
-        .co-form .upload-area:hover { border-color:var(--primary); }
-        .co-form .upload-area input { display:none; }
+        .co-upload-area { display:block; border:2px dashed var(--border); border-radius:10px; padding:20px; text-align:center; cursor:pointer; margin-bottom:6px; }
+        .co-upload-area:hover { border-color:var(--primary); }
+        .co-upload-area i { font-size:24px; color:var(--text-secondary); display:block; margin-bottom:6px; }
+        .co-upload-area span { font-size:13px; color:var(--text-secondary); }
+        .co-upload-hint { font-size:11px; color:var(--primary); margin:4px 0 10px; }
+        .co-preview { display:flex; gap:8px; flex-wrap:wrap; }
+        .co-preview img { width:80px; height:100px; object-fit:cover; border-radius:8px; border:1px solid var(--border); }
+        .co-anim { opacity:0; transform:translateY(30px); transition:all 0.6s ease; }
+        .co-anim.visible { opacity:1; transform:translateY(0); }
         @media (max-width:768px) { .co-form .form-row { flex-direction:column; } }
     </style>
 </head>
@@ -53,6 +59,7 @@
     </div>
 
     <div class="co-wrap">
+        <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> 返回首页</a>
         <div class="co-hero">
             <span class="section-tag">视觉共创企划</span>
             <h2>寻常驻出镜与创作搭档</h2>
@@ -63,29 +70,29 @@
         <div class="co-block">
             <h3><span>关于我</span> 与创作规划</h3>
             <div class="co-cards">
-                <div class="co-card"><h4>📷 硬件与技术</h4><p>主机位佳能R6，常用35mm、85mm、11mm焦段。日常以白棚拍摄和平面照片为主，后续会融入视频短片作品。全流程均有成熟AI技术辅助介入。</p></div>
-                <div class="co-card"><h4>🎯 工作态度</h4><p>性格温和，沟通顺畅。每次拍摄前均提供完整的策划方案，认真对待每一次按快门的机会，拒绝无准备的盲拍。拍摄点设在成都，重庆亦可协调。</p></div>
+                <div class="co-card co-anim"><h4>📷 硬件与技术</h4><p>主机位佳能R6，常用35mm、85mm、11mm焦段。日常以白棚拍摄和平面照片为主，后续会融入视频短片作品。全流程均有成熟AI技术辅助介入。</p></div>
+                <div class="co-card co-anim"><h4>🎯 工作态度</h4><p>性格温和，沟通顺畅。每次拍摄前均提供完整的策划方案，认真对待每一次按快门的机会，拒绝无准备的盲拍。拍摄点设在成都，重庆亦可协调。</p></div>
             </div>
         </div>
 
         <div class="co-block">
             <h3><span>对搭档的</span> 期许</h3>
             <div class="co-cards">
-                <div class="co-card"><h4>💡 创作者身份优先</h4><p>诚邀具备"创作者思维"的搭档。相较于被动出镜，我更看重审美积淀以及面对创作问题时成熟的处理方式。</p></div>
-                <div class="co-card"><h4>✨ 外形与表现力</h4><p>约一半动作涉及大动态构图，需身体具备一定柔韧性。期望净身高165cm以上、身材比例匀称，妆造风格干净纯粹。</p></div>
-                <div class="co-card"><h4>⏰ 时间与契约精神</h4><p>优质创作需要时间沉淀。希望您有充裕的可支配时间，具备较强的时间观念，能够及时沟通保障企划推进。</p></div>
+                <div class="co-card co-anim"><h4>💡 创作者身份优先</h4><p>诚邀具备"创作者思维"的搭档。相较于被动出镜，我更看重审美积淀以及面对创作问题时成熟的处理方式。</p></div>
+                <div class="co-card co-anim"><h4>✨ 外形与表现力</h4><p>约一半动作涉及大动态构图，需身体具备一定柔韧性。期望净身高165cm以上、身材比例匀称，妆造风格干净纯粹。</p></div>
+                <div class="co-card co-anim"><h4>⏰ 时间与契约精神</h4><p>优质创作需要时间沉淀。希望您有充裕的可支配时间，具备较强的时间观念，能够及时沟通保障企划推进。</p></div>
             </div>
         </div>
 
         <div class="co-block">
             <h3><span>合作机制</span> 与底线</h3>
             <div class="co-cards">
-                <div class="co-card"><h4>💰 成本共担</h4><p>拍摄期间产生的共同费用（场地棚费、门票、交通车费等）均采用AA制，透明处理。</p></div>
-                <div class="co-card"><h4>🤝 双向尊重</h4><p>婉拒单方面索取或"白嫖"心态。期待双方以专业、平等的态度，将全部精力聚焦于作品打磨。</p></div>
+                <div class="co-card co-anim"><h4>💰 成本共担</h4><p>拍摄期间产生的共同费用（场地棚费、门票、交通车费等）均采用AA制，透明处理。</p></div>
+                <div class="co-card co-anim"><h4>🤝 双向尊重</h4><p>婉拒单方面索取或"白嫖"心态。期待双方以专业、平等的态度，将全部精力聚焦于作品打磨。</p></div>
             </div>
         </div>
 
-        <div class="co-form">
+        <div class="co-form co-anim">
             <h3>📩 我要投稿</h3>
             <form id="coForm" action="https://api.web3forms.com/submit" method="POST">
                 <input type="hidden" name="access_key" value="08de3ce1-85fc-4b07-a2f3-bf778d80e8ea">
@@ -97,8 +104,16 @@
                 <div class="form-row">
                     <input type="text" name="contact" placeholder="联系方式（微信/QQ）" required>
                 </div>
-                <textarea name="works" placeholder="个人作品链接或简介..."></textarea>
-                <p style="font-size:11px;color:var(--text-secondary);margin:8px 0;">请附上近期作品链接或简要介绍自己的创作经验</p>
+                <textarea name="message" placeholder="想说的话..."></textarea>
+                <div class="co-upload" id="coUpload">
+                    <label class="co-upload-area" id="coUploadArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <span>上传个人作品（最多3张）</span>
+                        <input type="file" id="coFileInput" accept="image/*" multiple hidden>
+                    </label>
+                    <p class="co-upload-hint">📌 尽量请不要上传合成图</p>
+                    <div class="co-preview" id="coPreview"></div>
+                </div>
                 <button type="submit" class="btn btn-primary btn-full">提交投稿</button>
             </form>
         </div>
@@ -112,5 +127,7 @@
 
     <script src="app.js?v=1"></script>
     <script src="script.js?v=44"></script>
+    <script>var o=new IntersectionObserver(function(e){e.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible')})},{threshold:0.1});document.querySelectorAll('.co-anim').forEach(function(e){o.observe(e)})
+document.getElementById('coFileInput').addEventListener('change',function(){var p=document.getElementById('coPreview'),f=this.files;p.innerHTML='';for(var i=0;i<Math.min(f.length,3);i++){var r=new FileReader();r.onload=function(e){p.innerHTML+='<img src="'+e.target.result+'">'};r.readAsDataURL(f[i])}})</script>
 </body>
 </html>

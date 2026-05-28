@@ -722,6 +722,7 @@ function initApp() {
     // ===== 作品集点击放大 =====
     document.querySelectorAll('.portfolio-card').forEach(function(card) {
         card.addEventListener('click', function() {
+            if (this.closest('a[href]')) return;
             var img = this.querySelector('img');
             var title = this.querySelector('h3');
             var desc = this.querySelector('p');

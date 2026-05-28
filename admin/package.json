@@ -1,0 +1,9 @@
+{
+  "name": "yifang-admin",
+  "version": "1.0.0",
+  "description": "一方通行 管理后台",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
