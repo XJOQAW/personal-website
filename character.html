@@ -170,6 +170,10 @@
     };
 
     document.addEventListener('DOMContentLoaded', function() {
+        if (!localStorage.getItem('currentUser')) {
+            document.getElementById('charContent').innerHTML = '<div style="text-align:center;padding:120px 20px;"><i class="fas fa-lock" style="font-size:48px;color:var(--text-secondary);"></i><p style="margin:16px 0;color:var(--text-secondary);">请先登录后再查看动作参考</p><button onclick="document.getElementById(\'loginModal\').classList.add(\'active\')" style="padding:10px 28px;border:none;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--secondary));color:#fff;font-size:14px;cursor:pointer;">登录</button></div>';
+            return;
+        }
         var params = new URLSearchParams(window.location.search);
         var charName = params.get('name');
         var gameName = params.get('game');
@@ -247,5 +251,6 @@
         document.getElementById('lightboxModal').classList.add('active');
     }
     </script>
+    <div class="modal" id="loginModal"><div class="modal-box"><button class="modal-close" onclick="this.parentElement.parentElement.classList.remove('active')">&times;</button><h2>登录</h2><form class="login-form" id="loginForm" onsubmit="doLogin(event)"><div class="input-group"><i class="fas fa-user"></i><input type="text" id="loginAccount" placeholder="账号" required></div><div class="input-group"><i class="fas fa-lock"></i><input type="password" id="loginPassword" placeholder="密码" required></div><button type="submit" class="btn btn-primary btn-full">登录</button></form></div></div>
 </body>
 </html>

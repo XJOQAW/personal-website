@@ -10,6 +10,24 @@
     <link rel="stylesheet" href="style.css?v=38">
 </head>
 <body>
+    <!-- 免责声明弹窗 -->
+    <div class="disclaimer-overlay" id="disclaimerOverlay">
+        <div class="disclaimer-box">
+            <button class="disclaimer-close" id="disclaimerClose" disabled>&times;</button>
+            <h3>动作参考图片免责声明</h3>
+            <div class="disclaimer-text">
+                <p>本站动作参考板块中的所有角色图片，系本站运营者自费通过AI工具生成，仅供个人创作参考、动作临摹、学习交流使用。</p>
+                <p>本站不以任何形式通过上述图片进行商业盈利或收费传播。</p>
+                <p>所有角色形象、名称等知识产权归原始游戏/番剧作品的版权方所有。若任何版权方认为本站内容构成侵权，请联系本站，本站将在核实后第一时间删除相关内容。</p>
+                <p>用户因使用本站参考图片而产生的任何版权争议或法律风险，由用户自行承担，本站不承担连带责任。</p>
+                <p>点击按钮即表示您已阅读并同意上述内容。</p>
+            </div>
+            <div class="disclaimer-btns">
+                <button class="disclaimer-btn primary" id="disclaimerOk" disabled>已知晓（<span id="disclaimerCount">3</span>s）</button>
+                <button class="disclaimer-btn" id="disclaimerWeek" disabled>7日内不再提示（<span id="disclaimerCount2">3</span>s）</button>
+            </div>
+        </div>
+    </div>
     <nav class="nav visible" id="nav">
         <div class="nav-inner">
             <a href="index.html" class="nav-logo">一方通行</a>
@@ -510,6 +528,37 @@
             document.addEventListener('mouseup', onUp);
         });
     });
+    // 免责声明
+    (function(){
+        var weekKey = 'disclaimer7d';
+        var weekData = JSON.parse(localStorage.getItem(weekKey) || '{}');
+        if (sessionStorage.getItem('disclaimerOK') || (weekData.exp && Date.now() < weekData.exp)) return;
+        var overlay = document.getElementById('disclaimerOverlay');
+        overlay.style.display = 'flex';
+        var count = 3;
+        var okBtn = document.getElementById('disclaimerOk');
+        var weekBtn = document.getElementById('disclaimerWeek');
+        var closeBtn = document.getElementById('disclaimerClose');
+        function tick(){
+            count--; if(count<=0){
+                okBtn.disabled=false; weekBtn.disabled=false; closeBtn.disabled=false;
+                okBtn.textContent='已知晓'; weekBtn.textContent='7日内不再提示';
+                return;
+            }
+            document.getElementById('disclaimerCount').textContent=count;
+            document.getElementById('disclaimerCount2').textContent=count;
+            setTimeout(tick,1000);
+        }
+        setTimeout(tick,1000);
+        function dismiss(days){
+            if(days){ localStorage.setItem(weekKey,JSON.stringify({exp:Date.now()+days*86400000})); }
+            else { sessionStorage.setItem('disclaimerOK','1'); }
+            overlay.style.display='none';
+        }
+        okBtn.addEventListener('click',function(){dismiss(0)});
+        weekBtn.addEventListener('click',function(){dismiss(7)});
+        closeBtn.addEventListener('click',function(){dismiss(0)});
+    })();
     </script>
 </body>
 </html>
