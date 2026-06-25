@@ -264,6 +264,8 @@ function initApp() {
             var target = this.getAttribute('data-tab');
             document.getElementById('studioPricing').style.display = target === 'studio' ? 'grid' : 'none';
             document.getElementById('eventPricing').style.display = target === 'event' ? 'grid' : 'none';
+            var bestEl = document.getElementById('bestPricing');
+            if (bestEl) bestEl.style.display = target === 'best' ? 'grid' : 'none';
         });
     });
 
